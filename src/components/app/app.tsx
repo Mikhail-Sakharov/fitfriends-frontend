@@ -5,6 +5,7 @@ import SignIn from '../../pages/sign-in/sign-in';
 import SignUpQuestionnaireCoach from '../../pages/sign-up-questionnaire-coach/sign-up-questionnaire-coach';
 import SignUpQuestionnaireUser from '../../pages/sign-up-questionnaire-user/sign-up-questionnaire-user';
 import Main from '../../pages/main/main';
+import PersonalAccountCoach from '../../pages/personal-account-coach/personal-account-coach';
 
 function App(): JSX.Element {
   return (
@@ -16,6 +17,7 @@ function App(): JSX.Element {
         <Route path={'user'} element={<SignUpQuestionnaireUser />}/>
         <Route path={'main'} element={<Main />}/>
         <Route path={'signin'} element={<SignIn />}/>
+        <Route path={'personal-account-coach'} element={<PersonalAccountCoach />}/>
       </Routes>
     </BrowserRouter>
   );
