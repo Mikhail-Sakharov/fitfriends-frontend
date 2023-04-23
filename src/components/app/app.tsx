@@ -10,6 +10,7 @@ import CreateTraining from '../../pages/create-training/create-training';
 import MyTrainings from '../../pages/my-trainings/my-trainings';
 import MyOrders from '../../pages/my-orders/my-orders';
 import FriendsList from '../../pages/friends-list/friends-list';
+import TrainingCard from '../../pages/training-card/training-card';
 
 function App(): JSX.Element {
   return (
@@ -26,6 +27,7 @@ function App(): JSX.Element {
         <Route path={'my-trainings'} element={<MyTrainings />}/>
         <Route path={'my-orders'} element={<MyOrders />}/>
         <Route path={'friends-list'} element={<FriendsList />}/>
+        <Route path={'training-card'} element={<TrainingCard />}/>
       </Routes>
     </BrowserRouter>
   );
