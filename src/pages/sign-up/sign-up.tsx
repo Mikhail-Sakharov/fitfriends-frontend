@@ -30,7 +30,8 @@ function SignUp(): JSX.Element {
                       </label>
                     </div>
                     <div className="sign-up__description">
-                      <h2 className="sign-up__legend">Загрузите фото профиля</h2><span className="sign-up__text">JPG, PNG, оптимальный размер 100&times;100&nbsp;px</span>
+                      <h2 className="sign-up__legend">Загрузите фото профиля</h2>
+                      <span className="sign-up__text">JPG, PNG, оптимальный размер 100&times;100&nbsp;px</span>
                     </div>
                   </div>
                   <div className="sign-up__data">
@@ -142,7 +143,11 @@ function SignUp(): JSX.Element {
                         </svg>
                       </span>
                       <span className="sign-up__checkbox-label">
-                          Я соглашаюсь с <span>политикой конфиденциальности</span> компании
+                        Я соглашаюсь с
+                        {' '}
+                        <span>политикой конфиденциальности</span>
+                        {' '}
+                        компании
                       </span>
                     </label>
                   </div>

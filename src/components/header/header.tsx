@@ -89,16 +89,36 @@ function Header(): JSX.Element {
               <li className="search__item">
                 <Link className="search__link" to="#">Аэробика</Link>
               </li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
-              <li className="search__item"><Link className="search__link" to="#">Text</Link></li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
+              <li className="search__item">
+                <Link className="search__link" to="#">Text</Link>
+              </li>
             </ul>
           </form>
         </div>

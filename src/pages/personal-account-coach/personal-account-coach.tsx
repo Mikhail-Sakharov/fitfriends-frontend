@@ -212,7 +212,8 @@ function PersonalAccountCoach(): JSX.Element {
                       <button className="btn-flat btn-flat--underlined personal-account-coach__button" type="button">
                         <svg width="14" height="14" aria-hidden="true">
                           <use xlinkHref="#icon-import"></use>
-                        </svg><span>Загрузить</span>
+                        </svg>
+                        <span>Загрузить</span>
                       </button>
                       <div className="personal-account-coach__controls">
                         <button className="btn-icon personal-account-coach__control" type="button" aria-label="previous">
@@ -240,7 +241,8 @@ function PersonalAccountCoach(): JSX.Element {
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
                               <svg width="12" height="12" aria-hidden="true">
                                 <use xlinkHref="#icon-edit"></use>
-                              </svg><span>Изменить</span>
+                              </svg>
+                              <span>Изменить</span>
                             </button>
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
                               <svg width="12" height="12" aria-hidden="true">
@@ -275,12 +277,14 @@ function PersonalAccountCoach(): JSX.Element {
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
                               <svg width="12" height="12" aria-hidden="true">
                                 <use xlinkHref="#icon-edit"></use>
-                              </svg><span>Изменить</span>
+                              </svg>
+                              <span>Изменить</span>
                             </button>
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
                               <svg width="12" height="12" aria-hidden="true">
                                 <use xlinkHref="#icon-edit"></use>
-                              </svg><span>Сохранить</span>
+                              </svg>
+                              <span>Сохранить</span>
                             </button>
                             <div className="certificate-card__controls">
                               <button className="btn-icon certificate-card__control" type="button" aria-label="next">
@@ -309,12 +313,14 @@ function PersonalAccountCoach(): JSX.Element {
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
                               <svg width="12" height="12" aria-hidden="true">
                                 <use xlinkHref="#icon-edit"></use>
-                              </svg><span>Изменить</span>
+                              </svg>
+                              <span>Изменить</span>
                             </button>
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
                               <svg width="12" height="12" aria-hidden="true">
                                 <use xlinkHref="#icon-edit"></use>
-                              </svg><span>Сохранить</span>
+                              </svg>
+                              <span>Сохранить</span>
                             </button>
                             <div className="certificate-card__controls">
                               <button className="btn-icon certificate-card__control" type="button" aria-label="next">
@@ -379,12 +385,14 @@ function PersonalAccountCoach(): JSX.Element {
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
                               <svg width="12" height="12" aria-hidden="true">
                                 <use xlinkHref="#icon-edit"></use>
-                              </svg><span>Изменить</span>
+                              </svg>
+                              <span>Изменить</span>
                             </button>
                             <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
                               <svg width="12" height="12" aria-hidden="true">
                                 <use xlinkHref="#icon-edit"></use>
-                              </svg><span>Сохранить</span>
+                              </svg>
+                              <span>Сохранить</span>
                             </button>
                             <div className="certificate-card__controls">
                               <button className="btn-icon certificate-card__control" type="button" aria-label="next">

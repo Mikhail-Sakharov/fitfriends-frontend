@@ -70,7 +70,8 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                         </div>
                       </div>
                     </div>
-                    <div className="questionnaire-coach__block"><span className="questionnaire-coach__legend">Ваш уровень</span>
+                    <div className="questionnaire-coach__block">
+                      <span className="questionnaire-coach__legend">Ваш уровень</span>
                       <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-coach__radio">
                         <div className="custom-toggle-radio__block">
                           <label>
@@ -99,7 +100,8 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                       <span className="questionnaire-coach__legend">Ваши дипломы и сертификаты</span>
                       <div className="drag-and-drop questionnaire-coach__drag-and-drop">
                         <label>
-                          <span className="drag-and-drop__label" tabIndex={0}>Загрузите сюда файлы формата PDF, JPG или PNG
+                          <span className="drag-and-drop__label" tabIndex={0}>
+                            Загрузите сюда файлы формата PDF, JPG или PNG
                             <svg width="20" height="20" aria-hidden="true">
                               <use xlinkHref="#icon-import"></use>
                             </svg>

@@ -23,7 +23,9 @@ function Intro(): JSX.Element {
           <div className="intro__buttons">
             <button className="btn intro__button" type="button">Регистрация</button>
             <p className="intro__text">
-                Есть аккаунт? <Link className="intro__link" to="#">Вход</Link>
+              Есть аккаунт?
+              {' '}
+              <Link className="intro__link" to="#">Вход</Link>
             </p>
           </div>
         </div>

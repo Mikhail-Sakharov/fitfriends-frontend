@@ -231,22 +231,28 @@ function Main(): JSX.Element {
                         </picture>
                       </div>
                       <p className="thumbnail-training__price">
-                        <span className="thumbnail-training__price-value">1600</span><span>₽</span>
+                        <span className="thumbnail-training__price-value">1600</span>
+                        <span>₽</span>
                       </p>
                       <h3 className="thumbnail-training__title">run, forrest, run</h3>
                       <div className="thumbnail-training__info">
                         <ul className="thumbnail-training__hashtags-list">
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#бег</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#бег</span>
+                            </div>
                           </li>
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#500ккал</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#500ккал</span>
+                            </div>
                           </li>
                         </ul>
                         <div className="thumbnail-training__rate">
                           <svg width="16" height="16" aria-hidden="true">
                             <use xlinkHref="#icon-star"></use>
-                          </svg><span className="thumbnail-training__rate-value">5</span>
+                          </svg>
+                          <span className="thumbnail-training__rate-value">5</span>
                         </div>
                       </div>
                       <div className="thumbnail-training__text-wrapper">
@@ -271,16 +277,21 @@ function Main(): JSX.Element {
                         </picture>
                       </div>
                       <p className="thumbnail-training__price">
-                        <span className="thumbnail-training__price-value">1600</span><span>₽</span>
+                        <span className="thumbnail-training__price-value">1600</span>
+                        <span>₽</span>
                       </p>
                       <h3 className="thumbnail-training__title">fitball</h3>
                       <div className="thumbnail-training__info">
                         <ul className="thumbnail-training__hashtags-list">
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#пилатес</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#пилатес</span>
+                            </div>
                           </li>
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#200ккал</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#200ккал</span>
+                            </div>
                           </li>
                         </ul>
                         <div className="thumbnail-training__rate">
@@ -312,16 +323,21 @@ function Main(): JSX.Element {
                         </picture>
                       </div>
                       <p className="thumbnail-training__price">
-                        <span className="thumbnail-training__price-value">2200</span><span>₽</span>
+                        <span className="thumbnail-training__price-value">2200</span>
+                        <span>₽</span>
                       </p>
                       <h3 className="thumbnail-training__title">devil&apos;s cindy</h3>
                       <div className="thumbnail-training__info">
                         <ul className="thumbnail-training__hashtags-list">
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#кроссфит</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#кроссфит</span>
+                            </div>
                           </li>
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#950ккал</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#950ккал</span>
+                            </div>
                           </li>
                         </ul>
                         <div className="thumbnail-training__rate">
@@ -353,22 +369,28 @@ function Main(): JSX.Element {
                         </picture>
                       </div>
                       <p className="thumbnail-training__price">
-                        <span className="thumbnail-training__price-value">1800</span><span>₽</span>
+                        <span className="thumbnail-training__price-value">1800</span>
+                        <span>₽</span>
                       </p>
                       <h3 className="thumbnail-training__title">full body stretch</h3>
                       <div className="thumbnail-training__info">
                         <ul className="thumbnail-training__hashtags-list">
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#стретчинг</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#стретчинг</span>
+                            </div>
                           </li>
                           <li className="thumbnail-training__hashtags-item">
-                            <div className="hashtag thumbnail-training__hashtag"><span>#400ккал</span></div>
+                            <div className="hashtag thumbnail-training__hashtag">
+                              <span>#400ккал</span>
+                            </div>
                           </li>
                         </ul>
                         <div className="thumbnail-training__rate">
                           <svg width="16" height="16" aria-hidden="true">
                             <use xlinkHref="#icon-star"></use>
-                          </svg><span className="thumbnail-training__rate-value">5</span>
+                          </svg>
+                          <span className="thumbnail-training__rate-value">5</span>
                         </div>
                       </div>
                       <div className="thumbnail-training__text-wrapper">
@@ -436,7 +458,9 @@ function Main(): JSX.Element {
                     </div>
                     <ul className="thumbnail-user__hashtags-list">
                       <li className="thumbnail-user__hashtags-item">
-                        <div className="hashtag thumbnail-user__hashtag"><span>#пилатес</span></div>
+                        <div className="hashtag thumbnail-user__hashtag">
+                          <span>#пилатес</span>
+                        </div>
                       </li>
                     </ul>
                     <Link className="btn btn--outlined btn--dark-bg btn--medium thumbnail-user__button" to="#">Подробнее</Link>
@@ -461,7 +485,9 @@ function Main(): JSX.Element {
                     </div>
                     <ul className="thumbnail-user__hashtags-list">
                       <li className="thumbnail-user__hashtags-item">
-                        <div className="hashtag thumbnail-user__hashtag"><span>#силовые</span></div>
+                        <div className="hashtag thumbnail-user__hashtag">
+                          <span>#силовые</span>
+                        </div>
                       </li>
                     </ul>
                     <Link className="btn btn--outlined btn--dark-bg btn--medium thumbnail-user__button" to="#">Подробнее</Link>
@@ -486,7 +512,9 @@ function Main(): JSX.Element {
                     </div>
                     <ul className="thumbnail-user__hashtags-list">
                       <li className="thumbnail-user__hashtags-item">
-                        <div className="hashtag thumbnail-user__hashtag"><span>#бег</span></div>
+                        <div className="hashtag thumbnail-user__hashtag">
+                          <span>#бег</span>
+                        </div>
                       </li>
                     </ul>
                     <Link className="btn btn--outlined btn--dark-bg btn--medium thumbnail-user__button" to="#">Подробнее</Link>
@@ -516,7 +544,9 @@ function Main(): JSX.Element {
                     </div>
                     <ul className="thumbnail-user__hashtags-list">
                       <li className="thumbnail-user__hashtags-item">
-                        <div className="hashtag thumbnail-user__hashtag"><span>#пилатес</span></div>
+                        <div className="hashtag thumbnail-user__hashtag">
+                          <span>#пилатес</span>
+                        </div>
                       </li>
                     </ul>
                     <Link className="btn btn--outlined btn--dark-bg btn--medium thumbnail-user__button" to="#">Подробнее</Link>
