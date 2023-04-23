@@ -8,6 +8,8 @@ import Main from '../../pages/main/main';
 import PersonalAccountCoach from '../../pages/personal-account-coach/personal-account-coach';
 import CreateTraining from '../../pages/create-training/create-training';
 import MyTrainings from '../../pages/my-trainings/my-trainings';
+import MyOrders from '../../pages/my-orders/my-orders';
+import FriendsList from '../../pages/friends-list/friends-list';
 
 function App(): JSX.Element {
   return (
@@ -22,6 +24,8 @@ function App(): JSX.Element {
         <Route path={'personal-account-coach'} element={<PersonalAccountCoach />}/>
         <Route path={'create-training'} element={<CreateTraining />}/>
         <Route path={'my-trainings'} element={<MyTrainings />}/>
+        <Route path={'my-orders'} element={<MyOrders />}/>
+        <Route path={'friends-list'} element={<FriendsList />}/>
       </Routes>
     </BrowserRouter>
   );

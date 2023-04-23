@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
 
-function Component(): JSX.Element {
+function MyOrders(): JSX.Element {
   return (
     <>
       <Header />
@@ -309,4 +309,4 @@ function Component(): JSX.Element {
   );
 }
 
-export default Component;
+export default MyOrders;
