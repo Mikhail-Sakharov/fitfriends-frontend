@@ -14,6 +14,7 @@ import TrainingCard from '../../pages/training-card/training-card';
 import PersonalAccountUser from '../../pages/personal-account-user/personal-account-user';
 import TrainingCatalog from '../../pages/training-catalog/training-catalog';
 import MyPurchases from '../../pages/my-purchases/my-purchases';
+import MyGyms from '../../pages/my-gyms/my-gyms';
 
 function App(): JSX.Element {
   return (
@@ -34,6 +35,7 @@ function App(): JSX.Element {
         <Route path={'training-card'} element={<TrainingCard />}/>
         <Route path={'training-catalog'} element={<TrainingCatalog />}/>
         <Route path={'my-purchases'} element={<MyPurchases />}/>
+        <Route path={'my-gyms'} element={<MyGyms />}/>
       </Routes>
     </BrowserRouter>
   );
