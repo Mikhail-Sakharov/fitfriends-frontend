@@ -11,6 +11,7 @@ import MyTrainings from '../../pages/my-trainings/my-trainings';
 import MyOrders from '../../pages/my-orders/my-orders';
 import FriendsList from '../../pages/friends-list/friends-list';
 import TrainingCard from '../../pages/training-card/training-card';
+import PersonalAccountUser from '../../pages/personal-account-user/personal-account-user';
 
 function App(): JSX.Element {
   return (
@@ -23,6 +24,7 @@ function App(): JSX.Element {
         <Route path={'main'} element={<Main />}/>
         <Route path={'signin'} element={<SignIn />}/>
         <Route path={'personal-account-coach'} element={<PersonalAccountCoach />}/>
+        <Route path={'personal-account-user'} element={<PersonalAccountUser />}/>
         <Route path={'create-training'} element={<CreateTraining />}/>
         <Route path={'my-trainings'} element={<MyTrainings />}/>
         <Route path={'my-orders'} element={<MyOrders />}/>
