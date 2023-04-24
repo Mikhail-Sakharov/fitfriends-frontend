@@ -1,10 +1,32 @@
 import Header from '../../components/header/header';
 import {UserRole} from '../../types/user-role.enum';
+import {nanoid} from 'nanoid';
 
 const getUSerRole = () => UserRole.Coach;
 
 function TrainingCard(): JSX.Element {
   const userRole = getUSerRole();
+  const training = {
+    title: 'energy+',
+    bgImageUrl: '7w6er87q6wter',
+    level: 'любитель',
+    type: 'стрейчинг',
+    duration: '10 — 30 мин',
+    price: 6500,
+    caloriesCount: 5000,
+    description: 'Упражнения укрепляют мышечный корсет, делают суставы более гибкими, улучшают осанку и координацию!',
+    gender: 'для всех',
+    videoUrl: '',
+    rating: 0,
+    coachId: '64359129835875db1a1aeade',
+    isSpecialOffer: false
+  };
+  const features = [
+    `#${training.type}`,
+    `#${training.gender}`,
+    `#${training.caloriesCount}ккал`,
+    `#${training.duration}`
+  ];
 
   return (
     <>
@@ -188,14 +210,16 @@ function TrainingCard(): JSX.Element {
                           <div className="training-info__input training-info__input--training">
                             <label>
                               <span className="training-info__label">Название тренировки</span>
-                              <input type="text" name="training" value="energy" disabled={userRole !== UserRole.Coach}/>
+                              <input type="text" name="training" value={training.title} disabled={userRole !== UserRole.Coach}/>
                             </label>
                             <div className="training-info__error">Обязательное поле</div>
                           </div>
                           <div className="training-info__textarea">
                             <label>
                               <span className="training-info__label">Описание тренировки</span>
-                              <textarea name="description" disabled={userRole !== UserRole.Coach}>Упражнения укрепляют мышечный корсет, делают суставы более гибкими, улучшают осанку и&nbsp;координацию.</textarea>
+                              <textarea name="description" disabled={userRole !== UserRole.Coach}>
+                                {training.description}
+                              </textarea>
                             </label>
                           </div>
                         </div>
@@ -208,37 +232,28 @@ function TrainingCard(): JSX.Element {
                                   <use xlinkHref="#icon-star"></use>
                                 </svg>
                               </span>
-                              <input type="number" name="rating" value="4" disabled={userRole !== UserRole.Coach}/>
+                              <input type="number" name="rating" value={training.rating} disabled={userRole !== UserRole.Coach}/>
                             </label>
                           </div>
                           <ul className="training-info__list">
-                            <li className="training-info__item">
-                              <div className="hashtag hashtag--white">
-                                <span>#пилатес</span>
-                              </div>
-                            </li>
-                            <li className="training-info__item">
-                              <div className="hashtag hashtag--white">
-                                <span>#для_всех</span>
-                              </div>
-                            </li>
-                            <li className="training-info__item">
-                              <div className="hashtag hashtag--white">
-                                <span>#320ккал</span>
-                              </div>
-                            </li>
-                            <li className="training-info__item">
-                              <div className="hashtag hashtag--white">
-                                <span>#30_минут</span>
-                              </div>
-                            </li>
+                            {
+                              features.map((feature) => (
+                                <li key={nanoid()} className="training-info__item">
+                                  <div className="hashtag hashtag--white">
+                                    <span>
+                                      {feature}
+                                    </span>
+                                  </div>
+                                </li>
+                              ))
+                            }
                           </ul>
                         </div>
                         <div className="training-info__price-wrapper">
                           <div className="training-info__input training-info__input--price">
                             <label>
                               <span className="training-info__label">Стоимость</span>
-                              <input type="text" name="price" value="800 ₽" disabled={userRole !== UserRole.Coach}/>
+                              <input type="text" name="price" value={`${training.price} ₽`} disabled={userRole !== UserRole.Coach}/>
                             </label>
                             <div className="training-info__error">Введите число</div>
                           </div>
@@ -261,21 +276,45 @@ function TrainingCard(): JSX.Element {
                     </form>
                   </div>
                 </div>
-                <div className="training-video">
+                <div className={`training-video ${training.videoUrl === '' || training.bgImageUrl === '' ? 'training-video--load' : ''}`}>
                   <h2 className="training-video__title">Видео</h2>
-                  <div className="training-video__video">
-                    <div className="training-video__thumbnail">
-                      <picture>
-                        <source type="image/webp" srcSet="img/content/training-video/video-thumbnail.webp, img/content/training-video/video-thumbnail@2x.webp 2x"/>
-                        <img src="img/content/training-video/video-thumbnail.png" srcSet="img/content/training-video/video-thumbnail@2x.png 2x" width="922" height="566" alt="Обложка видео"/>
-                      </picture>
-                    </div>
-                    <button className="training-video__play-button btn-reset">
-                      <svg width="18" height="30" aria-hidden="true">
-                        <use xlinkHref="#icon-arrow"></use>
-                      </svg>
-                    </button>
-                  </div>
+                  {
+                    training.videoUrl !== '' && training.bgImageUrl !== ''
+                      ? (
+                        <div className="training-video__video">
+                          <div className="training-video__thumbnail">
+                            <picture>
+                              <source type="image/webp" srcSet="img/content/training-video/video-thumbnail.webp, img/content/training-video/video-thumbnail@2x.webp 2x"/>
+                              <img src="img/content/training-video/video-thumbnail.png" srcSet="img/content/training-video/video-thumbnail@2x.png 2x" width="922" height="566" alt="Обложка видео"/>
+                            </picture>
+                          </div>
+                          <button className="training-video__play-button btn-reset">
+                            <svg width="18" height="30" aria-hidden="true">
+                              <use xlinkHref="#icon-arrow"></use>
+                            </svg>
+                          </button>
+                        </div>
+                      )
+                      : (
+                        <div className="training-video__drop-files">
+                          <form action="#" method="post">
+                            <div className="training-video__form-wrapper">
+                              <div className="drag-and-drop">
+                                <label>
+                                  <span className="drag-and-drop__label" tabIndex={0}>
+                                    Загрузите сюда файлы формата MOV, AVI или MP4
+                                    <svg width="20" height="20" aria-hidden="true">
+                                      <use xlinkHref="#icon-import-video"></use>
+                                    </svg>
+                                  </span>
+                                  <input type="file" name="import" tabIndex={-1} accept=".mov, .avi, .mp4"/>
+                                </label>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                      )
+                  }
                   <div className="training-video__buttons-wrapper">
                     <button className="btn training-video__button training-video__button--start" type="button" disabled>Приступить</button>
                     {
