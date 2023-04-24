@@ -12,6 +12,7 @@ import MyOrders from '../../pages/my-orders/my-orders';
 import FriendsList from '../../pages/friends-list/friends-list';
 import TrainingCard from '../../pages/training-card/training-card';
 import PersonalAccountUser from '../../pages/personal-account-user/personal-account-user';
+import TrainingCatalog from '../../pages/training-catalog/training-catalog';
 
 function App(): JSX.Element {
   return (
@@ -30,6 +31,7 @@ function App(): JSX.Element {
         <Route path={'my-orders'} element={<MyOrders />}/>
         <Route path={'friends-list'} element={<FriendsList />}/>
         <Route path={'training-card'} element={<TrainingCard />}/>
+        <Route path={'training-catalog'} element={<TrainingCatalog />}/>
       </Routes>
     </BrowserRouter>
   );
