@@ -2,10 +2,11 @@ import Header from '../../components/header/header';
 import {UserRole} from '../../types/user-role.enum';
 import {nanoid} from 'nanoid';
 
-const getUSerRole = () => UserRole.Coach;
+type TrainingCardProps = {
+  userRole: UserRole;
+};
 
-function TrainingCard(): JSX.Element {
-  const userRole = getUSerRole();
+function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
   const training = {
     title: 'energy+',
     bgImageUrl: '7w6er87q6wter',
