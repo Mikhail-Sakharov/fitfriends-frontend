@@ -20,6 +20,7 @@ import FoodDiary from '../../pages/food-diary/food-diary';
 import GymsCatalog from '../../pages/gyms-catalog/gyms-catalog';
 import GymCard from '../../pages/gym-card/gym-card';
 import UsersCatalog from '../../pages/users-catalog/users-catalog';
+import UserCard from '../../pages/user-card/user-card';
 
 function App(): JSX.Element {
   return (
@@ -46,6 +47,7 @@ function App(): JSX.Element {
         <Route path={'gyms-catalog'} element={<GymsCatalog />}/>
         <Route path={'gym-card'} element={<GymCard />}/>
         <Route path={'users-catalog'} element={<UsersCatalog />}/>
+        <Route path={'user-card'} element={<UserCard />}/>
       </Routes>
     </BrowserRouter>
   );
