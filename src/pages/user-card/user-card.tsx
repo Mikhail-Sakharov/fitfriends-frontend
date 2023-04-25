@@ -1,6 +1,7 @@
 import Header from '../../components/header/header';
 import UserCardCoach from '../../components/user-card-coach/user-card-coach';
 import UserCardUser from '../../components/user-card-user/user-card-user';
+import {Training} from '../../types/training.interface';
 import {UserRole} from '../../types/user-role.enum';
 import {User} from '../../types/user.interface';
 
@@ -49,6 +50,21 @@ function UserCard(): JSX.Element {
     },
     myFriends: []
   }; */
+  const trainings = Array.from({length: 4}, () => ({
+    title: 'energy+',
+    bgImageUrl: 'img/content/thumbnails/training-02.jpg',
+    level: 'любитель',
+    type: 'стрейчинг',
+    duration: '10 — 30 мин',
+    price: 6500,
+    caloriesCount: 5000,
+    description: 'Упражнения укрепляют мышечный корсет, делают суставы более гибкими, улучшают осанку и координацию!',
+    gender: 'для всех',
+    videoUrl: '',
+    rating: 0,
+    coachId: '64359129835875db1a1aeade',
+    isSpecialOffer: false
+  })) as unknown as Training[];
 
   return (
     <>
@@ -67,7 +83,7 @@ function UserCard(): JSX.Element {
                 {
                   user.userRole === UserRole.Coach
                     ? (
-                      <UserCardCoach user={user}/>
+                      <UserCardCoach user={user} trainings={trainings}/>
                     )
                     : (
                       <UserCardUser user={user}/>

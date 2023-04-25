@@ -5,7 +5,7 @@ import {Training} from '../../types/training.interface';
 
 type UserCardCoachProps = {
   user: User;
-  trainings?: Training[]; // ?---------------------------------------------------------------
+  trainings?: Training[];
 };
 
 function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
