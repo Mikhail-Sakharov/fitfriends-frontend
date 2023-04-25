@@ -22,6 +22,7 @@ import GymCard from '../../pages/gym-card/gym-card';
 import UsersCatalog from '../../pages/users-catalog/users-catalog';
 import UserCard from '../../pages/user-card/user-card';
 import {AppRoute} from '../../const';
+import NotFound from '../../pages/not-found/not-found';
 
 function App(): JSX.Element {
   return (
@@ -49,6 +50,7 @@ function App(): JSX.Element {
         <Route path={AppRoute.GymCard} element={<GymCard />}/>
         <Route path={AppRoute.UsersCatalog} element={<UsersCatalog />}/>
         <Route path={AppRoute.UserCard} element={<UserCard />}/>
+        <Route path={AppRoute.NotFound} element={<NotFound />}/>
       </Routes>
     </BrowserRouter>
   );
