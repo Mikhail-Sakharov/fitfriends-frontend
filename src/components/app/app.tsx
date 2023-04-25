@@ -21,33 +21,34 @@ import GymsCatalog from '../../pages/gyms-catalog/gyms-catalog';
 import GymCard from '../../pages/gym-card/gym-card';
 import UsersCatalog from '../../pages/users-catalog/users-catalog';
 import UserCard from '../../pages/user-card/user-card';
+import {AppRoute} from '../../const';
 
 function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={'intro'} element={<Intro />}/>
-        <Route path={'signup'} element={<SignUp />}/>
-        <Route path={'coach'} element={<SignUpQuestionnaireCoach />}/>
-        <Route path={'user'} element={<SignUpQuestionnaireUser />}/>
-        <Route path={'main'} element={<Main />}/>
-        <Route path={'signin'} element={<SignIn />}/>
-        <Route path={'personal-account-coach'} element={<PersonalAccountCoach />}/>
-        <Route path={'personal-account-user'} element={<PersonalAccountUser />}/>
-        <Route path={'create-training'} element={<CreateTraining />}/>
-        <Route path={'my-trainings'} element={<MyTrainings />}/>
-        <Route path={'my-orders'} element={<MyOrders />}/>
-        <Route path={'friends-list'} element={<FriendsList />}/>
-        <Route path={'training-card'} element={<TrainingCard />}/>
-        <Route path={'training-catalog'} element={<TrainingCatalog />}/>
-        <Route path={'my-purchases'} element={<MyPurchases />}/>
-        <Route path={'my-gyms'} element={<MyGyms />}/>
-        <Route path={'training-diary'} element={<TrainingDiary />}/>
-        <Route path={'food-diary'} element={<FoodDiary />}/>
-        <Route path={'gyms-catalog'} element={<GymsCatalog />}/>
-        <Route path={'gym-card'} element={<GymCard />}/>
-        <Route path={'users-catalog'} element={<UsersCatalog />}/>
-        <Route path={'user-card'} element={<UserCard />}/>
+        <Route path={AppRoute.Intro} element={<Intro />}/>
+        <Route path={AppRoute.SignUp} element={<SignUp />}/>
+        <Route path={AppRoute.SignUpQuestionnaireCoach} element={<SignUpQuestionnaireCoach />}/>
+        <Route path={AppRoute.SignUpQuestionnaireUser} element={<SignUpQuestionnaireUser />}/>
+        <Route path={AppRoute.Main} element={<Main />}/>
+        <Route path={AppRoute.SignIn} element={<SignIn />}/>
+        <Route path={AppRoute.PersonalAccountCoach} element={<PersonalAccountCoach />}/>
+        <Route path={AppRoute.PersonalAccountUser} element={<PersonalAccountUser />}/>
+        <Route path={AppRoute.CreateTraining} element={<CreateTraining />}/>
+        <Route path={AppRoute.MyTrainings} element={<MyTrainings />}/>
+        <Route path={AppRoute.MyOrders} element={<MyOrders />}/>
+        <Route path={AppRoute.FriendsList} element={<FriendsList />}/>
+        <Route path={AppRoute.TrainingCard} element={<TrainingCard />}/>
+        <Route path={AppRoute.TrainingCatalog} element={<TrainingCatalog />}/>
+        <Route path={AppRoute.MyPurchases} element={<MyPurchases />}/>
+        <Route path={AppRoute.MyGyms} element={<MyGyms />}/>
+        <Route path={AppRoute.TrainingDiary} element={<TrainingDiary />}/>
+        <Route path={AppRoute.FoodDiary} element={<FoodDiary />}/>
+        <Route path={AppRoute.GymsCatalog} element={<GymsCatalog />}/>
+        <Route path={AppRoute.GymCard} element={<GymCard />}/>
+        <Route path={AppRoute.UsersCatalog} element={<UsersCatalog />}/>
+        <Route path={AppRoute.UserCard} element={<UserCard />}/>
       </Routes>
     </BrowserRouter>
   );
