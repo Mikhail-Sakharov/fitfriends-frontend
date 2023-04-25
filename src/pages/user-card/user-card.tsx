@@ -1,8 +1,53 @@
 import Header from '../../components/header/header';
+import UserCardCoach from '../../components/user-card-coach/user-card-coach';
+import UserCardUser from '../../components/user-card-user/user-card-user';
+import {UserRole} from '../../types/user-role.enum';
+import {User} from '../../types/user.interface';
 
 function UserCard(): JSX.Element {
+  // TODO: запрос юзера по id
+  // TODO: запрос тренировок тренера, если роль - Тренер
+  const user = {
+    userName: 'John',
+    email: 'john@qwe.qwe',
+    gender: 'мужской',
+    birthday: '01.01.1989',
+    userRole: 'тренер',
+    location: 'Спортивная',
+    trainingLevel: 'профессионал',
+    trainingTypes: [
+      'бег',
+      'кроссфит',
+      'бокс'
+    ],
+    questionnaire: {
+      certificates: [
+        'myCoolCertificate.pdf'
+      ],
+      description: 'The best coach ever',
+      isReadyToTrain: false
+    },
+    myFriends: []
+  } as User;
   /* const user = {
-
+    userName: 'Михаил',
+    email: 'qwe@qwe.qwe',
+    gender: 'мужской',
+    birthday: '09.03.1989',
+    userRole: 'пользователь',
+    location: 'Петроградская',
+    trainingLevel: 'любитель',
+    trainingTypes: [
+      'бег',
+      'кроссфит'
+    ],
+    questionnaire: {
+      trainingDuration: '30-50 мин',
+      dailyCaloriesCount: 1000,
+      totalCaloriesCount: 5000,
+      isReadyToGetTrained: true
+    },
+    myFriends: []
   }; */
 
   return (
@@ -19,67 +64,15 @@ function UserCard(): JSX.Element {
                 <span>Назад</span>
               </button>
               <div className="inner-page__content">
-                <section className="user-card">
-                  <h1 className="visually-hidden">Карточка пользователя</h1>
-                  <div className="user-card__wrapper">
-                    <div className="user-card__content">
-                      <div className="user-card__head">
-                        <h2 className="user-card__title">Катерина</h2>
-                        <div className="user-card__icon">
-                          <svg className="user-card__crown" width="12" height="12" aria-hidden="true">
-                            <use xlinkHref="#icon-crown"></use>
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="user-card__label">
-                        <svg className="user-card__icon-location" width="12" height="14" aria-hidden="true">
-                          <use xlinkHref="#icon-location"></use>
-                        </svg>
-                        <span>Невский проспект</span>
-                      </div>
-                      <div className="user-card__status">
-                        <span>Готов к тренировке</span>
-                      </div>
-                      <div className="user-card__text">
-                        <p>Привет! Я&nbsp;Катерина и&nbsp;мне 27 лет. Обожаю спорт и&nbsp;все, что с&nbsp;ним связанно. Регулярно хожу на&nbsp;тренировки по&nbsp;кроссфиту, также занимаюсь йогой, рястяжкой и&nbsp;пилатесом.</p>
-                        <p>Занимаюсь как с&nbsp;тренером индивидуально, так и&nbsp;на&nbsp;групповых занятиях. Люблю соревнования и&nbsp;челленджи, так что присоединяйтесь, давайте объединяться и&nbsp;заниматься вместе!&#41;</p>
-                      </div>
-                      <ul className="user-card__hashtag-list">
-                        <li className="user-card__hashtag-item">
-                          <div className="hashtag">
-                            <span>#йога</span>
-                          </div>
-                        </li>
-                        <li className="user-card__hashtag-item">
-                          <div className="hashtag">
-                            <span>#кроссфит</span>
-                          </div>
-                        </li>
-                        <li className="user-card__hashtag-item">
-                          <div className="hashtag">
-                            <span>#пилатес</span>
-                          </div>
-                        </li>
-                        <li className="user-card__hashtag-item">
-                          <div className="hashtag">
-                            <span>#любитель</span>
-                          </div>
-                        </li>
-                      </ul>
-                      <button className="btn user-card__btn" type="button">Добавить в друзья</button>
-                    </div>
-                    <div className="user-card__gallary">
-                      <ul className="user-card__gallary-list">
-                        <li className="user-card__gallary-item">
-                          <img src="img/content/user-card-photo1.jpg" srcSet="img/content/user-card-photo1@2x.jpg 2x" width="334" height="573" alt="photo1"/>
-                        </li>
-                        <li className="user-card__gallary-item">
-                          <img src="img/content/user-card-photo2.jpg" srcSet="img/content/user-card-photo2@2x.jpg 2x" width="334" height="573" alt="photo2"/>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </section>
+                {
+                  user.userRole === UserRole.Coach
+                    ? (
+                      <UserCardCoach user={user}/>
+                    )
+                    : (
+                      <UserCardUser user={user}/>
+                    )
+                }
               </div>
             </div>
           </div>
