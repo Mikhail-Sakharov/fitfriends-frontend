@@ -25,12 +25,26 @@ export enum AppRoute {
   NotFound = '*'
 }
 
-/* export enum APIRoute {
-
-} */
+export enum APIRoute {
+  Register = '/auth/register',
+  Login = '/auth/login',
+  Logout = '/auth/logout',
+  Refresh = '/auth/refresh',
+  Users = '/users',
+  Friends = '/users/friends',
+  Avatar = '/users/avatar',
+  Certificate = '/users/certificate',
+  AddFriend = '/users/friends/add',
+  RemoveFriend = '/users/friends/remove',
+}
 
 export enum AuthorizationStatus {
   Auth = 'AUTH',
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN'
+}
+
+export enum ReducerNameSpace {
+  Auth = 'AUTH',
+  User = 'USER'
 }
