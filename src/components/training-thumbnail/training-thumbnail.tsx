@@ -1,6 +1,13 @@
 import {Link} from 'react-router-dom';
+import {Training} from '../../types/training.interface';
+import {nanoid} from 'nanoid';
 
-function TrainingThumbnail(): JSX.Element {
+type TrainingThumbnailProps = {
+  training: Training;
+};
+
+function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
+  // TODO: путь к bgImage
   return (
     <div className="thumbnail-training">
       <div className="thumbnail-training__inner">
@@ -11,32 +18,44 @@ function TrainingThumbnail(): JSX.Element {
           </picture>
         </div>
         <p className="thumbnail-training__price">
-          <span className="thumbnail-training__price-value">1200</span>
+          <span className="thumbnail-training__price-value">
+            {training.price}
+          </span>
           <span>₽</span>
         </p>
-        <h3 className="thumbnail-training__title">Power</h3>
+        <h3 className="thumbnail-training__title">
+          {training.title}
+        </h3>
         <div className="thumbnail-training__info">
           <ul className="thumbnail-training__hashtags-list">
-            <li className="thumbnail-training__hashtags-item">
-              <div className="hashtag thumbnail-training__hashtag">
-                <span>#силовые</span>
-              </div>
-            </li>
-            <li className="thumbnail-training__hashtags-item">
-              <div className="hashtag thumbnail-training__hashtag">
-                <span>#600ккал</span>
-              </div>
-            </li>
+            {
+              [
+                training.type,
+                training.caloriesCount
+              ].map((tag) => (
+                <li key={nanoid()} className="thumbnail-training__hashtags-item">
+                  <div className="hashtag thumbnail-training__hashtag">
+                    <span>
+                      {`#${tag}`}
+                    </span>
+                  </div>
+                </li>
+              ))
+            }
           </ul>
           <div className="thumbnail-training__rate">
             <svg width="16" height="16" aria-hidden="true">
               <use xlinkHref="#icon-star"></use>
             </svg>
-            <span className="thumbnail-training__rate-value">4</span>
+            <span className="thumbnail-training__rate-value">
+              {training.rating}
+            </span>
           </div>
         </div>
         <div className="thumbnail-training__text-wrapper">
-          <p className="thumbnail-training__text">Тренировка на отработку правильной техники работы с тяжелыми весами, укрепления мышц кора и спины.</p>
+          <p className="thumbnail-training__text">
+            {training.description}
+          </p>
         </div>
         <div className="thumbnail-training__button-wrapper">
           <Link className="btn btn--small thumbnail-training__button-catalog" to="#">Подробнее</Link>

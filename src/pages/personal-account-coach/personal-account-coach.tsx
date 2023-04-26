@@ -1,5 +1,6 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
+import {AppRoute} from '../../const';
 
 function PersonalAccountCoach(): JSX.Element {
   return (
@@ -172,7 +173,7 @@ function PersonalAccountCoach(): JSX.Element {
               <div className="inner-page__content">
                 <div className="personal-account-coach">
                   <div className="personal-account-coach__navigation">
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to="#">
+                    <Link className="thumbnail-link thumbnail-link--theme-light" to={AppRoute.MyTrainings}>
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width="30" height="26" aria-hidden="true">
                           <use xlinkHref="#icon-flash"></use>
@@ -180,7 +181,7 @@ function PersonalAccountCoach(): JSX.Element {
                       </div>
                       <span className="thumbnail-link__text">Мои тренировки</span>
                     </Link>
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to="#">
+                    <Link className="thumbnail-link thumbnail-link--theme-light" to={AppRoute.CreateTraining}>
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width="30" height="26" aria-hidden="true">
                           <use xlinkHref="#icon-add"></use>
@@ -188,7 +189,7 @@ function PersonalAccountCoach(): JSX.Element {
                       </div>
                       <span className="thumbnail-link__text">Создать тренировку</span>
                     </Link>
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to="#">
+                    <Link className="thumbnail-link thumbnail-link--theme-light" to={AppRoute.FriendsList}>
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width="30" height="26" aria-hidden="true">
                           <use xlinkHref="#icon-friends"></use>
@@ -196,7 +197,7 @@ function PersonalAccountCoach(): JSX.Element {
                       </div>
                       <span className="thumbnail-link__text">Мои друзья</span>
                     </Link>
-                    <Link className="thumbnail-link thumbnail-link--theme-light" to="#">
+                    <Link className="thumbnail-link thumbnail-link--theme-light" to={AppRoute.MyOrders}>
                       <div className="thumbnail-link__icon thumbnail-link__icon--theme-light">
                         <svg width="30" height="26" aria-hidden="true">
                           <use xlinkHref="#icon-bag"></use>

@@ -1,4 +1,4 @@
-import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
+import {Navigate, Route, Routes} from 'react-router-dom';
 import Intro from '../../pages/intro/intro';
 import SignUp from '../../pages/sign-up/sign-up';
 import SignIn from '../../pages/sign-in/sign-in';
@@ -40,251 +40,249 @@ function App(): JSX.Element {
   const userRole = getUserRole();
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path={AppRoute.Root}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              <RoleDependentRoute userRole={userRole}/>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.Intro}
-          element={
-            authorizationStatus !== AuthorizationStatus.Auth
-              ? <Intro />
-              : <Navigate to={AppRoute.Root}/>
-          }
-        />
-        <Route
-          path={AppRoute.SignUp}
-          element={
-            authorizationStatus !== AuthorizationStatus.Auth
-              ? <SignUp />
-              : <Navigate to={AppRoute.Root}/>
-          }
-        />
-        <Route
-          path={AppRoute.SignUpQuestionnaireCoach}
-          element={
-            authorizationStatus !== AuthorizationStatus.Auth
-              ? <SignUpQuestionnaireCoach />
-              : <Navigate to={AppRoute.Root}/>
-          }
-        />
-        <Route
-          path={AppRoute.SignUpQuestionnaireUser}
-          element={
-            authorizationStatus !== AuthorizationStatus.Auth
-              ? <SignUpQuestionnaireUser />
-              : <Navigate to={AppRoute.Root}/>
-          }
-        />
-        <Route
-          path={AppRoute.SignIn}
-          element={
-            authorizationStatus !== AuthorizationStatus.Auth
-              ? <SignIn />
-              : <Navigate to={AppRoute.Root}/>
-          }
-        />
-        <Route
-          path={AppRoute.Main}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <Main />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.PersonalAccountCoach}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.Coach
-                  ? <PersonalAccountCoach />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.PersonalAccountUser}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <PersonalAccountUser />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.CreateTraining}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.Coach
-                  ? <CreateTraining />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.MyTrainings}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.Coach
-                  ? <MyTrainings />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.MyOrders}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.Coach
-                  ? <MyOrders />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.FriendsList}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              <FriendsList />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.TrainingCard}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              <TrainingCard userRole={userRole}/>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.TrainingCatalog}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <TrainingCatalog />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.MyPurchases}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <MyPurchases />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.MyGyms}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <MyGyms />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.TrainingDiary}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <TrainingDiary />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.FoodDiary}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <FoodDiary />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.GymsCatalog}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <GymsCatalog />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.GymCard}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <GymCard />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.UsersCatalog}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              {
-                userRole === UserRole.User
-                  ? <UsersCatalog />
-                  : <Navigate to={AppRoute.Root}/>
-              }
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path={AppRoute.UserCard}
-          element={
-            <PrivateRoute authorizationStatus={authorizationStatus}>
-              <UserCard />
-            </PrivateRoute>
-          }
-        />
-        <Route path={AppRoute.NotFound} element={<NotFound />}/>
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route
+        path={AppRoute.Root}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            <RoleDependentRoute userRole={userRole}/>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.Intro}
+        element={
+          authorizationStatus !== AuthorizationStatus.Auth
+            ? <Intro />
+            : <Navigate to={AppRoute.Root}/>
+        }
+      />
+      <Route
+        path={AppRoute.SignUp}
+        element={
+          authorizationStatus !== AuthorizationStatus.Auth
+            ? <SignUp />
+            : <Navigate to={AppRoute.Root}/>
+        }
+      />
+      <Route
+        path={AppRoute.SignUpQuestionnaireCoach}
+        element={
+          authorizationStatus !== AuthorizationStatus.Auth
+            ? <SignUpQuestionnaireCoach />
+            : <Navigate to={AppRoute.Root}/>
+        }
+      />
+      <Route
+        path={AppRoute.SignUpQuestionnaireUser}
+        element={
+          authorizationStatus !== AuthorizationStatus.Auth
+            ? <SignUpQuestionnaireUser />
+            : <Navigate to={AppRoute.Root}/>
+        }
+      />
+      <Route
+        path={AppRoute.SignIn}
+        element={
+          authorizationStatus !== AuthorizationStatus.Auth
+            ? <SignIn />
+            : <Navigate to={AppRoute.Root}/>
+        }
+      />
+      <Route
+        path={AppRoute.Main}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <Main />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.PersonalAccountCoach}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.Coach
+                ? <PersonalAccountCoach />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.PersonalAccountUser}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <PersonalAccountUser />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.CreateTraining}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.Coach
+                ? <CreateTraining />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.MyTrainings}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.Coach
+                ? <MyTrainings />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.MyOrders}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.Coach
+                ? <MyOrders />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.FriendsList}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            <FriendsList />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.TrainingCard}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            <TrainingCard userRole={userRole}/>
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.TrainingCatalog}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <TrainingCatalog />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.MyPurchases}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <MyPurchases />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.MyGyms}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <MyGyms />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.TrainingDiary}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <TrainingDiary />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.FoodDiary}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <FoodDiary />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.GymsCatalog}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <GymsCatalog />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.GymCard}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <GymCard />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.UsersCatalog}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            {
+              userRole === UserRole.User
+                ? <UsersCatalog />
+                : <Navigate to={AppRoute.Root}/>
+            }
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path={AppRoute.UserCard}
+        element={
+          <PrivateRoute authorizationStatus={authorizationStatus}>
+            <UserCard />
+          </PrivateRoute>
+        }
+      />
+      <Route path={AppRoute.NotFound} element={<NotFound />}/>
+    </Routes>
   );
 }
 
