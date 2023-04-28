@@ -28,7 +28,7 @@ import {UserRole} from '../../types/user-role.enum';
 import RoleDependentRoute from '../role-dependent-route/role-dependent-route';
 
 function useAppSelector() { // временный фейковый селектор
-  return AuthorizationStatus.Auth;
+  return AuthorizationStatus.NoAuth;
 }
 
 function getUserRole() { // временный фейковый селектор

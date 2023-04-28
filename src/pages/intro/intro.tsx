@@ -1,6 +1,9 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import {AppRoute} from '../../const';
 
 function Intro(): JSX.Element {
+  const navigate = useNavigate();
+
   return (
     <main>
       <div className="intro">
@@ -21,7 +24,14 @@ function Intro(): JSX.Element {
             </picture>
           </div>
           <div className="intro__buttons">
-            <button className="btn intro__button" type="button">Регистрация</button>
+            <button
+              onClick={() => navigate(AppRoute.SignUp)}
+              className="btn intro__button"
+              type="button"
+            >
+              Регистрация
+
+            </button>
             <p className="intro__text">
               Есть аккаунт?
               {' '}
