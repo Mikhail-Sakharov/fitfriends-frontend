@@ -1,4 +1,63 @@
+import {nanoid} from 'nanoid';
+import {TrainingType} from '../../types/training-type.enum';
+import {FormEvent, useEffect, useState} from 'react';
+
 function SignUpQuestionnaireCoach(): JSX.Element {
+  const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
+
+  const [isTrainingTypesInputUsed, setIsTrainingTypesInputUsed] = useState(false);
+
+  const [trainingTypesError, setTrainingTypesError] = useState('Выберите типы тренировок');
+
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if (trainingTypesError) {
+      setIsFormValid(false);
+    } else {
+      setIsFormValid(true);
+    }
+  }, [trainingTypesError]);
+
+  const checkTrainingTypesNumber = (typesNumber: number) => {
+    if (typesNumber < 1) {
+      setTrainingTypesError('Выберите типы тренировок');
+    }
+    if (typesNumber > 3) {
+      setTrainingTypesError('Выберите не больше трёх типов тренировок');
+    }
+    if (typesNumber >= 1 && typesNumber <= 3) {
+      setTrainingTypesError('');
+    }
+  };
+
+  const handleSpecializationInputChange = (trainingType: TrainingType) => {
+    if (trainingTypes.includes(trainingType)) {
+      setTrainingTypes((prevState) => {
+        const updatedState = prevState.filter((type) => type !== trainingType);
+        checkTrainingTypesNumber(updatedState.length);
+        return updatedState;
+      });
+    } else {
+      setTrainingTypes((prevState) => {
+        const updatedState = [...prevState, trainingType];
+        checkTrainingTypesNumber(updatedState.length);
+        return updatedState;
+      });
+    }
+    setIsTrainingTypesInputUsed(true);
+  };
+
+  const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    if (isFormValid) {
+      console.log({
+        trainingTypes
+      });
+    }
+    setIsTrainingTypesInputUsed(true);
+  };
+
   return (
     <main>
       <div className="background-logo">
@@ -19,55 +78,35 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                   <div className="questionnaire-coach__wrapper">
                     <div className="questionnaire-coach__block">
                       <span className="questionnaire-coach__legend">Ваша специализация (тип) тренировок</span>
-                      <div className="specialization-checkbox questionnaire-coach__specializations">
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="yoga"/>
-                            <span className="btn-checkbox__btn">Йога</span>
-                          </label>
-                        </div>
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="running"/>
-                            <span className="btn-checkbox__btn">Бег</span>
-                          </label>
-                        </div>
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="power" checked/>
-                            <span className="btn-checkbox__btn">Силовые</span>
-                          </label>
-                        </div>
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="aerobics"/>
-                            <span className="btn-checkbox__btn">Аэробика</span>
-                          </label>
-                        </div>
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="crossfit" checked/>
-                            <span className="btn-checkbox__btn">Кроссфит</span>
-                          </label>
-                        </div>
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="boxing" checked/>
-                            <span className="btn-checkbox__btn">Бокс</span>
-                          </label>
-                        </div>
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="pilates"/>
-                            <span className="btn-checkbox__btn">Пилатес</span>
-                          </label>
-                        </div>
-                        <div className="btn-checkbox">
-                          <label>
-                            <input className="visually-hidden" type="checkbox" name="specialisation" value="stretching"/>
-                            <span className="btn-checkbox__btn">Стрейчинг</span>
-                          </label>
-                        </div>
+                      <div
+                        className={`
+                          specialization-checkbox
+                          questionnaire-coach__specializations
+                          ${isTrainingTypesInputUsed && trainingTypesError ? 'custom-input--error' : ''}
+                        `}
+                      >
+                        {
+                          Object.entries(TrainingType).map((entry) => (
+                            <div key={nanoid()} className="btn-checkbox">
+                              <label>
+                                <input
+                                  onChange={() => handleSpecializationInputChange(entry[1])}
+                                  className="visually-hidden"
+                                  type="checkbox"
+                                  name="specialisation"
+                                  value={entry[0].toLowerCase()}
+                                  checked={trainingTypes.includes(entry[1])}
+                                />
+                                <span className="btn-checkbox__btn">
+                                  {entry[1].split('').map((item, index) => index === 0 ? item.toUpperCase() : item)}
+                                </span>
+                              </label>
+                            </div>
+                          ))
+                        }
+                        <span className="custom-input__error">
+                          {isTrainingTypesInputUsed && trainingTypesError}
+                        </span>
                       </div>
                     </div>
                     <div className="questionnaire-coach__block">
@@ -82,7 +121,7 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                         </div>
                         <div className="custom-toggle-radio__block">
                           <label>
-                            <input type="radio" name="level" checked/>
+                            <input type="radio" name="level"/>
                             <span className="custom-toggle-radio__icon"></span>
                             <span className="custom-toggle-radio__label">Любитель</span>
                           </label>
@@ -119,7 +158,7 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                       </div>
                       <div className="questionnaire-coach__checkbox">
                         <label>
-                          <input type="checkbox" value="individual-training" name="individual-training" checked/>
+                          <input type="checkbox" value="individual-training" name="individual-training"/>
                           <span className="questionnaire-coach__checkbox-icon">
                             <svg width="9" height="6" aria-hidden="true">
                               <use xlinkHref="#arrow-check"></use>
@@ -130,7 +169,13 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                       </div>
                     </div>
                   </div>
-                  <button className="btn questionnaire-coach__button" type="submit">Продолжить</button>
+                  <button
+                    onClick={handleSubmitButtonClick}
+                    className="btn questionnaire-coach__button"
+                    type="submit"
+                  >
+                    Продолжить
+                  </button>
                 </div>
               </form>
             </div>
