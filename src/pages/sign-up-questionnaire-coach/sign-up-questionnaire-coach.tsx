@@ -1,23 +1,27 @@
 import {nanoid} from 'nanoid';
 import {TrainingType} from '../../types/training-type.enum';
 import {FormEvent, useEffect, useState} from 'react';
+import {TrainingLevel} from '../../types/training-level.enum';
 
 function SignUpQuestionnaireCoach(): JSX.Element {
   const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
+  const [trainingLevel, setTrainingLevel] = useState('');
 
   const [isTrainingTypesInputUsed, setIsTrainingTypesInputUsed] = useState(false);
+  const [isTrainingLevelInputUsed, setIsTrainingLevelInputUsed] = useState(false);
 
   const [trainingTypesError, setTrainingTypesError] = useState('Выберите типы тренировок');
+  const [trainingLevelError, setTrainingLevelError] = useState('Выберите ваш уровень подготовки');
 
   const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
-    if (trainingTypesError) {
+    if (trainingTypesError || trainingLevelError) {
       setIsFormValid(false);
     } else {
       setIsFormValid(true);
     }
-  }, [trainingTypesError]);
+  }, [trainingTypesError, trainingLevelError]);
 
   const checkTrainingTypesNumber = (typesNumber: number) => {
     if (typesNumber < 1) {
@@ -48,14 +52,22 @@ function SignUpQuestionnaireCoach(): JSX.Element {
     setIsTrainingTypesInputUsed(true);
   };
 
+  const handleTrainingLevelInputChange = (level: TrainingLevel) => {
+    setTrainingLevel(level);
+    setTrainingLevelError('');
+    setIsTrainingLevelInputUsed(true);
+  };
+
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     if (isFormValid) {
       console.log({
-        trainingTypes
+        trainingTypes,
+        trainingLevel
       });
     }
     setIsTrainingTypesInputUsed(true);
+    setIsTrainingLevelInputUsed(true);
   };
 
   return (
@@ -111,28 +123,34 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                     </div>
                     <div className="questionnaire-coach__block">
                       <span className="questionnaire-coach__legend">Ваш уровень</span>
-                      <div className="custom-toggle-radio custom-toggle-radio--big questionnaire-coach__radio">
-                        <div className="custom-toggle-radio__block">
-                          <label>
-                            <input type="radio" name="level"/>
-                            <span className="custom-toggle-radio__icon"></span>
-                            <span className="custom-toggle-radio__label">Новичок</span>
-                          </label>
-                        </div>
-                        <div className="custom-toggle-radio__block">
-                          <label>
-                            <input type="radio" name="level"/>
-                            <span className="custom-toggle-radio__icon"></span>
-                            <span className="custom-toggle-radio__label">Любитель</span>
-                          </label>
-                        </div>
-                        <div className="custom-toggle-radio__block">
-                          <label>
-                            <input type="radio" name="level"/>
-                            <span className="custom-toggle-radio__icon"></span>
-                            <span className="custom-toggle-radio__label">Профессионал</span>
-                          </label>
-                        </div>
+                      <div
+                        className={`
+                          custom-toggle-radio
+                          custom-toggle-radio--big
+                          questionnaire-coach__radio
+                          ${isTrainingLevelInputUsed && trainingLevelError ? 'custom-input--error' : ''}
+                        `}
+                      >
+                        {
+                          Object.values(TrainingLevel).map((level) => (
+                            <div key={nanoid()} className="custom-toggle-radio__block">
+                              <label>
+                                <input
+                                  onChange={() => handleTrainingLevelInputChange(level)}
+                                  checked={level === trainingLevel}
+                                  type="radio" name="level"
+                                />
+                                <span className="custom-toggle-radio__icon"></span>
+                                <span className="custom-toggle-radio__label">
+                                  {level.split('').map((item, index) => index === 0 ? item.toUpperCase() : item)}
+                                </span>
+                              </label>
+                            </div>
+                          ))
+                        }
+                        <span className="custom-input__error">
+                          {isTrainingLevelInputUsed && trainingLevelError}
+                        </span>
                       </div>
                     </div>
                     <div className="questionnaire-coach__block">
