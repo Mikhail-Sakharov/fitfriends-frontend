@@ -11,7 +11,7 @@ const initialState: AuthProcess = {
 };
 
 export const authProcess = createSlice({
-  name: ReducerNameSpace.User,
+  name: ReducerNameSpace.Auth,
   initialState,
   reducers: {},
   extraReducers(builder) {

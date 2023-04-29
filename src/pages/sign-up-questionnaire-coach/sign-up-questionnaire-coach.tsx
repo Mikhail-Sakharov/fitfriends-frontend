@@ -2,13 +2,37 @@ import {nanoid} from 'nanoid';
 import {TrainingType} from '../../types/training-type.enum';
 import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {TrainingLevel} from '../../types/training-level.enum';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {registerUserAction} from '../../store/api-actons';
+import {
+  getUserName,
+  getEmail,
+  getPassword,
+  getLocation,
+  getBirthday,
+  getGender,
+  getUserRole
+} from '../../store/user-data/selectors';
+import {AppRoute} from '../../const';
+import {useNavigate} from 'react-router-dom';
 
 export const CERTIFICATE_FILE_TYPES = ['jpg', 'pdf', 'png'];
 
 function SignUpQuestionnaireCoach(): JSX.Element {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const userName = useAppSelector(getUserName);
+  const email = useAppSelector(getEmail);
+  const password = useAppSelector(getPassword);
+  const gender = useAppSelector(getGender);
+  const birthday = useAppSelector(getBirthday);
+  const userRole = useAppSelector(getUserRole);
+  const location = useAppSelector(getLocation);
+
   const [certificate, setCertificate] = useState<File | null>(null);
   const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
-  const [trainingLevel, setTrainingLevel] = useState('');
+  const [trainingLevel, setTrainingLevel] = useState<TrainingLevel | null>(null);
   const [description, setDescription] = useState('');
   const [isReadyToTrain, setIsReadyToTrain] = useState(false);
 
@@ -23,6 +47,12 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   const [descriptionError, setDescriptionError] = useState('Заполните поле');
 
   const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    if (!userName) {
+      navigate(AppRoute.SignUp);
+    }
+  }, []);
 
   useEffect(() => {
     if (imageError || trainingTypesError || trainingLevelError || descriptionError) {
@@ -102,14 +132,23 @@ function SignUpQuestionnaireCoach(): JSX.Element {
 
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
     evt.preventDefault();
-    if (isFormValid) {
-      console.log({
-        certificate,
-        trainingTypes,
+    if (isFormValid && gender && userRole && location && trainingLevel) {
+      dispatch(registerUserAction({
+        userName,
+        email,
+        password,
+        gender,
+        birthday,
+        userRole,
+        location,
         trainingLevel,
-        description,
-        isReadyToTrain
-      });
+        trainingTypes,
+        questionnaire: {
+          certificates: [],
+          description,
+          isReadyToTrain
+        }
+      }));
 
       /* if (certificate) {
         const formData = new FormData();

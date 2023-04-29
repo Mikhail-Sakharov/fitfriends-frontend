@@ -5,8 +5,20 @@ import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
 import {useNavigate} from 'react-router-dom';
 import {EMAIL_REG_EXP, AppRoute} from '../../const';
+import {useAppDispatch} from '../../hooks';
+import {
+  setBirthdayAction,
+  setEmailAction,
+  setGenderAction,
+  setLocationAction,
+  setPasswordAction,
+  setUserNameAction,
+  setUserRoleAction
+} from '../../store/user-data/user-data';
+import {getHumanizedDate} from '../../helpers';
 
 function SignUp(): JSX.Element {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [userAgreementInputChecked, setUserAgreementInputChecked] = useState(true);
@@ -155,18 +167,14 @@ function SignUp(): JSX.Element {
 
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
     evt.preventDefault();
-    const registrationData = {
-      userName,
-      email,
-      password,
-      location,
-      birthday, // convert to XX.XX.XXXX
-      gender,
-      userRole
-    };
     if (formValid) {
-      // отправить в store
-      console.log(registrationData);
+      dispatch(setUserNameAction(userName));
+      dispatch(setEmailAction(email));
+      dispatch(setPasswordAction(password));
+      dispatch(setLocationAction(location));
+      dispatch(setBirthdayAction(getHumanizedDate(birthday)));
+      dispatch(setGenderAction(gender));
+      dispatch(setUserRoleAction(userRole));
       switch(userRole) {
         case UserRole.Coach:
           navigate(AppRoute.SignUpQuestionnaireCoach);

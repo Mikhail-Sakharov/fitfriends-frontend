@@ -4,6 +4,7 @@ import {APIRoute} from '../const';
 import {UserResponse} from '../types/user.response';
 import {RegisterUserRequestBody} from '../types/register-user-request-body';
 import {AppDispatch, State} from '../types/state';
+import {saveTokens} from '../services/tokens';
 
 export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserRequestBody, {
   dispatch: AppDispatch;
@@ -13,9 +14,7 @@ export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserReq
   'auth/register',
   async (registerUserRequestBody, {dispatch, extra: api}) => {
     const {data} = await api.post<UserResponse>(APIRoute.Register, registerUserRequestBody);
-    // saveToken(data.token);
-    // saveUserName(data.userName);
-    // saveUserRole(data.userRole);
+    saveTokens(data.tokens.accessToken, data.tokens.refreshToken);
     return data;
   },
 );
