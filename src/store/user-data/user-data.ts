@@ -5,6 +5,7 @@ import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
 
 type UserData = {
+  avatar: string;
   userName: string;
   email: string;
   password: string;
@@ -15,6 +16,7 @@ type UserData = {
 };
 
 const initialState: UserData = {
+  avatar: '',
   userName: '',
   email: '',
   password: '',
@@ -28,6 +30,9 @@ export const userData = createSlice({
   name: ReducerNameSpace.User,
   initialState,
   reducers: {
+    setAvatarAction: (state, action) => {
+      state.avatar = action.payload as string;
+    },
     setUserNameAction: (state, action) => {
       state.userName = action.payload as string;
     },
@@ -53,6 +58,7 @@ export const userData = createSlice({
 });
 
 export const {
+  setAvatarAction,
   setUserNameAction,
   setEmailAction,
   setPasswordAction,

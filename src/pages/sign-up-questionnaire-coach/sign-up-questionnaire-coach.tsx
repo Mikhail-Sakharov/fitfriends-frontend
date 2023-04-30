@@ -3,7 +3,7 @@ import {TrainingType} from '../../types/training-type.enum';
 import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {registerUserAction, uploadCertificateAction} from '../../store/api-actons';
+import {registerUserAction, uploadAvatarAction, uploadCertificateAction} from '../../store/api-actons';
 import {
   getUserName,
   getEmail,
@@ -11,7 +11,8 @@ import {
   getLocation,
   getBirthday,
   getGender,
-  getUserRole
+  getUserRole,
+  getAvatar
 } from '../../store/user-data/selectors';
 import {AppRoute, CERTIFICATE_FILE_TYPES} from '../../const';
 import {useNavigate} from 'react-router-dom';
@@ -20,6 +21,7 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const avatar = useAppSelector(getAvatar);
   const userName = useAppSelector(getUserName);
   const email = useAppSelector(getEmail);
   const password = useAppSelector(getPassword);
@@ -39,7 +41,7 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   const [descriptionInputUsed, setDescriptionInputUsed] = useState(false);
   const [imageInputUsed, setImageInputUsed] = useState(false);
 
-  const [imageError, setImageError] = useState('Добавьте подтверждающий документ');
+  const [certificateError, setCertificateError] = useState('Добавьте подтверждающий документ');
   const [trainingTypesError, setTrainingTypesError] = useState('Выберите типы тренировок');
   const [trainingLevelError, setTrainingLevelError] = useState('Выберите ваш уровень подготовки');
   const [descriptionError, setDescriptionError] = useState('Заполните поле');
@@ -53,12 +55,12 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (imageError || trainingTypesError || trainingLevelError || descriptionError) {
+    if (certificateError || trainingTypesError || trainingLevelError || descriptionError) {
       setIsFormValid(false);
     } else {
       setIsFormValid(true);
     }
-  }, [imageError, trainingTypesError, trainingLevelError, descriptionError]);
+  }, [certificateError, trainingTypesError, trainingLevelError, descriptionError]);
 
   const checkTrainingTypesNumber = (typesNumber: number) => {
     if (typesNumber < 1) {
@@ -120,11 +122,11 @@ function SignUpQuestionnaireCoach(): JSX.Element {
     if (matches && file) {
       setCertificate(file);
 
-      setImageError('');
+      setCertificateError('');
     } else if (!matches && file) {
-      setImageError('Загрузите сюда файлы формата PDF, JPG или PNG');
+      setCertificateError('Загрузите сюда файлы формата PDF, JPG или PNG');
     } else {
-      setImageError('Добавьте подтверждающий документ');
+      setCertificateError('Добавьте подтверждающий документ');
     }
   };
 
@@ -147,9 +149,20 @@ function SignUpQuestionnaireCoach(): JSX.Element {
         }
       }));
 
+      if (avatar) {
+        const file = fetch(avatar)
+          .then((r) => r.blob())
+          .then((blobFile) => new File([blobFile], 'avatar', {type: 'image/png'}));
+
+        const avatarFile = await file;
+        const formData = new FormData();
+        formData.append('avatar', avatarFile, 'avatar.png'); // TODO: define extention
+        dispatch(uploadAvatarAction(formData));
+      }
+
       if (certificate) {
         const formData = new FormData();
-        formData.append('certificate', certificate, 'certificate.pdf');
+        formData.append('certificate', certificate, 'certificate.pdf'); // TODO: define extention
         dispatch(uploadCertificateAction(formData));
       }
     }
@@ -250,7 +263,7 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                     <div className="questionnaire-coach__block">
                       <span className="questionnaire-coach__legend">Ваши дипломы и сертификаты</span>
                       <div className="drag-and-drop questionnaire-coach__drag-and-drop">
-                        <label className={`${imageInputUsed && imageError ? 'custom-input--error' : ''}`}>
+                        <label className={`${imageInputUsed && certificateError ? 'custom-input--error' : ''}`}>
                           <span className="drag-and-drop__label" tabIndex={0}>
                             Загрузите сюда файлы формата PDF, JPG или PNG
                             <svg width="20" height="20" aria-hidden="true">
@@ -262,7 +275,7 @@ function SignUpQuestionnaireCoach(): JSX.Element {
                             type="file" name="import" tabIndex={-1} accept=".pdf, .jpg, .png"
                           />
                           <span className="custom-input__error">
-                            {imageInputUsed && imageError}
+                            {imageInputUsed && certificateError}
                           </span>
                         </label>
                       </div>

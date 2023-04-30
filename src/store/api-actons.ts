@@ -30,3 +30,15 @@ export const uploadCertificateAction = createAsyncThunk<UserRdo, FormData, {
     return data;
   },
 );
+
+export const uploadAvatarAction = createAsyncThunk<UserRdo, FormData, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance;
+}>(
+  'users/avatar',
+  async (avatar, {dispatch, extra: api}) => {
+    const {data} = await api.post<UserRdo>(`${FF_USERS_SERVICE_URL}${APIRoute.Avatar}`, avatar);
+    return data;
+  },
+);

@@ -1,12 +1,13 @@
-import {FormEvent, useEffect, useState} from 'react';
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {nanoid} from 'nanoid';
 import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
 import {useNavigate} from 'react-router-dom';
-import {EMAIL_REG_EXP, AppRoute} from '../../const';
+import {EMAIL_REG_EXP, AppRoute, AVATAR_FILE_TYPES} from '../../const';
 import {useAppDispatch} from '../../hooks';
 import {
+  setAvatarAction,
   setBirthdayAction,
   setEmailAction,
   setGenderAction,
@@ -25,6 +26,7 @@ function SignUp(): JSX.Element {
 
   const [isSelectOpened, setIsSelectOpened] = useState(false);
 
+  const [avatar, setAvatar] = useState('');
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,6 +35,7 @@ function SignUp(): JSX.Element {
   const [birthday, setBirthday] = useState('');
   const [userRole, setUserRole] = useState('');
 
+  const [avatarInputUsed, setAvatarInputUsed] = useState(false);
   const [userNameInputUsed, setUserNameInputUsed] = useState(false);
   const [emailInputUsed, setEmailInputUsed] = useState(false);
   const [passwordInputUsed, setPasswordInputUsed] = useState(false);
@@ -41,6 +44,7 @@ function SignUp(): JSX.Element {
   const [birthdayInputUsed, setBirthdayInputUsed] = useState(false);
   const [userRoleInputUsed, setUserRoleInputUsed] = useState(false);
 
+  const [avatarError, setAvatarError] = useState('Загрузите файл аватара');
   const [userNameError, setUserNameError] = useState('Заполните поле');
   const [emailError, setEmailError] = useState('Заполните поле');
   const [passwordError, setPasswordError] = useState('Заполните поле');
@@ -59,13 +63,14 @@ function SignUp(): JSX.Element {
       locationError,
       genderError,
       birthdayError,
-      userRoleError
+      userRoleError,
+      avatarError
     ].some((item) => !!item)) {
       setFormValid(false);
     } else {
       setFormValid(true);
     }
-  }, [userNameError, emailError, passwordError, locationError, genderError, birthdayError, userRoleError]);
+  }, [userNameError, emailError, passwordError, locationError, genderError, birthdayError, userRoleError, avatarError]);
 
   const handleInputFocus = (evt: FormEvent<HTMLInputElement>) => {
     switch(evt.currentTarget.name) {
@@ -86,6 +91,22 @@ function SignUp(): JSX.Element {
 
   const handleLocationInputFocus = () => {
     setLocationInputUsed(true);
+  };
+
+  const handleAvatarFileInputChange = (evt: ChangeEvent<HTMLInputElement>) => { // validate size
+    const file = evt.currentTarget.files && evt.currentTarget.files[0];
+    const fileName = file ? file.name.toLowerCase() : '';
+    const matches = AVATAR_FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
+
+    if (matches && file) {
+      setAvatar(URL.createObjectURL(file));
+
+      setAvatarError('');
+    } else if (!matches && file) {
+      setAvatarError('Загрузите сюда файлы формата PDF, JPG или PNG');
+    } else {
+      setAvatarError('Добавьте подтверждающий документ');
+    }
   };
 
   const handleUserNameInputChange = (evt: FormEvent<HTMLInputElement>) => {
@@ -168,6 +189,7 @@ function SignUp(): JSX.Element {
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     if (formValid) {
+      dispatch(setAvatarAction(avatar));
       dispatch(setUserNameAction(userName));
       dispatch(setEmailAction(email));
       dispatch(setPasswordAction(password));
@@ -191,6 +213,7 @@ function SignUp(): JSX.Element {
     setGenderInputUsed(true);
     setBirthdayInputUsed(true);
     setUserRoleInputUsed(true);
+    setAvatarInputUsed(true);
   };
 
   return (
@@ -212,10 +235,13 @@ function SignUp(): JSX.Element {
             <div className="popup-form__form">
               <form method="get">
                 <div className="sign-up">
-                  <div className="sign-up__load-photo">
+                  <div className={`sign-up__load-photo ${avatarInputUsed && avatarError ? 'custom-input--error' : ''}`}>
                     <div className="input-load-avatar">
                       <label>
-                        <input className="visually-hidden" type="file" accept="image/png, image/jpeg"/>
+                        <input
+                          onChange={handleAvatarFileInputChange}
+                          className="visually-hidden" type="file" accept="image/png, image/jpeg"
+                        />
                         <span className="input-load-avatar__btn">
                           <svg width="20" height="20" aria-hidden="true">
                             <use xlinkHref="#icon-import"></use>
@@ -226,6 +252,9 @@ function SignUp(): JSX.Element {
                     <div className="sign-up__description">
                       <h2 className="sign-up__legend">Загрузите фото профиля</h2>
                       <span className="sign-up__text">JPG, PNG, оптимальный размер 100&times;100&nbsp;px</span>
+                      <span className="custom-input__error">
+                        {avatarInputUsed && avatarError}
+                      </span>
                     </div>
                   </div>
                   <div className="sign-up__data">

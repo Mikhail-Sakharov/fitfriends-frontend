@@ -4,6 +4,7 @@ import {State} from '../../types/state';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {UserRole} from '../../types/user-role.enum';
 
+export const getAvatar = (state: State): string => state[ReducerNameSpace.User].avatar;
 export const getUserName = (state: State): string => state[ReducerNameSpace.User].userName;
 export const getEmail = (state: State): string => state[ReducerNameSpace.User].email;
 export const getPassword = (state: State): string => state[ReducerNameSpace.User].password;

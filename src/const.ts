@@ -54,3 +54,5 @@ export enum ReducerNameSpace {
 export const EMAIL_REG_EXP = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
 export const CERTIFICATE_FILE_TYPES = ['jpg', 'pdf', 'png'];
+
+export const AVATAR_FILE_TYPES = ['jpg', 'png'];
