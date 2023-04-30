@@ -5,7 +5,7 @@ import {TrainingType} from './training-type.enum';
 import {UserRole} from './user-role.enum';
 import {Questionnaire, User} from './user.interface';
 
-class UserRdo {
+export class UserRdo {
   public id!: string;
   public createdAt!: string[];
   public userName!: string;

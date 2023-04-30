@@ -25,6 +25,8 @@ export enum AppRoute {
   NotFound = '*'
 }
 
+export const FF_USERS_SERVICE_URL = 'http://localhost:5678';
+
 export enum APIRoute {
   Register = '/auth/register',
   Login = '/auth/login',
@@ -50,3 +52,5 @@ export enum ReducerNameSpace {
 }
 
 export const EMAIL_REG_EXP = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+
+export const CERTIFICATE_FILE_TYPES = ['jpg', 'pdf', 'png'];

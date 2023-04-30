@@ -3,7 +3,7 @@ import {TrainingType} from '../../types/training-type.enum';
 import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {registerUserAction} from '../../store/api-actons';
+import {registerUserAction, uploadCertificateAction} from '../../store/api-actons';
 import {
   getUserName,
   getEmail,
@@ -13,10 +13,8 @@ import {
   getGender,
   getUserRole
 } from '../../store/user-data/selectors';
-import {AppRoute} from '../../const';
+import {AppRoute, CERTIFICATE_FILE_TYPES} from '../../const';
 import {useNavigate} from 'react-router-dom';
-
-export const CERTIFICATE_FILE_TYPES = ['jpg', 'pdf', 'png'];
 
 function SignUpQuestionnaireCoach(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -130,10 +128,9 @@ function SignUpQuestionnaireCoach(): JSX.Element {
     }
   };
 
-  const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
-    evt.preventDefault();
+  const dispatchFormData = async () => {
     if (isFormValid && gender && userRole && location && trainingLevel) {
-      dispatch(registerUserAction({
+      await dispatch(registerUserAction({
         userName,
         email,
         password,
@@ -150,15 +147,17 @@ function SignUpQuestionnaireCoach(): JSX.Element {
         }
       }));
 
-      /* if (certificate) {
+      if (certificate) {
         const formData = new FormData();
         formData.append('certificate', certificate, 'certificate.pdf');
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:5678/users/certificate');
-        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDM1OTEyOTgzNTg3NWRiMWExYWVhZGUiLCJlbWFpbCI6ImpvaG5AcXdlLnF3ZSIsInVzZXJOYW1lIjoiSm9obiIsInVzZXJSb2xlIjoi0YLRgNC10L3QtdGAIiwiaWF0IjoxNjgyNzg2NDI0LCJleHAiOjE2ODI3ODczMjR9.SErnzcKniFvw-Q9VgUdIAImb-41V8KsLqMQA5j6AhTo');
-        xhr.send(formData);
-      } */
+        dispatch(uploadCertificateAction(formData));
+      }
     }
+  };
+
+  const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    dispatchFormData();
     setIsTrainingTypesInputUsed(true);
     setIsTrainingLevelInputUsed(true);
     setDescriptionInputUsed(true);
