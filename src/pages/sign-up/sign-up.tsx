@@ -4,7 +4,7 @@ import {nanoid} from 'nanoid';
 import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
 import {useNavigate} from 'react-router-dom';
-import {EMAIL_REG_EXP, AppRoute, AVATAR_FILE_TYPES} from '../../const';
+import {EMAIL_REG_EXP, AppRoute, AVATAR_FILE_TYPES, UserNameLength, UserPasswordLength, AVATAR_MAX_SIZE} from '../../const';
 import {useAppDispatch} from '../../hooks';
 import {
   setAvatarAction,
@@ -26,6 +26,7 @@ function SignUp(): JSX.Element {
 
   const [isSelectOpened, setIsSelectOpened] = useState(false);
 
+  // значения полей
   const [avatar, setAvatar] = useState('');
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
@@ -35,6 +36,7 @@ function SignUp(): JSX.Element {
   const [birthday, setBirthday] = useState('');
   const [userRole, setUserRole] = useState('');
 
+  // был ли инпут в фокусе
   const [avatarInputUsed, setAvatarInputUsed] = useState(false);
   const [userNameInputUsed, setUserNameInputUsed] = useState(false);
   const [emailInputUsed, setEmailInputUsed] = useState(false);
@@ -44,6 +46,7 @@ function SignUp(): JSX.Element {
   const [birthdayInputUsed, setBirthdayInputUsed] = useState(false);
   const [userRoleInputUsed, setUserRoleInputUsed] = useState(false);
 
+  // текст ошибки
   const [avatarError, setAvatarError] = useState('Загрузите файл аватара');
   const [userNameError, setUserNameError] = useState('Заполните поле');
   const [emailError, setEmailError] = useState('Заполните поле');
@@ -53,8 +56,10 @@ function SignUp(): JSX.Element {
   const [birthdayError, setBirthdayError] = useState('Выберите дату рождения');
   const [userRoleError, setUserRoleError] = useState('Выберите роль');
 
+  // валидны ли данные формы или нет
   const [formValid, setFormValid] = useState(true);
 
+  // устанавливаем флаг валидности формы на каждой отрисовке
   useEffect(() => {
     if ([
       userNameError,
@@ -93,7 +98,7 @@ function SignUp(): JSX.Element {
     setLocationInputUsed(true);
   };
 
-  const handleAvatarFileInputChange = (evt: ChangeEvent<HTMLInputElement>) => { // validate size
+  const handleAvatarFileInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const file = evt.currentTarget.files && evt.currentTarget.files[0];
     const fileName = file ? file.name.toLowerCase() : '';
     const matches = AVATAR_FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
@@ -107,13 +112,19 @@ function SignUp(): JSX.Element {
     } else {
       setAvatarError('Добавьте подтверждающий документ');
     }
+
+    if (file?.size && file?.size > AVATAR_MAX_SIZE) {
+      setAvatarError(`Максимальный размер файла ${AVATAR_MAX_SIZE * (1e-6)} Мбайт`);
+    }
+
+    setAvatarInputUsed(true);
   };
 
   const handleUserNameInputChange = (evt: FormEvent<HTMLInputElement>) => {
     const value = evt.currentTarget.value;
     setUserName(value);
-    if (value.length < 1 || value.length > 15) {
-      setUserNameError('Длина имени от 1 до 15 символов');
+    if (value.length < UserNameLength.MIN || value.length > UserNameLength.MAX) {
+      setUserNameError(`Длина имени от ${UserNameLength.MIN} до ${UserNameLength.MAX} символов`);
       if (!value) {
         setUserNameError('Заполните поле');
       }
@@ -138,8 +149,8 @@ function SignUp(): JSX.Element {
   const handlePasswordInputChange = (evt: FormEvent<HTMLInputElement>) => {
     const value = evt.currentTarget.value;
     setPassword(value);
-    if (value.length < 6 || value.length > 12) {
-      setPasswordError('Длина пароля от 6 до 12 символов');
+    if (value.length < UserPasswordLength.MIN || value.length > UserPasswordLength.MAX) {
+      setPasswordError(`Длина пароля от ${UserPasswordLength.MIN} до ${UserPasswordLength.MAX} символов`);
       if (!value) {
         setPasswordError('Заполните поле');
       }
@@ -243,6 +254,11 @@ function SignUp(): JSX.Element {
                           className="visually-hidden" type="file" accept="image/png, image/jpeg"
                         />
                         <span className="input-load-avatar__btn">
+                          {
+                            avatar && (
+                              <img src={avatar} width="334" height="573" alt="user avatar"/>
+                            )
+                          }
                           <svg width="20" height="20" aria-hidden="true">
                             <use xlinkHref="#icon-import"></use>
                           </svg>

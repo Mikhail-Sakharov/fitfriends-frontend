@@ -14,13 +14,14 @@ import {
   getUserRole,
   getAvatar
 } from '../../store/user-data/selectors';
-import {AppRoute, CERTIFICATE_FILE_TYPES} from '../../const';
+import {AppRoute, CERTIFICATE_FILE_TYPES, CoachDescriptionLength, TrainingTypesCount} from '../../const';
 import {useNavigate} from 'react-router-dom';
 
 function SignUpQuestionnaireCoach(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  // возвращаем общие данные из состояния (т.е. без опросника)
   const avatar = useAppSelector(getAvatar);
   const userName = useAppSelector(getUserName);
   const email = useAppSelector(getEmail);
@@ -30,30 +31,37 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   const userRole = useAppSelector(getUserRole);
   const location = useAppSelector(getLocation);
 
+  // значения полей
   const [certificate, setCertificate] = useState<File | null>(null);
   const [trainingTypes, setTrainingTypes] = useState<TrainingType[]>([]);
   const [trainingLevel, setTrainingLevel] = useState<TrainingLevel | null>(null);
   const [description, setDescription] = useState('');
   const [isReadyToTrain, setIsReadyToTrain] = useState(false);
 
+  // был ли инпут в фокусе
   const [isTrainingTypesInputUsed, setIsTrainingTypesInputUsed] = useState(false);
   const [isTrainingLevelInputUsed, setIsTrainingLevelInputUsed] = useState(false);
   const [descriptionInputUsed, setDescriptionInputUsed] = useState(false);
   const [imageInputUsed, setImageInputUsed] = useState(false);
 
+  // текст ошибки
   const [certificateError, setCertificateError] = useState('Добавьте подтверждающий документ');
   const [trainingTypesError, setTrainingTypesError] = useState('Выберите типы тренировок');
   const [trainingLevelError, setTrainingLevelError] = useState('Выберите ваш уровень подготовки');
   const [descriptionError, setDescriptionError] = useState('Заполните поле');
 
+  // валидны ли данные формы или нет
   const [isFormValid, setIsFormValid] = useState(false);
 
+  // если первая часть не заполнена, возвращаем пользователя обратно на первый шаг
+  // проверяем только при монтировании компонента
   useEffect(() => {
     if (!userName) {
       navigate(AppRoute.SignUp);
     }
   }, []);
 
+  // устанавливаем флаг валидности формы на каждой отрисовке
   useEffect(() => {
     if (certificateError || trainingTypesError || trainingLevelError || descriptionError) {
       setIsFormValid(false);
@@ -63,13 +71,13 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   }, [certificateError, trainingTypesError, trainingLevelError, descriptionError]);
 
   const checkTrainingTypesNumber = (typesNumber: number) => {
-    if (typesNumber < 1) {
+    if (typesNumber < TrainingTypesCount.MIN) {
       setTrainingTypesError('Выберите типы тренировок');
     }
-    if (typesNumber > 3) {
-      setTrainingTypesError('Выберите не больше трёх типов тренировок');
+    if (typesNumber > TrainingTypesCount.MAX) {
+      setTrainingTypesError(`Выберите не больше ${TrainingTypesCount.MAX} типов тренировок`);
     }
-    if (typesNumber >= 1 && typesNumber <= 3) {
+    if (typesNumber >= TrainingTypesCount.MIN && typesNumber <= TrainingTypesCount.MAX) {
       setTrainingTypesError('');
     }
   };
@@ -100,8 +108,8 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   const handleDescriptionInputChange = (evt: FormEvent<HTMLTextAreaElement>) => {
     const value = evt.currentTarget.value;
     setDescription(value);
-    if (value.length < 10 || value.length > 140) {
-      setDescriptionError('Длина описания 10 до 140 символов');
+    if (value.length < CoachDescriptionLength.MIN || value.length > CoachDescriptionLength.MAX) {
+      setDescriptionError(`Длина описания от ${CoachDescriptionLength.MIN} до ${CoachDescriptionLength.MAX} символов`);
       if (!value) {
         setDescriptionError('Заполните поле');
       }
@@ -155,14 +163,21 @@ function SignUpQuestionnaireCoach(): JSX.Element {
           .then((blobFile) => new File([blobFile], 'avatar', {type: 'image/png'}));
 
         const avatarFile = await file;
+        const avatarFileName = avatarFile.name;
+        const avatarType = avatarFile.type.match(/(?<=\/).+/);
+
         const formData = new FormData();
-        formData.append('avatar', avatarFile, 'avatar.png'); // TODO: define extention
+        formData.append('avatar', avatarFile, `${avatarFileName}.${avatarType ? avatarType[0] : ''}`);
         dispatch(uploadAvatarAction(formData));
+        URL.revokeObjectURL(avatar);
       }
 
       if (certificate) {
+        const certificateName = certificate.name;
+        const certificateFileType = certificate.type.match(/(?<=\/).+/);
+
         const formData = new FormData();
-        formData.append('certificate', certificate, 'certificate.pdf'); // TODO: define extention
+        formData.append('certificate', certificate, `${certificateName}.${certificateFileType ? certificateFileType[0] : ''}`);
         dispatch(uploadCertificateAction(formData));
       }
     }
@@ -175,6 +190,9 @@ function SignUpQuestionnaireCoach(): JSX.Element {
     setIsTrainingLevelInputUsed(true);
     setDescriptionInputUsed(true);
     setImageInputUsed(true);
+    if (isFormValid) {
+      navigate(AppRoute.PersonalAccountCoach);
+    }
   };
 
   return (

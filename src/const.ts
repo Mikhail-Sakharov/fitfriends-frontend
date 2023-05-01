@@ -56,3 +56,35 @@ export const EMAIL_REG_EXP = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 export const CERTIFICATE_FILE_TYPES = ['jpg', 'pdf', 'png'];
 
 export const AVATAR_FILE_TYPES = ['jpg', 'png'];
+
+export const AVATAR_MAX_SIZE = 1000000;
+
+export const UserDailyCaloriesCount = {
+  MIN: 1000,
+  MAX: 5000
+};
+
+export const UserTotalCaloriesCount = {
+  MIN: 1000,
+  MAX: 5000
+};
+
+export const TrainingTypesCount = {
+  MIN: 1,
+  MAX: 3
+};
+
+export const CoachDescriptionLength = {
+  MIN: 10,
+  MAX: 140
+};
+
+export const UserNameLength = {
+  MIN: 1,
+  MAX: 15
+};
+
+export const UserPasswordLength = {
+  MIN: 6,
+  MAX: 12
+};
