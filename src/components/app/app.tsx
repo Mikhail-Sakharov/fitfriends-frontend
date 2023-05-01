@@ -26,18 +26,12 @@ import NotFound from '../../pages/not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
 import {UserRole} from '../../types/user-role.enum';
 import RoleDependentRoute from '../role-dependent-route/role-dependent-route';
-
-function useAppSelector() { // временный фейковый селектор
-  return AuthorizationStatus.NoAuth;
-}
-
-function getUserRole() { // временный фейковый селектор
-  return UserRole.Coach;
-}
+import {getAuthorizationStatus, getUserRole} from '../../store/auth-process/selectors';
+import {useAppSelector} from '../../hooks';
 
 function App(): JSX.Element {
-  const authorizationStatus = useAppSelector();
-  const userRole = getUserRole();
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const userRole = useAppSelector(getUserRole);
 
   return (
     <Routes>
