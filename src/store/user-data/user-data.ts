@@ -3,6 +3,7 @@ import {ReducerNameSpace} from '../../const';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
+import {uploadAvatarAction} from '../api-actons';
 
 type UserData = {
   avatar: string;
@@ -54,6 +55,12 @@ export const userData = createSlice({
     setUserRoleAction: (state, action) => {
       state.userRole = action.payload as UserRole;
     },
+  },
+  extraReducers(builder) {
+    builder
+      .addCase(uploadAvatarAction.fulfilled, (state, action) => {
+        state.avatar = action.payload.avatarUrl;
+      });
   }
 });
 

@@ -1,8 +1,12 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
-import {AppRoute} from '../../const';
+import {AppRoute, FF_USERS_SERVICE_URL} from '../../const';
+import {useAppSelector} from '../../hooks';
+import {getAvatar} from '../../store/user-data/selectors';
 
 function PersonalAccountCoach(): JSX.Element {
+  const avatarUrl = useAppSelector(getAvatar);
+
   return (
     <>
       <Header />
@@ -15,9 +19,17 @@ function PersonalAccountCoach(): JSX.Element {
                 <div className="user-info-edit__header">
                   <div className="input-load-avatar">
                     <label>
-                      <input className="visually-hidden" type="file" name="user-photo-1" accept="image/png, image/jpeg"/>
+                      <input
+                        className="visually-hidden"
+                        type="file" name="user-photo-1"
+                        accept="image/png, image/jpeg"
+                      />
                       <span className="input-load-avatar__avatar">
-                        <img src="img/content/user-photo-1.png" srcSet="img/content/user-photo-1@2x.png 2x" width="98" height="98" alt="user"/>
+                        <img
+                          src={`${FF_USERS_SERVICE_URL}/${avatarUrl}`}
+                          srcSet={`${FF_USERS_SERVICE_URL}/${avatarUrl} 2x`}
+                          width="98" height="98" alt="user"
+                        />
                       </span>
                     </label>
                   </div>
@@ -64,7 +76,7 @@ function PersonalAccountCoach(): JSX.Element {
                     <h2 className="user-info-edit__title user-info-edit__title--status">Статус</h2>
                     <div className="custom-toggle custom-toggle--switch user-info-edit__toggle">
                       <label>
-                        <input type="checkbox" name="ready-for-training" checked/>
+                        <input type="checkbox" name="ready-for-training"/>
                         <span className="custom-toggle__icon">
                           <svg width="9" height="6" aria-hidden="true">
                             <use xlinkHref="#arrow-check"></use>
@@ -79,7 +91,7 @@ function PersonalAccountCoach(): JSX.Element {
                     <div className="specialization-checkbox user-info-edit__specialization">
                       <div className="btn-checkbox">
                         <label>
-                          <input className="visually-hidden" type="checkbox" name="specialization" value="yoga" checked/>
+                          <input className="visually-hidden" type="checkbox" name="specialization" value="yoga"/>
                           <span className="btn-checkbox__btn">Йога</span>
                         </label>
                       </div>
@@ -91,7 +103,7 @@ function PersonalAccountCoach(): JSX.Element {
                       </div>
                       <div className="btn-checkbox">
                         <label>
-                          <input className="visually-hidden" type="checkbox" name="specialization" value="aerobics" checked/>
+                          <input className="visually-hidden" type="checkbox" name="specialization" value="aerobics"/>
                           <span className="btn-checkbox__btn">Аэробика</span>
                         </label>
                       </div>
@@ -109,13 +121,13 @@ function PersonalAccountCoach(): JSX.Element {
                       </div>
                       <div className="btn-checkbox">
                         <label>
-                          <input className="visually-hidden" type="checkbox" name="specialization" value="pilates" checked/>
+                          <input className="visually-hidden" type="checkbox" name="specialization" value="pilates"/>
                           <span className="btn-checkbox__btn">Пилатес</span>
                         </label>
                       </div>
                       <div className="btn-checkbox">
                         <label>
-                          <input className="visually-hidden" type="checkbox" name="specialization" value="stretching" checked/>
+                          <input className="visually-hidden" type="checkbox" name="specialization" value="stretching"/>
                           <span className="btn-checkbox__btn">Стрейчинг</span>
                         </label>
                       </div>

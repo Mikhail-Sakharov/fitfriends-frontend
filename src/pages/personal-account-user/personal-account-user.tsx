@@ -1,7 +1,12 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
+import {useAppSelector} from '../../hooks';
+import {getAvatar} from '../../store/user-data/selectors';
+import {FF_USERS_SERVICE_URL} from '../../const';
 
 function PersonalAccountUser(): JSX.Element {
+  const avatarUrl = useAppSelector(getAvatar);
+
   return (
     <>
       <Header />
@@ -14,9 +19,17 @@ function PersonalAccountUser(): JSX.Element {
                 <div className="user-info__header">
                   <div className="input-load-avatar">
                     <label>
-                      <input className="visually-hidden" type="file" name="user-photo-1" accept="image/png, image/jpeg"/>
+                      <input
+                        className="visually-hidden"
+                        type="file" name="user-photo-1"
+                        accept="image/png, image/jpeg"
+                      />
                       <span className="input-load-avatar__avatar">
-                        <img src="img/content/user-photo-1.png" srcSet="img/content/user-photo-1@2x.png 2x" width="98" height="98" alt="user"/>
+                        <img
+                          src={`${FF_USERS_SERVICE_URL}/${avatarUrl}`}
+                          srcSet={`${FF_USERS_SERVICE_URL}/${avatarUrl} 2x`}
+                          width="98" height="98" alt="user"
+                        />
                       </span>
                     </label>
                   </div>
