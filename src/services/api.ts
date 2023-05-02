@@ -6,6 +6,7 @@ import {refreshTokensAction} from '../store/api-actons';
 import {toast} from 'react-toastify';
 
 const StatusCodeMapping: Record<number, boolean> = {
+  [StatusCodes.FORBIDDEN]: true,
   [StatusCodes.BAD_REQUEST]: true,
   [StatusCodes.UNAUTHORIZED]: true,
   [StatusCodes.NOT_FOUND]: true
@@ -89,7 +90,7 @@ export const createAPI = (): AxiosInstance => {
       }
 
       if (error.response?.status === 401) {
-        store.dispatch(refreshTokensAction);
+        store.dispatch(refreshTokensAction());
       }
 
       throw error;

@@ -6,6 +6,8 @@ import browserHistory from './browser-history';
 import {Provider} from 'react-redux';
 import {store} from './store';
 import {refreshTokensAction} from './store/api-actons';
+import {ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 store.dispatch(refreshTokensAction());
 
@@ -17,6 +19,7 @@ root.render(
   <React.StrictMode>
     <Provider store = {store}>
       <HistoryRouter history={browserHistory}>
+        <ToastContainer limit={1}/>
         <App />
       </HistoryRouter>
     </Provider>
