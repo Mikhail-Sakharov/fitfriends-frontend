@@ -9,11 +9,11 @@ import {saveTokens} from '../services/tokens';
 export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserRequestBody, {
   dispatch: AppDispatch;
   state: State;
-  extra: AxiosInstance;
+  extra: AxiosInstance[];
 }>(
   'auth/register',
   async (registerUserRequestBody, {dispatch, extra: api}) => {
-    const {data} = await api.post<UserResponse>(`${FF_USERS_SERVICE_URL}${APIRoute.Register}`, registerUserRequestBody);
+    const {data} = await api[0].post<UserResponse>(`${FF_USERS_SERVICE_URL}${APIRoute.Register}`, registerUserRequestBody);
     saveTokens(data.tokens.accessToken, data.tokens.refreshToken);
     return data;
   },
@@ -22,11 +22,11 @@ export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserReq
 export const uploadCertificateAction = createAsyncThunk<UserRdo, FormData, {
   dispatch: AppDispatch;
   state: State;
-  extra: AxiosInstance;
+  extra: AxiosInstance[];
 }>(
   'users/certificate',
   async (certificate, {dispatch, extra: api}) => {
-    const {data} = await api.post<UserRdo>(`${FF_USERS_SERVICE_URL}${APIRoute.Certificate}`, certificate);
+    const {data} = await api[0].post<UserRdo>(`${FF_USERS_SERVICE_URL}${APIRoute.Certificate}`, certificate);
     return data;
   },
 );
@@ -34,11 +34,24 @@ export const uploadCertificateAction = createAsyncThunk<UserRdo, FormData, {
 export const uploadAvatarAction = createAsyncThunk<UserRdo, FormData, {
   dispatch: AppDispatch;
   state: State;
-  extra: AxiosInstance;
+  extra: AxiosInstance[];
 }>(
   'users/avatar',
   async (avatar, {dispatch, extra: api}) => {
-    const {data} = await api.post<UserRdo>(`${FF_USERS_SERVICE_URL}${APIRoute.Avatar}`, avatar);
+    const {data} = await api[0].post<UserRdo>(`${FF_USERS_SERVICE_URL}${APIRoute.Avatar}`, avatar);
+    return data;
+  },
+);
+
+export const refreshTokensAction = createAsyncThunk<UserResponse, undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'auth/refresh',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[1].get<UserResponse>(`${FF_USERS_SERVICE_URL}${APIRoute.Refresh}`);
+    saveTokens(data.tokens.accessToken, data.tokens.refreshToken);
     return data;
   },
 );
