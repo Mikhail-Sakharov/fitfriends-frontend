@@ -28,7 +28,7 @@ const initialState: UserData = {
 };
 
 export const userData = createSlice({
-  name: ReducerNameSpace.User,
+  name: ReducerNameSpace.UserData,
   initialState,
   reducers: {
     setAvatarAction: (state, action) => {

@@ -28,10 +28,19 @@ import {UserRole} from '../../types/user-role.enum';
 import RoleDependentRoute from '../role-dependent-route/role-dependent-route';
 import {getAuthorizationStatus, getUserRole} from '../../store/auth-process/selectors';
 import {useAppSelector} from '../../hooks';
+import {getDataLoadedStatus} from '../../store/app-data/selectors';
+import Spinner from '../../pages/spinner/spinner';
 
 function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const userRole = useAppSelector(getUserRole);
+  const isDataLoaded = useAppSelector(getDataLoadedStatus);
+
+  if (isDataLoaded) {
+    return (
+      <Spinner />
+    );
+  }
 
   return (
     <Routes>

@@ -8,7 +8,9 @@ import {store} from './store';
 import {refreshTokensAction} from './store/api-actons';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {setDataLoadedStatus} from './store/app-data/app-data';
 
+store.dispatch(setDataLoadedStatus(true));
 store.dispatch(refreshTokensAction());
 
 const root = ReactDOM.createRoot(

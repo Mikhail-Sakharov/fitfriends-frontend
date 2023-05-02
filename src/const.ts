@@ -47,8 +47,9 @@ export enum AuthorizationStatus {
 }
 
 export enum ReducerNameSpace {
-  Auth = 'AUTH',
-  User = 'USER'
+  AuthProcess = 'AUTH_PROCESS',
+  UserData = 'USER_DATA',
+  AppData = 'APP_DATA'
 }
 
 export const EMAIL_REG_EXP = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
