@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {AuthorizationStatus, ReducerNameSpace} from '../../const';
-import {refreshTokensAction, registerUserAction} from '../api-actons';
+import {refreshTokensAction, registerUserAction, signInUserAction} from '../api-actons';
 import {UserRole} from '../../types/user-role.enum';
 
 type AuthProcess = {
@@ -24,6 +24,13 @@ export const authProcess = createSlice({
         state.userRole = action.payload.user.userRole;
       })
       .addCase(registerUserAction.rejected, (state) => {
+        state.authorizationStatus = AuthorizationStatus.NoAuth;
+      })
+      .addCase(signInUserAction.fulfilled, (state, action) => {
+        state.authorizationStatus = AuthorizationStatus.Auth;
+        state.userRole = action.payload.user.userRole;
+      })
+      .addCase(signInUserAction.rejected, (state) => {
         state.authorizationStatus = AuthorizationStatus.NoAuth;
       })
       .addCase(refreshTokensAction.fulfilled, (state, action) => {

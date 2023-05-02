@@ -8,6 +8,7 @@ import {AppRoute, TrainingTypesCount, UserDailyCaloriesCount, UserTotalCaloriesC
 import {TrainingLevel} from '../../types/training-level.enum';
 import {Duration} from '../../types/duration.enum';
 import {registerUserAction, uploadAvatarAction} from '../../store/api-actons';
+import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 function SignUpQuestionnaireUser(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -144,6 +145,7 @@ function SignUpQuestionnaireUser(): JSX.Element {
 
   const dispatchFormData = async () => {
     if (isFormValid && gender && trainingDuration && userRole && location && trainingLevel) {
+      dispatch(setDataLoadedStatus(true));
       await dispatch(registerUserAction({
         userName,
         email,
@@ -187,9 +189,6 @@ function SignUpQuestionnaireUser(): JSX.Element {
     setIsDurationInputUsed(true);
     setIsTotalCaloriesInputUsed(true);
     setIsDailyCaloriesInputUsed(true);
-    if (isFormValid) {
-      navigate(AppRoute.PersonalAccountUser);
-    }
   };
 
   return (

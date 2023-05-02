@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {refreshTokensAction} from '../api-actons';
+import {refreshTokensAction, registerUserAction, signInUserAction} from '../api-actons';
 
 type AppData = {
   dataLoadedStatus: boolean;
@@ -20,10 +20,22 @@ export const appData = createSlice({
   },
   extraReducers(builder) {
     builder
+      .addCase(registerUserAction.fulfilled, (state) => {
+        state.dataLoadedStatus = false;
+      })
+      .addCase(registerUserAction.rejected, (state) => {
+        state.dataLoadedStatus = false;
+      })
       .addCase(refreshTokensAction.fulfilled, (state) => {
         state.dataLoadedStatus = false;
       })
       .addCase(refreshTokensAction.rejected, (state) => {
+        state.dataLoadedStatus = false;
+      })
+      .addCase(signInUserAction.fulfilled, (state) => {
+        state.dataLoadedStatus = false;
+      })
+      .addCase(signInUserAction.rejected, (state) => {
         state.dataLoadedStatus = false;
       });
   }

@@ -16,6 +16,7 @@ import {
 } from '../../store/user-data/selectors';
 import {AppRoute, CERTIFICATE_FILE_TYPES, CoachDescriptionLength, TrainingTypesCount} from '../../const';
 import {useNavigate} from 'react-router-dom';
+import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 function SignUpQuestionnaireCoach(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -140,6 +141,7 @@ function SignUpQuestionnaireCoach(): JSX.Element {
 
   const dispatchFormData = async () => {
     if (isFormValid && gender && userRole && location && trainingLevel) {
+      dispatch(setDataLoadedStatus(true));
       await dispatch(registerUserAction({
         userName,
         email,
@@ -190,9 +192,6 @@ function SignUpQuestionnaireCoach(): JSX.Element {
     setIsTrainingLevelInputUsed(true);
     setDescriptionInputUsed(true);
     setImageInputUsed(true);
-    if (isFormValid) {
-      navigate(AppRoute.PersonalAccountCoach);
-    }
   };
 
   return (

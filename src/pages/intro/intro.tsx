@@ -35,7 +35,7 @@ function Intro(): JSX.Element {
             <p className="intro__text">
               Есть аккаунт?
               {' '}
-              <Link className="intro__link" to="#">Вход</Link>
+              <Link className="intro__link" to={AppRoute.SignIn}>Вход</Link>
             </p>
           </div>
         </div>

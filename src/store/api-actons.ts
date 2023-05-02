@@ -5,6 +5,7 @@ import {UserRdo, UserResponse} from '../types/user.response';
 import {RegisterUserRequestBody} from '../types/register-user-request-body';
 import {AppDispatch, State} from '../types/state';
 import {saveTokens} from '../services/tokens';
+import {SignInUserRequestBody} from '../types/sign-in-user-request-body';
 
 export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserRequestBody, {
   dispatch: AppDispatch;
@@ -14,6 +15,19 @@ export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserReq
   'auth/register',
   async (registerUserRequestBody, {dispatch, extra: api}) => {
     const {data} = await api[0].post<UserResponse>(`${FF_USERS_SERVICE_URL}${APIRoute.Register}`, registerUserRequestBody);
+    saveTokens(data.tokens.accessToken, data.tokens.refreshToken);
+    return data;
+  },
+);
+
+export const signInUserAction = createAsyncThunk<UserResponse, SignInUserRequestBody, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'auth/signin',
+  async (signInUserRequestBody, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<UserResponse>(`${FF_USERS_SERVICE_URL}${APIRoute.Login}`, signInUserRequestBody);
     saveTokens(data.tokens.accessToken, data.tokens.refreshToken);
     return data;
   },
