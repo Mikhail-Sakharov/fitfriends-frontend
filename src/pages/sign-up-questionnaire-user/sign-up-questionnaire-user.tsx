@@ -160,6 +160,7 @@ function SignUpQuestionnaireUser(): JSX.Element {
           trainingDuration,
           dailyCaloriesCount,
           totalCaloriesCount,
+          description: '',
           isReadyToGetTrained: true
         }
       }));

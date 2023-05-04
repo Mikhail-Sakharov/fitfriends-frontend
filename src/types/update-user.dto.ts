@@ -15,6 +15,7 @@ class UserQuestionnaire {
   public trainingDuration?: Duration;
   public dailyCaloriesCount?: number;
   public totalCaloriesCount?: number;
+  public description?: string;
   public isReadyToGetTrained?: boolean;
 }
 

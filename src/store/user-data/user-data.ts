@@ -89,6 +89,7 @@ export const userData = createSlice({
           case UserRole.User:
             state.avatar = action.payload.user.avatarUrl;
             state.userName = action.payload.user.userName;
+            state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
             state.trainingTypes = action.payload.user.trainingTypes;
             state.trainingLevel = action.payload.user.trainingLevel;
@@ -112,6 +113,7 @@ export const userData = createSlice({
           case UserRole.User:
             state.avatar = action.payload.user.avatarUrl;
             state.userName = action.payload.user.userName;
+            state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
             state.trainingTypes = action.payload.user.trainingTypes;
             state.trainingLevel = action.payload.user.trainingLevel;
@@ -135,6 +137,7 @@ export const userData = createSlice({
           case UserRole.User:
             state.avatar = action.payload.user.avatarUrl;
             state.userName = action.payload.user.userName;
+            state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
             state.trainingTypes = action.payload.user.trainingTypes;
             state.trainingLevel = action.payload.user.trainingLevel;
@@ -158,6 +161,7 @@ export const userData = createSlice({
           case UserRole.User:
             state.avatar = action.payload.avatarUrl;
             state.userName = action.payload.userName;
+            state.description = (action.payload.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.questionnaire as UserQuestionnaire).isReadyToGetTrained;
             state.trainingTypes = action.payload.trainingTypes;
             state.trainingLevel = action.payload.trainingLevel;
