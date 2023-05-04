@@ -25,7 +25,9 @@ export enum AppRoute {
   NotFound = '*'
 }
 
-export const FF_USERS_SERVICE_URL = 'http://localhost:5678';
+export const FF_USERS_URL = 'http://localhost:5678';
+
+export const FF_SERVICE_URL = 'http://localhost:5679';
 
 export enum APIRoute {
   Register = '/auth/register',
@@ -38,6 +40,8 @@ export enum APIRoute {
   Certificate = '/users/certificate',
   AddFriend = '/users/friends/add',
   RemoveFriend = '/users/friends/remove',
+  Trainings = '/trainings',
+  TrainingVideo = '/trainings/video',
 }
 
 export enum AuthorizationStatus {
@@ -59,6 +63,8 @@ export const CERTIFICATE_FILE_TYPES = ['jpg', 'pdf', 'png'];
 export const AVATAR_FILE_TYPES = ['jpg', 'png'];
 
 export const AVATAR_MAX_SIZE = 1000000;
+
+export const VIDEO_FILE_TYPES = ['mov', 'avi', 'mp4'];
 
 export const UserDailyCaloriesCount = {
   MIN: 1000,
@@ -88,4 +94,24 @@ export const UserNameLength = {
 export const UserPasswordLength = {
   MIN: 6,
   MAX: 12
+};
+
+export const TrainingTitleLength = {
+  MIN: 1,
+  MAX: 15
+};
+
+export const TrainingCaloriesCount = {
+  MIN: 1000,
+  MAX: 5000
+};
+
+export const TrainingPrice = {
+  MIN: 0,
+  MAX: 1000000
+};
+
+export const TrainingDescriptionLength = {
+  MIN: 10,
+  MAX: 140
 };

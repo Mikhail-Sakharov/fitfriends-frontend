@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
-import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CoachDescriptionLength, FF_USERS_SERVICE_URL, TrainingTypesCount, UserNameLength} from '../../const';
+import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CoachDescriptionLength, FF_USERS_URL, TrainingTypesCount, UserNameLength} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {
   getAvatar,
@@ -217,8 +217,8 @@ function PersonalAccountCoach(): JSX.Element {
                       />
                       <span className="input-load-avatar__avatar">
                         <img
-                          src={`${FF_USERS_SERVICE_URL}/${avatarUrl}`}
-                          srcSet={`${FF_USERS_SERVICE_URL}/${avatarUrl} 2x`}
+                          src={`${FF_USERS_URL}/${avatarUrl}`}
+                          srcSet={`${FF_USERS_URL}/${avatarUrl} 2x`}
                           width="98" height="98" alt="user"
                         />
                       </span>

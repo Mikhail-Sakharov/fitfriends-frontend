@@ -1,13 +1,15 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {refreshTokensAction, registerUserAction, signInUserAction} from '../api-actons';
+import {createTrainingAction, refreshTokensAction, registerUserAction, signInUserAction} from '../api-actons';
 
 type AppData = {
   dataLoadedStatus: boolean;
+  createdTrainingId: string;
 };
 
 const initialState: AppData = {
-  dataLoadedStatus: false
+  dataLoadedStatus: false,
+  createdTrainingId: ''
 };
 
 export const appData = createSlice({
@@ -36,6 +38,13 @@ export const appData = createSlice({
         state.dataLoadedStatus = false;
       })
       .addCase(signInUserAction.rejected, (state) => {
+        state.dataLoadedStatus = false;
+      })
+      .addCase(createTrainingAction.fulfilled, (state, action) => {
+        state.createdTrainingId = action.payload.id;
+        state.dataLoadedStatus = false;
+      })
+      .addCase(createTrainingAction.rejected, (state) => {
         state.dataLoadedStatus = false;
       });
   }

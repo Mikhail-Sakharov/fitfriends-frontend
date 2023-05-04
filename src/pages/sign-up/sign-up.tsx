@@ -329,8 +329,7 @@ function SignUp(): JSX.Element {
                         custom-select
                         ${location ? 'not-empty' : ''}
                         ${locationInputUsed && locationError ? 'is-invalid' : ''}
-                        ${isSelectOpened ? 'is-open' : ''}
-                        custom-select--not-selected
+                        ${isSelectOpened ? 'is-open' : 'custom-select--not-selected'}
                       `}
                     >
                       <span className="custom-select__label">Ваша локация</span>
