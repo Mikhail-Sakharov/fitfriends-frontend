@@ -1,6 +1,15 @@
 import {Link} from 'react-router-dom';
+import {dropTokens} from '../../services/tokens';
 
 function Header(): JSX.Element {
+
+  // Временно. Удалить!
+  //-------------------------------------------------------
+  const handleExitButtonClick = () => {
+    dropTokens();
+  };
+  //-------------------------------------------------------
+
   return (
     <header className="header">
       <div className="container">
@@ -67,6 +76,16 @@ function Header(): JSX.Element {
                   </li>
                 </ul>
               </div>
+            </li>
+            <li
+              onClick={handleExitButtonClick}
+              className="main-nav__item"
+            >
+              <Link className="main-nav__link" to="#" aria-label="Выход (временно, удалить)">
+                <svg width="16" height="18" aria-hidden="true">
+                  <use xlinkHref="#icon-wallet"></use>
+                </svg>
+              </Link>
             </li>
           </ul>
         </nav>

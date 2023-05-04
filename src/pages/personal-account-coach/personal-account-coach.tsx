@@ -33,6 +33,8 @@ function PersonalAccountCoach(): JSX.Element {
   const locationInitialValue = useAppSelector(getLocation);
   const genderInitialValue = useAppSelector(getGender);
 
+  const [isContentEditable, setIsContentEditable] = useState(false);
+
   // флаг селекта - открыт/закрыт
   const [isLocationSelectOpened, setIsLocationSelectOpened] = useState(false);
   const [isGenderSelectOpened, setIsGenderSelectOpened] = useState(false);
@@ -183,9 +185,15 @@ function PersonalAccountCoach(): JSX.Element {
     }
   };
 
+  const handleEditButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    setIsContentEditable(true);
+  };
+
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     dispatchFormData();
+    setIsContentEditable(false);
   };
 
   return (
@@ -197,7 +205,7 @@ function PersonalAccountCoach(): JSX.Element {
             <div className="inner-page__wrapper">
               <h1 className="visually-hidden">Личный кабинет</h1>
               <section className="user-info-edit">
-                <div className="user-info-edit__header">
+                <div className={`${isContentEditable ? 'user-info-edit__header' : 'user-info__header'}`}>
                   <div className="input-load-avatar">
                     <label>
                       <input
@@ -205,6 +213,7 @@ function PersonalAccountCoach(): JSX.Element {
                         className="visually-hidden"
                         type="file" name="user-photo-1"
                         accept="image/png, image/jpeg"
+                        disabled={!isContentEditable}
                       />
                       <span className="input-load-avatar__avatar">
                         <img
@@ -215,39 +224,67 @@ function PersonalAccountCoach(): JSX.Element {
                       </span>
                     </label>
                   </div>
-                  <div className="user-info-edit__controls">
-                    <button className="user-info-edit__control-btn" aria-label="обновить">
-                      <svg width="16" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-change"></use>
-                      </svg>
-                    </button>
-                    <button className="user-info-edit__control-btn" aria-label="удалить">
-                      <svg width="14" height="16" aria-hidden="true">
-                        <use xlinkHref="#icon-trash"></use>
-                      </svg>
-                    </button>
-                  </div>
+                  {
+                    isContentEditable
+                      && (
+                        <div className="user-info-edit__controls">
+                          <button className="user-info-edit__control-btn" aria-label="обновить">
+                            <svg width="16" height="16" aria-hidden="true">
+                              <use xlinkHref="#icon-change"></use>
+                            </svg>
+                          </button>
+                          <button className="user-info-edit__control-btn" aria-label="удалить">
+                            <svg width="14" height="16" aria-hidden="true">
+                              <use xlinkHref="#icon-trash"></use>
+                            </svg>
+                          </button>
+                        </div>
+                      )
+                  }
                 </div>
-                <form className="user-info-edit__form" action="#" method="post">
-                  <button
-                    onClick={handleSubmitButtonClick}
-                    className="btn-flat btn-flat--underlined user-info-edit__save-button"
-                    type="submit" aria-label="Сохранить"
-                  >
-                    <svg width="12" height="12" aria-hidden="true">
-                      <use xlinkHref="#icon-edit"></use>
-                    </svg>
-                    <span>Сохранить</span>
-                  </button>
-                  <div className="user-info-edit__section">
+                <form className={`${isContentEditable ? 'user-info-edit__form' : 'user-info__form'}`} action="#" method="post">
+                  {
+                    isContentEditable
+                      ? (
+                        <button
+                          onClick={handleSubmitButtonClick}
+                          className="btn-flat btn-flat--underlined user-info-edit__save-button"
+                          type="submit" aria-label="Сохранить"
+                        >
+                          <svg width="12" height="12" aria-hidden="true">
+                            <use xlinkHref="#icon-edit"></use>
+                          </svg>
+                          <span>Сохранить</span>
+                        </button>
+                      )
+                      : (
+                        <button
+                          onClick={handleEditButtonClick}
+                          className="btn-flat btn-flat--underlined user-info__edit-button"
+                          type="button" aria-label="Редактировать"
+                        >
+                          <svg width="12" height="12" aria-hidden="true">
+                            <use xlinkHref="#icon-edit"></use>
+                          </svg>
+                          <span>Редактировать</span>
+                        </button>
+                      )
+                  }
+                  <div className={`${isContentEditable ? 'user-info-edit__section' : 'user-info__section'}`}>
                     <h2 className="user-info-edit__title">Обо мне</h2>
-                    <div className={`custom-input user-info-edit__input ${userNameError ? 'custom-input--error' : ''}`}>
+                    <div
+                      className={`
+                        custom-input
+                        ${isContentEditable ? 'user-info-edit__input' : 'custom-input--readonly user-info__input'}
+                        ${userNameError ? 'custom-input--error' : ''}`}
+                    >
                       <label>
                         <span className="custom-input__label">Имя</span>
                         <span className="custom-input__wrapper">
                           <input
                             onChange={handleUserNameInputChange}
                             type="text" name="name" value={userName}
+                            disabled={!isContentEditable}
                           />
                         </span>
                         <span className="custom-input__error">
@@ -255,13 +292,19 @@ function PersonalAccountCoach(): JSX.Element {
                         </span>
                       </label>
                     </div>
-                    <div className="custom-textarea user-info-edit__textarea">
+                    <div
+                      className={`
+                        custom-textarea
+                        ${isContentEditable ? 'user-info-edit__textarea' : 'custom-textarea--readonly user-info__textarea'}
+                      `}
+                    >
                       <label className={`${descriptionError ? 'custom-input--error' : ''}`}>
                         <span className="custom-textarea__label">Описание</span>
                         <textarea
                           onChange={handleDescriptionInputChange}
                           name="description" placeholder=" "
                           value={description}
+                          disabled={!isContentEditable}
                         >
                         </textarea>
                         <span className="custom-input__error">
@@ -270,9 +313,25 @@ function PersonalAccountCoach(): JSX.Element {
                       </label>
                     </div>
                   </div>
-                  <div className="user-info-edit__section user-info-edit__section--status">
-                    <h2 className="user-info-edit__title user-info-edit__title--status">Статус</h2>
-                    <div className="custom-toggle custom-toggle--switch user-info-edit__toggle">
+                  <div
+                    className={`
+                      ${isContentEditable ? 'user-info-edit__section user-info-edit__section--status' : 'user-info__section user-info__section--status'}
+                    `}
+                  >
+                    <h2
+                      className={`
+                        ${isContentEditable ? 'user-info-edit__title user-info-edit__title--status' : 'user-info__title user-info__title--status'}
+                      `}
+                    >
+                      Статус
+                    </h2>
+                    <div
+                      className={`
+                        custom-toggle
+                        custom-toggle--switch
+                        ${isContentEditable ? 'user-info-edit__toggle' : 'user-info__toggle'}
+                      `}
+                    >
                       <label>
                         <input
                           onChange={() => setIsReadyToTrain((prevState) => !prevState)}
@@ -289,12 +348,22 @@ function PersonalAccountCoach(): JSX.Element {
                       </label>
                     </div>
                   </div>
-                  <div className="user-info-edit__section">
-                    <h2 className="user-info-edit__title user-info-edit__title--specialization">Специализация</h2>
+                  <div
+                    className={`
+                      ${isContentEditable ? 'user-info-edit__section' : 'user-info__section'}
+                    `}
+                  >
+                    <h2
+                      className={`
+                        ${isContentEditable ? 'user-info-edit__title user-info-edit__title--specialization' : 'user-info__title user-info__title--specialization'}
+                      `}
+                    >
+                      Специализация
+                    </h2>
                     <div
                       className={`
                         specialization-checkbox
-                        user-info-edit__specialization
+                        ${isContentEditable ? 'user-info-edit__specialization' : 'user-info__specialization'}
                         ${trainingTypesError ? 'custom-input--error' : ''}
                       `}
                     >
@@ -325,8 +394,8 @@ function PersonalAccountCoach(): JSX.Element {
                   <div
                     className={`
                       custom-select
+                      ${isContentEditable ? 'user-info-edit__select' : 'custom-select--readonly user-info__select'}
                       ${isLocationSelectOpened ? 'is-open' : ''}
-                      user-info-edit__select
                     `}
                   >
                     <span className="custom-select__label">Локация</span>
@@ -336,6 +405,7 @@ function PersonalAccountCoach(): JSX.Element {
                     <button
                       onClick={() => setIsLocationSelectOpened((prevState) => !prevState)}
                       className="custom-select__button" type="button" aria-label="Выберите одну из опций"
+                      disabled={!isContentEditable}
                     >
                       <span className="custom-select__text"></span>
                       <span className="custom-select__icon">
@@ -361,8 +431,8 @@ function PersonalAccountCoach(): JSX.Element {
                   <div
                     className={`
                       custom-select
+                      ${isContentEditable ? 'user-info-edit__select' : 'custom-select--readonly user-info__select'}
                       ${isGenderSelectOpened ? 'is-open' : ''}
-                      user-info-edit__select
                     `}
                   >
                     <span className="custom-select__label">Пол</span>
@@ -372,6 +442,7 @@ function PersonalAccountCoach(): JSX.Element {
                     <button
                       onClick={() => setIsGenderSelectOpened((prevState) => !prevState)}
                       className="custom-select__button" type="button" aria-label="Выберите одну из опций"
+                      disabled={!isContentEditable}
                     >
                       <span className="custom-select__text"></span>
                       <span className="custom-select__icon">
@@ -397,8 +468,8 @@ function PersonalAccountCoach(): JSX.Element {
                   <div
                     className={`
                       custom-select
+                      ${isContentEditable ? 'user-info-edit__select' : 'custom-select--readonly user-info__select'}
                       ${isTrainingLevelSelectOpened ? 'is-open' : ''}
-                      user-info-edit__select
                     `}
                   >
                     <span className="custom-select__label">Уровень</span>
@@ -408,6 +479,7 @@ function PersonalAccountCoach(): JSX.Element {
                     <button
                       onClick={() => setIsTrainingLevelSelectOpened((prevState) => !prevState)}
                       className="custom-select__button" type="button" aria-label="Выберите одну из опций"
+                      disabled={!isContentEditable}
                     >
                       <span className="custom-select__text"></span>
                       <span className="custom-select__icon">
