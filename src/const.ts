@@ -1,3 +1,5 @@
+import {TrainingType} from './types/training-type.enum';
+
 export enum AppRoute {
   Root = '/',
   Intro = '/intro',
@@ -55,6 +57,17 @@ export enum ReducerNameSpace {
   UserData = 'USER_DATA',
   AppData = 'APP_DATA'
 }
+
+export const TrainingTypeImageMap = {
+  [TrainingType.Yoga]: 'img/content/thumbnails/training-01.jpg',
+  [TrainingType.Running]: 'img/content/thumbnails/training-06.jpg',
+  [TrainingType.Boxing]: 'img/content/thumbnails/training-03.jpg',
+  [TrainingType.Stratching]: 'img/content/thumbnails/training-12.jpg',
+  [TrainingType.Crossfit]: 'img/content/thumbnails/training-02.jpg',
+  [TrainingType.Aerobics]: 'img/content/thumbnails/training-07.jpg',
+  [TrainingType.Pilates]: 'img/content/thumbnails/training-09.jpg',
+  [TrainingType.PowerLifting]: 'img/content/thumbnails/training-10.jpg'
+};
 
 export const EMAIL_REG_EXP = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 

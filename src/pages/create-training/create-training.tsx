@@ -4,19 +4,16 @@ import {TrainingLevel} from '../../types/training-level.enum';
 import {TrainingType} from '../../types/training-type.enum';
 import {Duration} from '../../types/duration.enum';
 import {nanoid} from 'nanoid';
-import {AppRoute, TrainingCaloriesCount, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength, VIDEO_FILE_TYPES} from '../../const';
+import {AppRoute, TrainingCaloriesCount, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength, TrainingTypeImageMap, VIDEO_FILE_TYPES} from '../../const';
 import {TrainingGenderType} from '../../types/training-gender.enum';
-import {useAppDispatch, useAppSelector} from '../../hooks';
+import {useAppDispatch} from '../../hooks';
 import {useNavigate} from 'react-router-dom';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
-import {createTrainingAction, uploadVideoFileAction} from '../../store/api-actons';
-import {getCreatedTrainingId} from '../../store/app-data/selectors';
+import {createTrainingAction} from '../../store/api-actons';
 
 function CreateTraining(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
-  const createdTrainingId = useAppSelector(getCreatedTrainingId);
 
   // флаг селекта - открыт/закрыт
   const [isTrainingTypeSelectOpened, setIsTrainingTypeSelectOpened] = useState(false);
@@ -34,7 +31,6 @@ function CreateTraining(): JSX.Element {
   const [description, setDescription] = useState('');
   const [gender, setGender] = useState<TrainingGenderType | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  // const [isSpecialOffer, setIsSpecialOffer] = useState();
 
   // был ли инпут в фокусе
   const [titleInputUsed, setTitleInputUsed] = useState(false);
@@ -228,30 +224,26 @@ function CreateTraining(): JSX.Element {
   };
 
   const dispatchFormData = async () => {
-    if (formValid && trainingLevel && trainingType && duration && gender) {
+    if (formValid && trainingLevel && trainingType && duration && gender && videoFile) {
       dispatch(setDataLoadedStatus(true));
-      await dispatch(createTrainingAction({
-        title,
-        bgImageUrl: 'img/content/thumbnails/training-01.jpg', // рандомная картинка
-        level: trainingLevel,
-        type: trainingType,
-        duration,
-        price,
-        caloriesCount,
-        description,
-        gender,
-        videoUrl: 'osidyfoigusydfoigu', // добавить дефолтное значение на сервере
-        isSpecialOffer: false // добавить дефолтное значение на сервере
-      }));
 
-      /* if (videoFile && createdTrainingId) {
-        const videoFileName = videoFile.name;
-        const videoFileType = videoFile.type.match(/(?<=\/).+/);
+      const formData = new FormData();
 
-        const formData = new FormData();
-        formData.append('video', videoFile, `${videoFileName}.${videoFileType ? videoFileType[0] : ''}`);
-        dispatch(uploadVideoFileAction({formData, createdTrainingId}));
-      } */
+      const videoFileName = videoFile.name;
+      const videoFileType = videoFile.type.match(/(?<=\/).+/);
+
+      formData.append('video', videoFile, `${videoFileName}.${videoFileType ? videoFileType[0] : ''}`);
+      formData.append('title', title);
+      formData.append('bgImageUrl', TrainingTypeImageMap[trainingType]);
+      formData.append('level', trainingLevel);
+      formData.append('type', trainingType);
+      formData.append('duration', duration);
+      formData.append('price', JSON.stringify(price));
+      formData.append('caloriesCount', JSON.stringify(caloriesCount));
+      formData.append('description', description);
+      formData.append('gender', gender);
+
+      await dispatch(createTrainingAction(formData));
     }
   };
 
@@ -267,9 +259,7 @@ function CreateTraining(): JSX.Element {
     setTrainingLevelInputUsed(true);
     setDescriptionInputUsed(true);
     setVideoFileInputUsed(true);
-    if (createdTrainingId) {
-      navigate(AppRoute.MyTrainings);
-    }
+    navigate(AppRoute.MyTrainings);
   };
 
   return (
