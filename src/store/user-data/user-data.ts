@@ -22,6 +22,7 @@ type UserData = {
   birthday: string;
   gender: Gender | null;
   userRole: UserRole | null;
+  certificates: string[];
 };
 
 const initialState: UserData = {
@@ -38,6 +39,7 @@ const initialState: UserData = {
   birthday: '',
   gender: null,
   userRole: null,
+  certificates: []
 };
 
 export const userData = createSlice({
@@ -85,6 +87,7 @@ export const userData = createSlice({
             state.trainingLevel = action.payload.user.trainingLevel;
             state.location = action.payload.user.location;
             state.gender = action.payload.user.gender;
+            state.certificates = (action.payload.user.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
             state.avatar = action.payload.user.avatarUrl;
@@ -109,6 +112,7 @@ export const userData = createSlice({
             state.trainingLevel = action.payload.user.trainingLevel;
             state.location = action.payload.user.location;
             state.gender = action.payload.user.gender;
+            state.certificates = (action.payload.user.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
             state.avatar = action.payload.user.avatarUrl;
@@ -133,6 +137,7 @@ export const userData = createSlice({
             state.trainingLevel = action.payload.user.trainingLevel;
             state.location = action.payload.user.location;
             state.gender = action.payload.user.gender;
+            state.certificates = (action.payload.user.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
             state.avatar = action.payload.user.avatarUrl;
@@ -157,6 +162,7 @@ export const userData = createSlice({
             state.trainingLevel = action.payload.trainingLevel;
             state.location = action.payload.location;
             state.gender = action.payload.gender;
+            state.certificates = (action.payload.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
             state.avatar = action.payload.avatarUrl;

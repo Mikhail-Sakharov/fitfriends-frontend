@@ -4,6 +4,7 @@ import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CoachDescriptionLength, FF
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {
   getAvatar,
+  getCertificates,
   getDescription,
   getGender,
   getIsReadyToTrain,
@@ -20,6 +21,9 @@ import {Gender} from '../../types/gender.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {updateUserAction, uploadAvatarAction} from '../../store/api-actons';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
+import {Document, Page, pdfjs} from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 function PersonalAccountCoach(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -32,6 +36,7 @@ function PersonalAccountCoach(): JSX.Element {
   const trainingLevelInitialValue = useAppSelector(getTrainingLevel);
   const locationInitialValue = useAppSelector(getLocation);
   const genderInitialValue = useAppSelector(getGender);
+  const certificates = useAppSelector(getCertificates);
 
   const [isContentEditable, setIsContentEditable] = useState(false);
 
@@ -564,6 +569,58 @@ function PersonalAccountCoach(): JSX.Element {
                       </div>
                     </div>
                     <ul className="personal-account-coach__list">
+                      {
+                        certificates.map((certificate) => (
+                          <li key={nanoid()} className="personal-account-coach__item">
+                            <div className="certificate-card certificate-card--edit">
+                              <div className="certificate-card__image">
+                                <picture style={{width: '100%'}}>
+                                  {
+                                    certificate.match(/.+.pdf/)
+                                      ? (
+                                        <Document file={`${FF_USERS_URL}/${certificate}`}>
+                                          <Page width={294} pageNumber={1}/>
+                                        </Document>
+                                      )
+                                      : (
+                                        <>
+                                          <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-1.webp, img/content/certificates-and-diplomas/certificate-1@2x.webp 2x"/>
+                                          <img src="img/content/certificates-and-diplomas/certificate-1.jpg" srcSet="img/content/certificates-and-diplomas/certificate-1@2x.jpg 2x" width="294" height="360" alt="Сертификат - Биомеханика ударов в боксе"/>
+                                        </>
+                                      )
+                                  }
+                                </picture>
+                              </div>
+                              <div className="certificate-card__buttons">
+                                <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
+                                  <svg width="12" height="12" aria-hidden="true">
+                                    <use xlinkHref="#icon-edit"></use>
+                                  </svg>
+                                  <span>Изменить</span>
+                                </button>
+                                <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
+                                  <svg width="12" height="12" aria-hidden="true">
+                                    <use xlinkHref="#icon-edit"></use>
+                                  </svg>
+                                  <span>Сохранить</span>
+                                </button>
+                                <div className="certificate-card__controls">
+                                  <button className="btn-icon certificate-card__control" type="button" aria-label="next">
+                                    <svg width="16" height="16" aria-hidden="true">
+                                      <use xlinkHref="#icon-change"></use>
+                                    </svg>
+                                  </button>
+                                  <button className="btn-icon certificate-card__control" type="button" aria-label="next">
+                                    <svg width="14" height="16" aria-hidden="true">
+                                      <use xlinkHref="#icon-trash"></use>
+                                    </svg>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          </li>
+                        ))
+                      }
                       <li className="personal-account-coach__item">
                         <div className="certificate-card certificate-card--edit">
                           <div className="certificate-card__image">

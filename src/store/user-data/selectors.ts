@@ -20,4 +20,5 @@ export const getIsReadyToTrain = (state: State): boolean => state[ReducerNameSpa
 export const getIsReadyToGetTrained = (state: State): boolean => state[ReducerNameSpace.UserData].isReadyToGetTrained;
 export const getTrainingTypes = (state: State): TrainingType[] => state[ReducerNameSpace.UserData].trainingTypes;
 export const getTrainingLevel = (state: State): TrainingLevel | null => state[ReducerNameSpace.UserData].trainingLevel;
+export const getCertificates = (state: State): string[] => state[ReducerNameSpace.UserData].certificates;
 
