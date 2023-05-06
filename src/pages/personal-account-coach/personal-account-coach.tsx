@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
-import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CoachDescriptionLength, FF_USERS_URL, MAX_CERTIFICATES_COUNT_PER_PAGE, TrainingTypesCount, UserNameLength} from '../../const';
+import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CERTIFICATE_FILE_TYPES, CoachDescriptionLength, FF_USERS_URL, MAX_CERTIFICATES_COUNT_PER_PAGE, TrainingTypesCount, UserNameLength} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {
   getAvatar,
@@ -19,7 +19,7 @@ import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {Gender} from '../../types/gender.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
-import {updateUserAction, uploadAvatarAction} from '../../store/api-actons';
+import {updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../../store/api-actons';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {Document, Page, pdfjs} from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -40,8 +40,6 @@ function PersonalAccountCoach(): JSX.Element {
   const certificates = useAppSelector(getCertificates);
 
   const [certificatesPage, setCertificatesPage] = useState(1);
-
-  console.log(certificatesPage);
 
   const [isContentEditable, setIsContentEditable] = useState(false);
 
@@ -65,6 +63,7 @@ function PersonalAccountCoach(): JSX.Element {
   const [trainingTypesError, setTrainingTypesError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [avatarError, setAvatarError] = useState('');
+  const [certificateError, setCertificateError] = useState('');
 
   // валидны ли данные формы или нет
   const [isFormValid, setIsFormValid] = useState(false);
@@ -207,6 +206,25 @@ function PersonalAccountCoach(): JSX.Element {
   const handleRightArrowButtonClick = () => {
     const pagesCount = Math.ceil(certificates.length / MAX_CERTIFICATES_COUNT_PER_PAGE);
     setCertificatesPage((prevState) => prevState < pagesCount ? prevState + 1 : prevState);
+  };
+
+  const handleCertificateFileInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const file = evt.currentTarget.files && evt.currentTarget.files[0];
+    const fileName = file ? file.name.toLowerCase() : '';
+    const matches = CERTIFICATE_FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
+
+    if (matches && file) {
+      dispatch(setDataLoadedStatus(true));
+
+      const certificateName = file.name;
+      const certificateFileType = file.type.match(/(?<=\/).+/);
+
+      const formData = new FormData();
+      formData.append('certificate', file, `${certificateName}.${certificateFileType ? certificateFileType[0] : ''}`);
+      dispatch(uploadCertificateAction(formData));
+    } else if (!matches && file) {
+      setCertificateError('Только файлы в формате PDF, JPG или PNG');
+    }
   };
 
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
@@ -563,12 +581,28 @@ function PersonalAccountCoach(): JSX.Element {
                   <div className="personal-account-coach__additional-info">
                     <div className="personal-account-coach__label-wrapper">
                       <h2 className="personal-account-coach__label">Дипломы и сертификаты</h2>
-                      <button className="btn-flat btn-flat--underlined personal-account-coach__button" type="button">
-                        <svg width="14" height="14" aria-hidden="true">
-                          <use xlinkHref="#icon-import"></use>
-                        </svg>
-                        <span>Загрузить</span>
-                      </button>
+                      <label
+                        className={`
+                          btn-flat btn-flat--underlined
+                          personal-account-coach__button
+                          ${certificateError ? 'custom-input--error' : ''}
+                        `}
+                      >
+                        <span>
+                          <svg width="14" height="14" aria-hidden="true">
+                            <use xlinkHref="#icon-import"></use>
+                          </svg>
+                          {' '}
+                          Загрузить
+                        </span>
+                        <input
+                          onChange={handleCertificateFileInputChange}
+                          className="visually-hidden" type="file" name="import" tabIndex={-1} accept=".pdf, .jpg, .png"
+                        />
+                        <span style={{marginTop: '0'}} className="custom-input__error">
+                          {certificateError}
+                        </span>
+                      </label>
                       <div className="personal-account-coach__controls">
                         <button
                           onClick={handleLeftArrowButtonClick}
@@ -592,22 +626,22 @@ function PersonalAccountCoach(): JSX.Element {
                     </div>
                     <ul className="personal-account-coach__list">
                       {
-                        certificates.slice((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE, ((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE) + MAX_CERTIFICATES_COUNT_PER_PAGE).map((certificate) => (
+                        certificates.slice((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE, ((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE) + MAX_CERTIFICATES_COUNT_PER_PAGE).map((certificateItem) => (
                           <li key={nanoid()} className="personal-account-coach__item">
                             <div className="certificate-card certificate-card--edit">
                               <div className="certificate-card__image">
                                 <picture>
                                   {
-                                    certificate.match(/.+.pdf/)
+                                    certificateItem.match(/.+.pdf/)
                                       ? (
-                                        <Document file={`${FF_USERS_URL}/${certificate}`}>
+                                        <Document file={`${FF_USERS_URL}/${certificateItem}`}>
                                           <Page renderAnnotationLayer={false} height={360} pageNumber={1} renderTextLayer={false}/>
                                         </Document>
                                       )
                                       : (
                                         <>
-                                          <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-1.webp, img/content/certificates-and-diplomas/certificate-1@2x.webp 2x"/>
-                                          <img src="img/content/certificates-and-diplomas/certificate-1.jpg" srcSet="img/content/certificates-and-diplomas/certificate-1@2x.jpg 2x" width="294" height="360" alt="Сертификат - Биомеханика ударов в боксе"/>
+                                          <source type="image/webp" srcSet={`${FF_USERS_URL}/${certificateItem}`}/>
+                                          <img src={`${FF_USERS_URL}/${certificateItem}`} srcSet={`${FF_USERS_URL}/${certificateItem} 2x`} width="294" height="360" alt="Сертификат - Биомеханика ударов в боксе"/>
                                         </>
                                       )
                                   }
@@ -642,7 +676,8 @@ function PersonalAccountCoach(): JSX.Element {
                             </div>
                           </li>
                         ))
-                      }{/*
+                      }
+                      {/*
                       <li className="personal-account-coach__item">
                         <div className="certificate-card certificate-card--edit">
                           <div className="certificate-card__image">
