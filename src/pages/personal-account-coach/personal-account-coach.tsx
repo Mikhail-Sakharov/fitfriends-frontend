@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
-import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CoachDescriptionLength, FF_USERS_URL, TrainingTypesCount, UserNameLength} from '../../const';
+import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CoachDescriptionLength, FF_USERS_URL, MAX_CERTIFICATES_COUNT_PER_PAGE, TrainingTypesCount, UserNameLength} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {
   getAvatar,
@@ -22,6 +22,7 @@ import {TrainingLevel} from '../../types/training-level.enum';
 import {updateUserAction, uploadAvatarAction} from '../../store/api-actons';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {Document, Page, pdfjs} from 'react-pdf';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -37,6 +38,10 @@ function PersonalAccountCoach(): JSX.Element {
   const locationInitialValue = useAppSelector(getLocation);
   const genderInitialValue = useAppSelector(getGender);
   const certificates = useAppSelector(getCertificates);
+
+  const [certificatesPage, setCertificatesPage] = useState(1);
+
+  console.log(certificatesPage);
 
   const [isContentEditable, setIsContentEditable] = useState(false);
 
@@ -193,6 +198,15 @@ function PersonalAccountCoach(): JSX.Element {
   const handleEditButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     setIsContentEditable(true);
+  };
+
+  const handleLeftArrowButtonClick = () => {
+    setCertificatesPage((prevState) => prevState > 1 ? prevState - 1 : prevState);
+  };
+
+  const handleRightArrowButtonClick = () => {
+    const pagesCount = Math.ceil(certificates.length / MAX_CERTIFICATES_COUNT_PER_PAGE);
+    setCertificatesPage((prevState) => prevState < pagesCount ? prevState + 1 : prevState);
   };
 
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
@@ -556,12 +570,20 @@ function PersonalAccountCoach(): JSX.Element {
                         <span>Загрузить</span>
                       </button>
                       <div className="personal-account-coach__controls">
-                        <button className="btn-icon personal-account-coach__control" type="button" aria-label="previous">
+                        <button
+                          onClick={handleLeftArrowButtonClick}
+                          className="btn-icon personal-account-coach__control"
+                          type="button" aria-label="previous"
+                        >
                           <svg width="16" height="14" aria-hidden="true">
                             <use xlinkHref="#arrow-left"></use>
                           </svg>
                         </button>
-                        <button className="btn-icon personal-account-coach__control" type="button" aria-label="next">
+                        <button
+                          onClick={handleRightArrowButtonClick}
+                          className="btn-icon personal-account-coach__control"
+                          type="button" aria-label="next"
+                        >
                           <svg width="16" height="14" aria-hidden="true">
                             <use xlinkHref="#arrow-right"></use>
                           </svg>
@@ -570,16 +592,16 @@ function PersonalAccountCoach(): JSX.Element {
                     </div>
                     <ul className="personal-account-coach__list">
                       {
-                        certificates.map((certificate) => (
+                        certificates.slice((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE, ((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE) + MAX_CERTIFICATES_COUNT_PER_PAGE).map((certificate) => (
                           <li key={nanoid()} className="personal-account-coach__item">
                             <div className="certificate-card certificate-card--edit">
                               <div className="certificate-card__image">
-                                <picture style={{width: '100%'}}>
+                                <picture>
                                   {
                                     certificate.match(/.+.pdf/)
                                       ? (
                                         <Document file={`${FF_USERS_URL}/${certificate}`}>
-                                          <Page width={294} pageNumber={1}/>
+                                          <Page renderAnnotationLayer={false} height={360} pageNumber={1} renderTextLayer={false}/>
                                         </Document>
                                       )
                                       : (
@@ -620,7 +642,7 @@ function PersonalAccountCoach(): JSX.Element {
                             </div>
                           </li>
                         ))
-                      }
+                      }{/*
                       <li className="personal-account-coach__item">
                         <div className="certificate-card certificate-card--edit">
                           <div className="certificate-card__image">
@@ -836,7 +858,7 @@ function PersonalAccountCoach(): JSX.Element {
                             </div>
                           </div>
                         </div>
-                      </li>
+                      </li> */}
                     </ul>
                   </div>
                 </div>
