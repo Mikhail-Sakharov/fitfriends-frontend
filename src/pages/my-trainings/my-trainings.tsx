@@ -1,19 +1,27 @@
-import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getTrainings} from '../../store/user-data/selectors';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {fetchMyTrainingsAction} from '../../store/api-actons';
 import {nanoid} from 'nanoid';
+import TrainingThumbnail from '../../components/training-thumbnail/training-thumbnail';
+import {MAX_TRAININGS_COUNT_PER_PAGE} from '../../const';
 
 function MyTrainings(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const trainings = useAppSelector(getTrainings);
 
+  const [trainingsPage, setTrainingsPage] = useState(1);
+
   useEffect(() => {
     dispatch(fetchMyTrainingsAction());
   }, [dispatch]);
+
+  const handleShowMoreButtonClick = () => {
+    const pagesCount = Math.ceil(trainings.length / MAX_TRAININGS_COUNT_PER_PAGE);
+    setTrainingsPage((prevState) => prevState < pagesCount ? prevState + 1 : prevState);
+  };
 
   return (
     <>
@@ -187,63 +195,20 @@ function MyTrainings(): JSX.Element {
                 <div className="my-trainings">
                   <ul className="my-trainings__list">
                     {
-                      trainings.map((training) => (
+                      trainings.slice(0, ((trainingsPage - 1) * MAX_TRAININGS_COUNT_PER_PAGE) + MAX_TRAININGS_COUNT_PER_PAGE).map((training) => (
                         <li key={nanoid()} className="my-trainings__item">
-                          <div className="thumbnail-training">
-                            <div className="thumbnail-training__inner">
-                              <div className="thumbnail-training__image">
-                                <picture>
-                                  <img src={training.bgImageUrl} width="330" height="190" alt=""/>
-                                </picture>
-                              </div>
-                              <p className="thumbnail-training__price">
-                                {training.price}
-                              </p>
-                              <h3 className="thumbnail-training__title">
-                                {training.title}
-                              </h3>
-                              <div className="thumbnail-training__info">
-                                <ul className="thumbnail-training__hashtags-list">
-                                  {
-                                    [
-                                      training.type,
-                                      training.caloriesCount
-                                    ].map((tag) => (
-                                      <li key={nanoid()} className="thumbnail-training__hashtags-item">
-                                        <div className="hashtag thumbnail-training__hashtag">
-                                          <span>
-                                            #
-                                            {tag}
-                                          </span>
-                                        </div>
-                                      </li>
-                                    ))
-                                  }
-                                </ul>
-                                <div className="thumbnail-training__rate">
-                                  <svg width="16" height="16" aria-hidden="true">
-                                    <use xlinkHref="#icon-star"></use>
-                                  </svg>
-                                  <span className="thumbnail-training__rate-value">5</span>
-                                </div>
-                              </div>
-                              <div className="thumbnail-training__text-wrapper">
-                                <p className="thumbnail-training__text">
-                                  {training.description}
-                                </p>
-                              </div>
-                              <div className="thumbnail-training__button-wrapper">
-                                <Link className="btn btn--small thumbnail-training__button-catalog" to="#">Подробнее</Link>
-                                <Link className="btn btn--small btn--outlined thumbnail-training__button-catalog" to="#">Отзывы</Link>
-                              </div>
-                            </div>
-                          </div>
+                          <TrainingThumbnail training={training}/>
                         </li>
                       ))
                     }
                   </ul>
                   <div className="show-more my-trainings__show-more">
-                    <button className="btn show-more__button show-more__button--more" type="button">Показать еще</button>
+                    <button
+                      onClick={handleShowMoreButtonClick}
+                      className="btn show-more__button show-more__button--more" type="button"
+                    >
+                      Показать еще
+                    </button>
                     <button className="btn show-more__button show-more__button--to-top" type="button">Вернуться в начало</button>
                   </div>
                 </div>

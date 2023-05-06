@@ -1,11 +1,11 @@
 import {CoachQuestionnaire, User} from '../../types/user.interface';
 import {nanoid} from 'nanoid';
-import {Training} from '../../types/training.interface';
 import TrainingThumbnail from '../training-thumbnail/training-thumbnail';
+import {TrainingRdo} from '../../types/training.rdo';
 
 type UserCardCoachProps = {
   user: User;
-  trainings?: Training[];
+  trainings?: TrainingRdo[];
 };
 
 function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {

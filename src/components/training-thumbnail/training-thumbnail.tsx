@@ -1,20 +1,18 @@
 import {Link} from 'react-router-dom';
-import {Training} from '../../types/training.interface';
 import {nanoid} from 'nanoid';
+import {TrainingRdo} from '../../types/training.rdo';
 
 type TrainingThumbnailProps = {
-  training: Training;
+  training: TrainingRdo;
 };
 
 function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
-  // TODO: путь к bgImage
   return (
     <div className="thumbnail-training">
       <div className="thumbnail-training__inner">
         <div className="thumbnail-training__image">
           <picture>
-            <source type="image/webp" srcSet="img/content/user-card-coach/training-1.webp, img/content/user-card-coach/training-1@2x.webp 2x"/>
-            <img src="img/content/user-card-coach/training-1.jpg" srcSet="img/content/user-card-coach/training-1@2x.jpg 2x" width="330" height="190" alt=""/>
+            <img src={training.bgImageUrl} width="330" height="190" alt="training thumbnail"/>
           </picture>
         </div>
         <p className="thumbnail-training__price">

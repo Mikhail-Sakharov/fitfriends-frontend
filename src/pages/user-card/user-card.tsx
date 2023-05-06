@@ -1,7 +1,7 @@
 import Header from '../../components/header/header';
 import UserCardCoach from '../../components/user-card-coach/user-card-coach';
 import UserCardUser from '../../components/user-card-user/user-card-user';
-import {Training} from '../../types/training.interface';
+import {TrainingRdo} from '../../types/training.rdo';
 import {UserRole} from '../../types/user-role.enum';
 import {User} from '../../types/user.interface';
 
@@ -64,7 +64,7 @@ function UserCard(): JSX.Element {
     rating: 0,
     coachId: '64359129835875db1a1aeade',
     isSpecialOffer: false
-  })) as unknown as Training[];
+  })) as unknown as TrainingRdo[];
 
   return (
     <>
