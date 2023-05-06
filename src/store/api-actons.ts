@@ -8,7 +8,8 @@ import {saveTokens} from '../services/tokens';
 import {SignInUserRequestBody} from '../types/sign-in-user-request-body';
 import UpdateUserDto from '../types/update-user.dto';
 import {TrainingRdo} from '../types/training.rdo';
-// import CreateTrainingDto from '../types/create-training.dto';
+import {GetTrainingsQuery} from '../types/get-trainings.query';
+import {getTrainingsQueryString} from '../helpers';
 
 export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserRequestBody, {
   dispatch: AppDispatch;
@@ -103,8 +104,8 @@ export const createTrainingAction = createAsyncThunk<TrainingRdo, FormData, {
   extra: AxiosInstance[];
 }>(
   'trainings/create',
-  async (createTrainingDtoRequest, {dispatch, extra: api}) => {
-    const {data} = await api[0].post<TrainingRdo>(`${FF_SERVICE_URL}${APIRoute.Trainings}`, createTrainingDtoRequest);
+  async (createTrainingRequest, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<TrainingRdo>(`${FF_SERVICE_URL}${APIRoute.Trainings}`, createTrainingRequest);
     return data;
   },
 );
@@ -128,3 +129,16 @@ export const uploadVideoFileAction = createAsyncThunk<TrainingRdo, CreateTrainin
     return data;
   },
 ); */
+
+export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[], GetTrainingsQuery | undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'coach/myTrainings',
+  async (getTrainingsQuery, {dispatch, extra: api}) => {
+    const queryString = getTrainingsQueryString(getTrainingsQuery);
+    const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.Trainings}${queryString}`);
+    return data;
+  },
+);

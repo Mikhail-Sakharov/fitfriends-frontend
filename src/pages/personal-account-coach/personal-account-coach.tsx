@@ -1,6 +1,16 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
-import {AVATAR_FILE_TYPES, AVATAR_MAX_SIZE, AppRoute, CERTIFICATE_FILE_TYPES, CoachDescriptionLength, FF_USERS_URL, MAX_CERTIFICATES_COUNT_PER_PAGE, TrainingTypesCount, UserNameLength} from '../../const';
+import {
+  AVATAR_FILE_TYPES,
+  AVATAR_MAX_SIZE,
+  AppRoute,
+  CERTIFICATE_FILE_TYPES,
+  CoachDescriptionLength,
+  FF_USERS_URL,
+  MAX_CERTIFICATES_COUNT_PER_PAGE,
+  TrainingTypesCount,
+  UserNameLength
+} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {
   getAvatar,
@@ -19,7 +29,12 @@ import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {Gender} from '../../types/gender.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
-import {deleteCertificateAction, updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../../store/api-actons';
+import {
+  deleteCertificateAction,
+  updateUserAction,
+  uploadAvatarAction,
+  uploadCertificateAction
+} from '../../store/api-actons';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {Document, Page, pdfjs} from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -664,7 +679,7 @@ function PersonalAccountCoach(): JSX.Element {
                                       : (
                                         <>
                                           <source type="image/webp" srcSet={`${FF_USERS_URL}/${certificateItem}`}/>
-                                          <img src={`${FF_USERS_URL}/${certificateItem}`} srcSet={`${FF_USERS_URL}/${certificateItem} 2x`} width="294" height="360" alt="Сертификат - Биомеханика ударов в боксе"/>
+                                          <img src={`${FF_USERS_URL}/${certificateItem}`} srcSet={`${FF_USERS_URL}/${certificateItem} 2x`} width="294" height="360" alt="Сертификат"/>
                                         </>
                                       )
                                   }

@@ -55,12 +55,11 @@ function SignUpQuestionnaireCoach(): JSX.Element {
   const [isFormValid, setIsFormValid] = useState(false);
 
   // если первая часть не заполнена, возвращаем пользователя обратно на первый шаг
-  // проверяем только при монтировании компонента
   useEffect(() => {
     if (!userName) {
       navigate(AppRoute.SignUp);
     }
-  }, []);
+  }, [navigate, userName]);
 
   // устанавливаем флаг валидности формы на каждой отрисовке
   useEffect(() => {

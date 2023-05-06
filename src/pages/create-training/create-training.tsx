@@ -259,7 +259,10 @@ function CreateTraining(): JSX.Element {
     setTrainingLevelInputUsed(true);
     setDescriptionInputUsed(true);
     setVideoFileInputUsed(true);
-    navigate(AppRoute.MyTrainings);
+
+    if (formValid) {
+      navigate(AppRoute.MyTrainings);
+    }
   };
 
   return (

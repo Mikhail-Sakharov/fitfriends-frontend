@@ -3,10 +3,11 @@ import {ReducerNameSpace} from '../../const';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
-import {deleteCertificateAction, refreshTokensAction, registerUserAction, signInUserAction, updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../api-actons';
+import {deleteCertificateAction, fetchMyTrainingsAction, refreshTokensAction, registerUserAction, signInUserAction, updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../api-actons';
 import {TrainingType} from '../../types/training-type.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {CoachQuestionnaire, UserQuestionnaire} from '../../types/user.interface';
+import {TrainingRdo} from '../../types/training.rdo';
 
 type UserData = {
   avatar: string;
@@ -23,6 +24,7 @@ type UserData = {
   gender: Gender | null;
   userRole: UserRole | null;
   certificates: string[];
+  trainings: TrainingRdo[];
 };
 
 const initialState: UserData = {
@@ -39,7 +41,8 @@ const initialState: UserData = {
   birthday: '',
   gender: null,
   userRole: null,
-  certificates: []
+  certificates: [],
+  trainings: []
 };
 
 export const userData = createSlice({
@@ -197,6 +200,9 @@ export const userData = createSlice({
         state.location = action.payload.location;
         state.gender = action.payload.gender;
         state.certificates = (action.payload.questionnaire as CoachQuestionnaire).certificates;
+      })
+      .addCase(fetchMyTrainingsAction.fulfilled, (state, action) => {
+        state.trainings = action.payload;
       });
   }
 });
