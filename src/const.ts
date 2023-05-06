@@ -40,6 +40,7 @@ export enum APIRoute {
   Friends = '/users/friends',
   Avatar = '/users/avatar',
   Certificate = '/users/certificate',
+  DeleteCertificate = '/users/certificate/delete',
   AddFriend = '/users/friends/add',
   RemoveFriend = '/users/friends/remove',
   Trainings = '/trainings',

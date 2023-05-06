@@ -48,6 +48,18 @@ export const uploadCertificateAction = createAsyncThunk<UserRdo, FormData, {
   },
 );
 
+export const deleteCertificateAction = createAsyncThunk<UserRdo, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'users/deleteCertificate',
+  async (certificateUrl, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<UserRdo>(`${FF_USERS_URL}${APIRoute.DeleteCertificate}?certificateUrl=${certificateUrl}`);
+    return data;
+  },
+);
+
 export const uploadAvatarAction = createAsyncThunk<UserRdo, FormData, {
   dispatch: AppDispatch;
   state: State;

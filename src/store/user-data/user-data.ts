@@ -3,7 +3,7 @@ import {ReducerNameSpace} from '../../const';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
-import {refreshTokensAction, registerUserAction, signInUserAction, updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../api-actons';
+import {deleteCertificateAction, refreshTokensAction, registerUserAction, signInUserAction, updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../api-actons';
 import {TrainingType} from '../../types/training-type.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {CoachQuestionnaire, UserQuestionnaire} from '../../types/user.interface';
@@ -177,6 +177,17 @@ export const userData = createSlice({
         }
       })
       .addCase(uploadCertificateAction.fulfilled, (state, action) => {
+        state.avatar = action.payload.avatarUrl;
+        state.userName = action.payload.userName;
+        state.description = (action.payload.questionnaire as CoachQuestionnaire).description;
+        state.isReadyToTrain = (action.payload.questionnaire as CoachQuestionnaire).isReadyToTrain;
+        state.trainingTypes = action.payload.trainingTypes;
+        state.trainingLevel = action.payload.trainingLevel;
+        state.location = action.payload.location;
+        state.gender = action.payload.gender;
+        state.certificates = (action.payload.questionnaire as CoachQuestionnaire).certificates;
+      })
+      .addCase(deleteCertificateAction.fulfilled, (state, action) => {
         state.avatar = action.payload.avatarUrl;
         state.userName = action.payload.userName;
         state.description = (action.payload.questionnaire as CoachQuestionnaire).description;

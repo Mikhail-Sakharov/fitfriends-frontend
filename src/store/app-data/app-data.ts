@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {createTrainingAction, refreshTokensAction, registerUserAction, signInUserAction, uploadCertificateAction} from '../api-actons';
+import {createTrainingAction, deleteCertificateAction, refreshTokensAction, registerUserAction, signInUserAction, uploadCertificateAction} from '../api-actons';
 
 type AppData = {
   dataLoadedStatus: boolean;
@@ -48,6 +48,9 @@ export const appData = createSlice({
         state.dataLoadedStatus = false;
       })
       .addCase(uploadCertificateAction.fulfilled, (state) => {
+        state.dataLoadedStatus = false;
+      })
+      .addCase(deleteCertificateAction.fulfilled, (state) => {
         state.dataLoadedStatus = false;
       });
   }

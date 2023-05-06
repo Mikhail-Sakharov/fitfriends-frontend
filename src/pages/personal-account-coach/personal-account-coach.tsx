@@ -19,7 +19,7 @@ import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {Gender} from '../../types/gender.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
-import {updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../../store/api-actons';
+import {deleteCertificateAction, updateUserAction, uploadAvatarAction, uploadCertificateAction} from '../../store/api-actons';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {Document, Page, pdfjs} from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
@@ -42,6 +42,9 @@ function PersonalAccountCoach(): JSX.Element {
   const [certificatesPage, setCertificatesPage] = useState(1);
 
   const [isContentEditable, setIsContentEditable] = useState(false);
+
+  const [isCertificatesEditable, setIsCertificatesEditable] = useState(false);
+  const [editableCertificateItem, setEditableCertificateItem] = useState('');
 
   // флаг селекта - открыт/закрыт
   const [isLocationSelectOpened, setIsLocationSelectOpened] = useState(false);
@@ -225,6 +228,21 @@ function PersonalAccountCoach(): JSX.Element {
     } else if (!matches && file) {
       setCertificateError('Только файлы в формате PDF, JPG или PNG');
     }
+  };
+
+  const handleCertificateSaveButtonClick = (certificateItem: string) => {
+    setEditableCertificateItem(certificateItem);
+    setIsCertificatesEditable(false);
+  };
+
+  const handleCertificateEditButtonClick = (certificateItem: string) => {
+    setEditableCertificateItem(certificateItem);
+    setIsCertificatesEditable(true);
+  };
+
+  const handleCertificateDeleteButtonClick = (certificateItem: string) => {
+    dispatch(setDataLoadedStatus(true));
+    dispatch(deleteCertificateAction(certificateItem));
   };
 
   const handleSubmitButtonClick = (evt: FormEvent<HTMLButtonElement>) => {
@@ -628,7 +646,12 @@ function PersonalAccountCoach(): JSX.Element {
                       {
                         certificates.slice((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE, ((certificatesPage - 1) * MAX_CERTIFICATES_COUNT_PER_PAGE) + MAX_CERTIFICATES_COUNT_PER_PAGE).map((certificateItem) => (
                           <li key={nanoid()} className="personal-account-coach__item">
-                            <div className="certificate-card certificate-card--edit">
+                            <div
+                              className={`
+                                certificate-card
+                                ${isCertificatesEditable ? 'certificate-card--edit' : ''}
+                              `}
+                            >
                               <div className="certificate-card__image">
                                 <picture>
                                   {
@@ -648,252 +671,53 @@ function PersonalAccountCoach(): JSX.Element {
                                 </picture>
                               </div>
                               <div className="certificate-card__buttons">
-                                <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
-                                  <svg width="12" height="12" aria-hidden="true">
-                                    <use xlinkHref="#icon-edit"></use>
-                                  </svg>
-                                  <span>Изменить</span>
-                                </button>
-                                <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
-                                  <svg width="12" height="12" aria-hidden="true">
-                                    <use xlinkHref="#icon-edit"></use>
-                                  </svg>
-                                  <span>Сохранить</span>
-                                </button>
-                                <div className="certificate-card__controls">
-                                  <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                    <svg width="16" height="16" aria-hidden="true">
-                                      <use xlinkHref="#icon-change"></use>
-                                    </svg>
-                                  </button>
-                                  <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                    <svg width="14" height="16" aria-hidden="true">
-                                      <use xlinkHref="#icon-trash"></use>
-                                    </svg>
-                                  </button>
-                                </div>
+                                {
+                                  isCertificatesEditable && (editableCertificateItem === certificateItem)
+                                    ? (
+                                      <>
+                                        <button
+                                          onClick={() => handleCertificateSaveButtonClick(certificateItem)}
+                                          className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button"
+                                        >
+                                          <svg width="12" height="12" aria-hidden="true">
+                                            <use xlinkHref="#icon-edit"></use>
+                                          </svg>
+                                          <span>Сохранить</span>
+                                        </button>
+                                        <div className="certificate-card__controls">
+                                          <button className="btn-icon certificate-card__control" type="button" aria-label="next">
+                                            <svg width="16" height="16" aria-hidden="true">
+                                              <use xlinkHref="#icon-change"></use>
+                                            </svg>
+                                          </button>
+                                          <button
+                                            onClick={() => handleCertificateDeleteButtonClick(certificateItem)}
+                                            className="btn-icon certificate-card__control" type="button" aria-label="next"
+                                          >
+                                            <svg width="14" height="16" aria-hidden="true">
+                                              <use xlinkHref="#icon-trash"></use>
+                                            </svg>
+                                          </button>
+                                        </div>
+                                      </>
+                                    )
+                                    : (
+                                      <button
+                                        onClick={() => handleCertificateEditButtonClick(certificateItem)}
+                                        className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button"
+                                      >
+                                        <svg width="12" height="12" aria-hidden="true">
+                                          <use xlinkHref="#icon-edit"></use>
+                                        </svg>
+                                        <span>Изменить</span>
+                                      </button>
+                                    )
+                                }
                               </div>
                             </div>
                           </li>
                         ))
                       }
-                      {/*
-                      <li className="personal-account-coach__item">
-                        <div className="certificate-card certificate-card--edit">
-                          <div className="certificate-card__image">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-1.webp, img/content/certificates-and-diplomas/certificate-1@2x.webp 2x"/>
-                              <img src="img/content/certificates-and-diplomas/certificate-1.jpg" srcSet="img/content/certificates-and-diplomas/certificate-1@2x.jpg 2x" width="294" height="360" alt="Сертификат - Биомеханика ударов в боксе"/>
-                            </picture>
-                          </div>
-                          <div className="certificate-card__buttons">
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Изменить</span>
-                            </button>
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Сохранить</span>
-                            </button>
-                            <div className="certificate-card__controls">
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="16" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-change"></use>
-                                </svg>
-                              </button>
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="14" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-trash"></use>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="personal-account-coach__item">
-                        <div className="certificate-card">
-                          <div className="certificate-card__image">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-2.webp, img/content/certificates-and-diplomas/certificate-2@2x.webp 2x"/>
-                              <img src="img/content/certificates-and-diplomas/certificate-2.jpg" srcSet="img/content/certificates-and-diplomas/certificate-2@2x.jpg 2x" width="294" height="360" alt="Сертификат - Организационно-методическая подготовка и проведение групповых и индивидуальных физкультурно-оздоровительных занятий"/>
-                            </picture>
-                          </div>
-                          <div className="certificate-card__buttons">
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Изменить</span>
-                            </button>
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Сохранить</span>
-                            </button>
-                            <div className="certificate-card__controls">
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="16" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-change"></use>
-                                </svg>
-                              </button>
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="14" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-trash"></use>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="personal-account-coach__item">
-                        <div className="certificate-card">
-                          <div className="certificate-card__image">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-3.webp, img/content/certificates-and-diplomas/certificate-3@2x.webp 2x"/>
-                              <img src="img/content/certificates-and-diplomas/certificate-3.jpg" srcSet="img/content/certificates-and-diplomas/certificate-3@2x.jpg 2x" width="294" height="360" alt="Сертифиционный курс по кроссфиту 2-го уровня"/>
-                            </picture>
-                          </div>
-                          <div className="certificate-card__buttons">
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Изменить</span>
-                            </button>
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Сохранить</span>
-                            </button>
-                            <div className="certificate-card__controls">
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="16" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-change"></use>
-                                </svg>
-                              </button>
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="14" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-trash"></use>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="personal-account-coach__item">
-                        <div className="certificate-card">
-                          <div className="certificate-card__image">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-4.webp, img/content/certificates-and-diplomas/certificate-4@2x.webp 2x"/>
-                              <img src="img/content/certificates-and-diplomas/certificate-4.jpg" srcSet="img/content/certificates-and-diplomas/certificate-4@2x.jpg 2x" width="294" height="360" alt="Сертификат инструкторов йоги"/>
-                            </picture>
-                          </div>
-                          <div className="certificate-card__buttons">
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Изменить</span>
-                            </button>
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Сохранить</span>
-                            </button>
-                            <div className="certificate-card__controls">
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="16" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-change"></use>
-                                </svg>
-                              </button>
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="14" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-trash"></use>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="personal-account-coach__item">
-                        <div className="certificate-card">
-                          <div className="certificate-card__image">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-5.webp, img/content/certificates-and-diplomas/certificate-5@2x.webp 2x"/>
-                              <img src="img/content/certificates-and-diplomas/certificate-5.jpg" srcSet="img/content/certificates-and-diplomas/certificate-5@2x.jpg 2x" width="294" height="360" alt="Сертификат фитне аэробики"/>
-                            </picture>
-                          </div>
-                          <div className="certificate-card__buttons">
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Изменить</span>
-                            </button>
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Сохранить</span>
-                            </button>
-                            <div className="certificate-card__controls">
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="16" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-change"></use>
-                                </svg>
-                              </button>
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="14" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-trash"></use>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li className="personal-account-coach__item">
-                        <div className="certificate-card">
-                          <div className="certificate-card__image">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/certificates-and-diplomas/certificate-6.webp, img/content/certificates-and-diplomas/certificate-6@2x.webp 2x"/>
-                              <img src="img/content/certificates-and-diplomas/certificate-6.jpg" srcSet="img/content/certificates-and-diplomas/certificate-6@2x.jpg 2x" width="294" height="360" alt="Сертификат фитне аэробики"/>
-                            </picture>
-                          </div>
-                          <div className="certificate-card__buttons">
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--edit" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Изменить</span>
-                            </button>
-                            <button className="btn-flat btn-flat--underlined certificate-card__button certificate-card__button--save" type="button">
-                              <svg width="12" height="12" aria-hidden="true">
-                                <use xlinkHref="#icon-edit"></use>
-                              </svg>
-                              <span>Сохранить</span>
-                            </button>
-                            <div className="certificate-card__controls">
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="16" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-change"></use>
-                                </svg>
-                              </button>
-                              <button className="btn-icon certificate-card__control" type="button" aria-label="next">
-                                <svg width="14" height="16" aria-hidden="true">
-                                  <use xlinkHref="#icon-trash"></use>
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </li> */}
                     </ul>
                   </div>
                 </div>
