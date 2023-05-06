@@ -14,13 +14,18 @@ function MyTrainings(): JSX.Element {
 
   const [trainingsPage, setTrainingsPage] = useState(1);
 
+  const pagesCount = Math.ceil(trainings.length / MAX_TRAININGS_COUNT_PER_PAGE);
+
   useEffect(() => {
     dispatch(fetchMyTrainingsAction());
   }, [dispatch]);
 
   const handleShowMoreButtonClick = () => {
-    const pagesCount = Math.ceil(trainings.length / MAX_TRAININGS_COUNT_PER_PAGE);
     setTrainingsPage((prevState) => prevState < pagesCount ? prevState + 1 : prevState);
+  };
+
+  const handleReturnToTopButtonClick = () => {
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -203,13 +208,25 @@ function MyTrainings(): JSX.Element {
                     }
                   </ul>
                   <div className="show-more my-trainings__show-more">
-                    <button
-                      onClick={handleShowMoreButtonClick}
-                      className="btn show-more__button show-more__button--more" type="button"
-                    >
-                      Показать еще
-                    </button>
-                    <button className="btn show-more__button show-more__button--to-top" type="button">Вернуться в начало</button>
+                    {
+                      trainingsPage === pagesCount
+                        ? (
+                          <button
+                            onClick={handleReturnToTopButtonClick}
+                            className="btn show-more__button" type="button"
+                          >
+                            Вернуться в начало
+                          </button>
+                        )
+                        : (
+                          <button
+                            onClick={handleShowMoreButtonClick}
+                            className="btn show-more__button show-more__button--more" type="button"
+                          >
+                            Показать еще
+                          </button>
+                        )
+                    }
                   </div>
                 </div>
               </div>
