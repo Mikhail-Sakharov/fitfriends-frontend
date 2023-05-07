@@ -15,14 +15,14 @@ function RangeSlider({minRangeValue, maxRangeValue, setExternalValue}: RangeSlid
     newValue: number | number[],
     activeThumb: number,
   ) => {
-    const minDistance = 1;
+    const minDistance = maxRangeValue / 10;
     if (!Array.isArray(newValue)) {
       return;
     }
 
     if (newValue[1] - newValue[0] < minDistance) {
       if (activeThumb === 0) {
-        const clamped = Math.min(newValue[0], 10 - minDistance);
+        const clamped = Math.min(newValue[0], maxRangeValue - minDistance);
         setValue([clamped, clamped + minDistance]);
       } else {
         const clamped = Math.max(newValue[1], minDistance);
