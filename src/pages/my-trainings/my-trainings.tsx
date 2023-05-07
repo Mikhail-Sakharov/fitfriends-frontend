@@ -6,15 +6,20 @@ import {fetchMyTrainingsAction} from '../../store/api-actons';
 import {nanoid} from 'nanoid';
 import TrainingThumbnail from '../../components/training-thumbnail/training-thumbnail';
 import {MAX_TRAININGS_COUNT_PER_PAGE} from '../../const';
+import RangeSlider from '../../components/range-slider/range-slider';
 
 function MyTrainings(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const trainings = useAppSelector(getTrainings);
-
   const [trainingsPage, setTrainingsPage] = useState(1);
-
   const pagesCount = Math.ceil(trainings.length / MAX_TRAININGS_COUNT_PER_PAGE);
+
+  const currentTrainingsPrices = trainings.map((training) => training.price) as number[];
+  const minCurrentPrice = Math.min(...currentTrainingsPrices);
+  const maxCurrentPrice = Math.max(...currentTrainingsPrices);
+
+  const [priceFilter, setPriceFilter] = useState<number[]>([minCurrentPrice, maxCurrentPrice]);
 
   useEffect(() => {
     dispatch(fetchMyTrainingsAction());
@@ -51,28 +56,20 @@ function MyTrainings(): JSX.Element {
                       <h4 className="my-training-form__block-title">Цена, ₽</h4>
                       <div className="filter-price">
                         <div className="filter-price__input-text filter-price__input-text--min">
-                          <input type="number" id="text-min" name="text-min" value="0"/>
+                          <input type="number" id="text-min" name="text-min" placeholder={minCurrentPrice.toString()} value={priceFilter[0].toString()}/>
                           <label htmlFor="text-min">от</label>
                         </div>
                         <div className="filter-price__input-text filter-price__input-text--max">
-                          <input type="number" id="text-max" name="text-max" value="3200"/>
+                          <input type="number" id="text-max" name="text-max" placeholder={maxCurrentPrice.toString()} value={priceFilter[1].toString()}/>
                           <label htmlFor="text-max">до</label>
                         </div>
                       </div>
                       <div className="filter-range">
-                        <div className="filter-range__scale">
-                          <div className="filter-range__bar">
-                            <span className="visually-hidden">Полоса прокрутки</span>
-                          </div>
-                        </div>
-                        <div className="filter-range__control">
-                          <button className="filter-range__min-toggle">
-                            <span className="visually-hidden">Минимальное значение</span>
-                          </button>
-                          <button className="filter-range__max-toggle">
-                            <span className="visually-hidden">Максимальное значение</span>
-                          </button>
-                        </div>
+                        <RangeSlider
+                          minRangeValue={minCurrentPrice}
+                          maxRangeValue={maxCurrentPrice}
+                          setExternalValue={setPriceFilter}
+                        />
                       </div>
                     </div>
                     <div className="my-training-form__block my-training-form__block--calories">
