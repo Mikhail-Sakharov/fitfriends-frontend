@@ -1,12 +1,22 @@
 import {Link} from 'react-router-dom';
 import {nanoid} from 'nanoid';
 import {TrainingRdo} from '../../types/training.rdo';
+import {AppRoute} from '../../const';
+import {useAppDispatch} from '../../hooks';
+import {setCurrentTraining} from '../../store/user-data/user-data';
 
 type TrainingThumbnailProps = {
   training: TrainingRdo;
 };
 
 function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const handleToTrainingCardPageLinkClick = () => {
+    dispatch(setCurrentTraining(training));
+    window.scrollTo(0, 0);
+  };
+
   return (
     <div className="thumbnail-training">
       <div className="thumbnail-training__inner">
@@ -56,7 +66,12 @@ function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
           </p>
         </div>
         <div className="thumbnail-training__button-wrapper">
-          <Link className="btn btn--small thumbnail-training__button-catalog" to="#">Подробнее</Link>
+          <Link
+            onClick={handleToTrainingCardPageLinkClick}
+            className="btn btn--small thumbnail-training__button-catalog" to={AppRoute.TrainingCard}
+          >
+            Подробнее
+          </Link>
           <Link className="btn btn--small btn--outlined thumbnail-training__button-catalog" to="#">Отзывы</Link>
         </div>
       </div>

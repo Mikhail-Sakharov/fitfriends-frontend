@@ -25,6 +25,7 @@ type UserData = {
   userRole: UserRole | null;
   certificates: string[];
   trainings: TrainingRdo[];
+  currentTraining: TrainingRdo | null;
 };
 
 const initialState: UserData = {
@@ -42,7 +43,8 @@ const initialState: UserData = {
   gender: null,
   userRole: null,
   certificates: [],
-  trainings: []
+  trainings: [],
+  currentTraining: null
 };
 
 export const userData = createSlice({
@@ -73,6 +75,9 @@ export const userData = createSlice({
     setUserRoleAction: (state, action) => {
       state.userRole = action.payload as UserRole;
     },
+    setCurrentTraining: (state, action) => {
+      state.currentTraining = action.payload as TrainingRdo;
+    }
   },
   extraReducers(builder) {
     builder
@@ -215,5 +220,6 @@ export const {
   setLocationAction,
   setBirthdayAction,
   setGenderAction,
-  setUserRoleAction
+  setUserRoleAction,
+  setCurrentTraining
 } = userData.actions;

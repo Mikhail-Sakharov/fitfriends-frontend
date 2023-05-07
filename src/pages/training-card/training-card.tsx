@@ -1,4 +1,6 @@
 import Header from '../../components/header/header';
+import {useAppSelector} from '../../hooks';
+import {getCurrentTraining} from '../../store/user-data/selectors';
 import {UserRole} from '../../types/user-role.enum';
 import {nanoid} from 'nanoid';
 
@@ -7,26 +9,13 @@ type TrainingCardProps = {
 };
 
 function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
-  const training = {
-    title: 'energy+',
-    bgImageUrl: '7w6er87q6wter',
-    level: 'любитель',
-    type: 'стрейчинг',
-    duration: '10 — 30 мин',
-    price: 6500,
-    caloriesCount: 5000,
-    description: 'Упражнения укрепляют мышечный корсет, делают суставы более гибкими, улучшают осанку и координацию!',
-    gender: 'для всех',
-    videoUrl: '',
-    rating: 0,
-    coachId: '64359129835875db1a1aeade',
-    isSpecialOffer: false
-  };
+  const training = useAppSelector(getCurrentTraining);
+  const trainingPrice = training?.price ? training.price : 0;
   const features = [
-    `#${training.type}`,
-    `#${training.gender}`,
-    `#${training.caloriesCount}ккал`,
-    `#${training.duration}`
+    `#${training ? training.type : ''}`,
+    `#${training ? training.gender : ''}`,
+    `#${training ? training.caloriesCount : ''}ккал`,
+    `#${training ? training.duration : ''}`
   ];
 
   return (
@@ -211,7 +200,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                           <div className="training-info__input training-info__input--training">
                             <label>
                               <span className="training-info__label">Название тренировки</span>
-                              <input type="text" name="training" value={training.title} disabled={userRole !== UserRole.Coach}/>
+                              <input type="text" name="training" value={training?.title} disabled={userRole !== UserRole.Coach}/>
                             </label>
                             <div className="training-info__error">Обязательное поле</div>
                           </div>
@@ -219,7 +208,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                             <label>
                               <span className="training-info__label">Описание тренировки</span>
                               <textarea name="description" disabled={userRole !== UserRole.Coach}>
-                                {training.description}
+                                {training?.description}
                               </textarea>
                             </label>
                           </div>
@@ -233,7 +222,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                                   <use xlinkHref="#icon-star"></use>
                                 </svg>
                               </span>
-                              <input type="number" name="rating" value={training.rating} disabled={userRole !== UserRole.Coach}/>
+                              <input type="number" name="rating" value={training?.rating} disabled={userRole !== UserRole.Coach}/>
                             </label>
                           </div>
                           <ul className="training-info__list">
@@ -254,7 +243,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                           <div className="training-info__input training-info__input--price">
                             <label>
                               <span className="training-info__label">Стоимость</span>
-                              <input type="text" name="price" value={`${training.price} ₽`} disabled={userRole !== UserRole.Coach}/>
+                              <input type="text" name="price" value={`${trainingPrice} ₽`} disabled={userRole !== UserRole.Coach}/>
                             </label>
                             <div className="training-info__error">Введите число</div>
                           </div>
@@ -277,10 +266,10 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                     </form>
                   </div>
                 </div>
-                <div className={`training-video ${training.videoUrl === '' || training.bgImageUrl === '' ? 'training-video--load' : ''}`}>
+                <div className={`training-video ${training?.videoUrl === '' || training?.bgImageUrl === '' ? 'training-video--load' : ''}`}>
                   <h2 className="training-video__title">Видео</h2>
                   {
-                    training.videoUrl !== '' && training.bgImageUrl !== ''
+                    training?.videoUrl !== '' && training?.bgImageUrl !== ''
                       ? (
                         <div className="training-video__video">
                           <div className="training-video__thumbnail">

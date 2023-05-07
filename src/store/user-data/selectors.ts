@@ -23,4 +23,5 @@ export const getTrainingTypes = (state: State): TrainingType[] => state[ReducerN
 export const getTrainingLevel = (state: State): TrainingLevel | null => state[ReducerNameSpace.UserData].trainingLevel;
 export const getCertificates = (state: State): string[] => state[ReducerNameSpace.UserData].certificates;
 export const getTrainings = (state: State): TrainingRdo[] => state[ReducerNameSpace.UserData].trainings;
+export const getCurrentTraining = (state: State): TrainingRdo | null => state[ReducerNameSpace.UserData].currentTraining;
 
