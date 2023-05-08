@@ -19,7 +19,12 @@ function MyTrainings(): JSX.Element {
   const minCurrentPrice = Math.min(...currentTrainingsPrices);
   const maxCurrentPrice = Math.max(...currentTrainingsPrices);
 
+  const currentTrainingsCaloriesCounts = trainings.map((training) => training.caloriesCount);
+  const minCurrentCaloriesCount = Math.min(...currentTrainingsCaloriesCounts);
+  const maxCurrentCaloriesCount = Math.max(...currentTrainingsCaloriesCounts);
+
   const [priceFilter, setPriceFilter] = useState<number[]>([minCurrentPrice, maxCurrentPrice]);
+  const [caloriesCountFilter, setCaloriesCountFilter] = useState<number[]>([minCurrentCaloriesCount, maxCurrentCaloriesCount]);
 
   useEffect(() => {
     dispatch(fetchMyTrainingsAction());
@@ -56,11 +61,20 @@ function MyTrainings(): JSX.Element {
                       <h4 className="my-training-form__block-title">Цена, ₽</h4>
                       <div className="filter-price">
                         <div className="filter-price__input-text filter-price__input-text--min">
-                          <input type="number" id="text-min" name="text-min" placeholder={minCurrentPrice.toString()} value={priceFilter[0].toString()}/>
+                          <input
+                            placeholder={minCurrentPrice.toString()}
+                            value={priceFilter[0].toString()}
+                            type="number" id="text-min"
+                            name="text-min"
+                          />
                           <label htmlFor="text-min">от</label>
                         </div>
                         <div className="filter-price__input-text filter-price__input-text--max">
-                          <input type="number" id="text-max" name="text-max" placeholder={maxCurrentPrice.toString()} value={priceFilter[1].toString()}/>
+                          <input
+                            placeholder={maxCurrentPrice.toString()}
+                            value={priceFilter[1].toString()}
+                            type="number" id="text-max" name="text-max"
+                          />
                           <label htmlFor="text-max">до</label>
                         </div>
                       </div>
@@ -76,28 +90,28 @@ function MyTrainings(): JSX.Element {
                       <h4 className="my-training-form__block-title">Калории</h4>
                       <div className="filter-calories">
                         <div className="filter-calories__input-text filter-calories__input-text--min">
-                          <input type="number" id="text-min-cal" name="text-min-cal"/>
+                          <input
+                            placeholder={minCurrentCaloriesCount.toString()}
+                            value={caloriesCountFilter[0].toString()}
+                            type="number" id="text-min-cal" name="text-min-cal"
+                          />
                           <label htmlFor="text-min-cal">от</label>
                         </div>
                         <div className="filter-calories__input-text filter-calories__input-text--max">
-                          <input type="number" id="text-max-cal" name="text-max-cal"/>
+                          <input
+                            placeholder={maxCurrentCaloriesCount.toString()}
+                            value={caloriesCountFilter[1].toString()}
+                            type="number" id="text-max-cal" name="text-max-cal"
+                          />
                           <label htmlFor="text-max-cal">до</label>
                         </div>
                       </div>
                       <div className="filter-range">
-                        <div className="filter-range__scale">
-                          <div className="filter-range__bar">
-                            <span className="visually-hidden">Полоса прокрутки</span>
-                          </div>
-                        </div>
-                        <div className="filter-range__control">
-                          <button className="filter-range__min-toggle">
-                            <span className="visually-hidden">Минимальное значение</span>
-                          </button>
-                          <button className="filter-range__max-toggle">
-                            <span className="visually-hidden">Максимальное значение</span>
-                          </button>
-                        </div>
+                        <RangeSlider
+                          minRangeValue={minCurrentCaloriesCount}
+                          maxRangeValue={maxCurrentCaloriesCount}
+                          setExternalValue={setCaloriesCountFilter}
+                        />
                       </div>
                     </div>
                     <div className="my-training-form__block my-training-form__block--raiting">
