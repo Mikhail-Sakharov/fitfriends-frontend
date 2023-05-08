@@ -7,6 +7,7 @@ import {nanoid} from 'nanoid';
 import TrainingThumbnail from '../../components/training-thumbnail/training-thumbnail';
 import {MAX_TRAININGS_COUNT_PER_PAGE, RatingCount} from '../../const';
 import RangeSlider from '../../components/range-slider/range-slider';
+import {Duration} from '../../types/duration.enum';
 
 function MyTrainings(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ function MyTrainings(): JSX.Element {
   const [priceFilter, setPriceFilter] = useState<number[]>([minCurrentPrice, maxCurrentPrice]);
   const [caloriesCountFilter, setCaloriesCountFilter] = useState<number[]>([minCurrentCaloriesCount, maxCurrentCaloriesCount]);
   const [ratingFilter, setRatingFilter] = useState<number[]>([RatingCount.MIN, RatingCount.MAX]);
+  const [durationFilter, setDurationFilter] = useState<Duration[]>([]);
 
   useEffect(() => {
     dispatch(fetchMyTrainingsAction());
@@ -37,6 +39,14 @@ function MyTrainings(): JSX.Element {
 
   const handleReturnToTopButtonClick = () => {
     window.scrollTo(0, 0);
+  };
+
+  const handleDurationInputChange = (option: Duration) => {
+    if (durationFilter.includes(option)) {
+      setDurationFilter((prevState) => prevState.filter((durationValue) => durationValue !== option));
+    } else {
+      setDurationFilter((prevState) => [...prevState, option]);
+    }
   };
 
   return (
@@ -136,71 +146,29 @@ function MyTrainings(): JSX.Element {
                     <div className="my-training-form__block my-training-form__block--duration">
                       <h4 className="my-training-form__block-title">Длительность</h4>
                       <ul className="my-training-form__check-list">
-                        <li className="my-training-form__check-list-item">
-                          <div className="custom-toggle custom-toggle--checkbox">
-                            <label>
-                              <input type="checkbox" value="duration-1" name="duration"/>
-                              <span className="custom-toggle__icon">
-                                <svg width="9" height="6" aria-hidden="true">
-                                  <use xlinkHref="#arrow-check"></use>
-                                </svg>
-                              </span>
-                              <span className="custom-toggle__label">10 мин - 30 мин</span>
-                            </label>
-                          </div>
-                        </li>
-                        <li className="my-training-form__check-list-item">
-                          <div className="custom-toggle custom-toggle--checkbox">
-                            <label>
-                              <input type="checkbox" value="duration-1" name="duration" checked/>
-                              <span className="custom-toggle__icon">
-                                <svg width="9" height="6" aria-hidden="true">
-                                  <use xlinkHref="#arrow-check"></use>
-                                </svg>
-                              </span>
-                              <span className="custom-toggle__label">30 мин - 50 мин</span>
-                            </label>
-                          </div>
-                        </li>
-                        <li className="my-training-form__check-list-item">
-                          <div className="custom-toggle custom-toggle--checkbox">
-                            <label>
-                              <input type="checkbox" value="duration-1" name="duration"/>
-                              <span className="custom-toggle__icon">
-                                <svg width="9" height="6" aria-hidden="true">
-                                  <use xlinkHref="#arrow-check"></use>
-                                </svg>
-                              </span>
-                              <span className="custom-toggle__label">50 мин - 80 мин</span>
-                            </label>
-                          </div>
-                        </li>
-                        <li className="my-training-form__check-list-item">
-                          <div className="custom-toggle custom-toggle--checkbox">
-                            <label>
-                              <input type="checkbox" value="duration-1" name="duration"/>
-                              <span className="custom-toggle__icon">
-                                <svg width="9" height="6" aria-hidden="true">
-                                  <use xlinkHref="#arrow-check"></use>
-                                </svg>
-                              </span>
-                              <span className="custom-toggle__label">80 мин - 100 мин</span>
-                            </label>
-                          </div>
-                        </li>
-                        <li className="my-training-form__check-list-item">
-                          <div className="custom-toggle custom-toggle--checkbox">
-                            <label>
-                              <input type="checkbox" value="duration-1" name="duration"/>
-                              <span className="custom-toggle__icon">
-                                <svg width="9" height="6" aria-hidden="true">
-                                  <use xlinkHref="#arrow-check"></use>
-                                </svg>
-                              </span>
-                              <span className="custom-toggle__label">100 мин - 120 мин</span>
-                            </label>
-                          </div>
-                        </li>
+                        {
+                          Object.values(Duration).map((option) => (
+                            <li key={nanoid()} className="my-training-form__check-list-item">
+                              <div className="custom-toggle custom-toggle--checkbox">
+                                <label>
+                                  <input
+                                    onChange={() => handleDurationInputChange(option)}
+                                    checked={durationFilter.includes(option)}
+                                    type="checkbox" value="duration-1" name="duration"
+                                  />
+                                  <span className="custom-toggle__icon">
+                                    <svg width="9" height="6" aria-hidden="true">
+                                      <use xlinkHref="#arrow-check"></use>
+                                    </svg>
+                                  </span>
+                                  <span className="custom-toggle__label">
+                                    {option}
+                                  </span>
+                                </label>
+                              </div>
+                            </li>
+                          ))
+                        }
                       </ul>
                     </div>
                   </form>
