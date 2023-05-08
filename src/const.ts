@@ -70,6 +70,8 @@ export const TrainingTypeImageMap = {
   [TrainingType.PowerLifting]: 'img/content/thumbnails/training-10.jpg'
 };
 
+export const FILTER_QUERY_DELAY = 1000;
+
 export const EMAIL_REG_EXP = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
 export const CERTIFICATE_FILE_TYPES = ['jpg', 'pdf', 'png'];
@@ -135,6 +137,6 @@ export const TrainingDescriptionLength = {
 };
 
 export const RatingCount = {
-  MIN: 1,
+  MIN: 0,
   MAX: 5
 };

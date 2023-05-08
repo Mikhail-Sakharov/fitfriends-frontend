@@ -12,6 +12,11 @@ type TrainingThumbnailProps = {
 function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
   const dispatch = useAppDispatch();
 
+  const features = [
+    `#${training ? training.type : ''}`,
+    `#${training ? training.caloriesCount : ''}ккал`
+  ];
+
   const handleToTrainingCardPageLinkClick = () => {
     dispatch(setCurrentTraining(training));
     window.scrollTo(0, 0);
@@ -37,14 +42,11 @@ function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
         <div className="thumbnail-training__info">
           <ul className="thumbnail-training__hashtags-list">
             {
-              [
-                training.type,
-                training.caloriesCount
-              ].map((tag) => (
+              features.map((tag) => (
                 <li key={nanoid()} className="thumbnail-training__hashtags-item">
                   <div className="hashtag thumbnail-training__hashtag">
                     <span>
-                      {`#${tag}`}
+                      {tag}
                     </span>
                   </div>
                 </li>

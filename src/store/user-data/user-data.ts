@@ -24,8 +24,9 @@ type UserData = {
   gender: Gender | null;
   userRole: UserRole | null;
   certificates: string[];
-  trainings: TrainingRdo[];
   currentTraining: TrainingRdo | null;
+  currentRequestTrainings: TrainingRdo[];
+  allExistingTrainings: TrainingRdo[];
 };
 
 const initialState: UserData = {
@@ -43,8 +44,9 @@ const initialState: UserData = {
   gender: null,
   userRole: null,
   certificates: [],
-  trainings: [],
-  currentTraining: null
+  currentTraining: null,
+  currentRequestTrainings: [],
+  allExistingTrainings: []
 };
 
 export const userData = createSlice({
@@ -207,7 +209,8 @@ export const userData = createSlice({
         state.certificates = (action.payload.questionnaire as CoachQuestionnaire).certificates;
       })
       .addCase(fetchMyTrainingsAction.fulfilled, (state, action) => {
-        state.trainings = action.payload;
+        state.currentRequestTrainings = action.payload[0];
+        state.allExistingTrainings = action.payload[1];
       });
   }
 });

@@ -28,3 +28,11 @@ export const getTrainingsQueryString = (getTrainingsQuery?: GetTrainingsQuery) =
   const queryString = `?${queryParams.filter((param) => param !== '').join('&')}`;
   return queryString;
 };
+
+export const debounce = <T>(callback: (arg: T) => void, delay: number) => {
+  let timeoutId: ReturnType<typeof setTimeout>;
+  return function (arg: T) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback(arg), delay);
+  };
+};

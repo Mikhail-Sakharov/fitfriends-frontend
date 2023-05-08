@@ -130,7 +130,7 @@ export const uploadVideoFileAction = createAsyncThunk<TrainingRdo, CreateTrainin
   },
 ); */
 
-export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[], GetTrainingsQuery | undefined, {
+export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[][], GetTrainingsQuery | undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
@@ -139,6 +139,7 @@ export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[], GetTrainin
   async (getTrainingsQuery, {dispatch, extra: api}) => {
     const queryString = getTrainingsQueryString(getTrainingsQuery);
     const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.Trainings}${queryString}`);
-    return data;
+    const allTrainings = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.Trainings}`);
+    return [data, allTrainings.data];
   },
 );
