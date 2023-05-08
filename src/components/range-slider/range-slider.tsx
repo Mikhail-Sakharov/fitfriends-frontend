@@ -4,10 +4,10 @@ import {useState} from 'react';
 type RangeSliderProps = {
   minRangeValue: number;
   maxRangeValue: number;
-  setExternalValue: (value: number[]) => void;
+  setExternalValues: ((value: number[]) => void)[];
 };
 
-function RangeSlider({minRangeValue, maxRangeValue, setExternalValue}: RangeSliderProps): JSX.Element {
+function RangeSlider({minRangeValue, maxRangeValue, setExternalValues}: RangeSliderProps): JSX.Element {
   const [value, setValue] = useState<number[]>([minRangeValue, maxRangeValue]);
 
   const handleChange = (
@@ -24,13 +24,15 @@ function RangeSlider({minRangeValue, maxRangeValue, setExternalValue}: RangeSlid
       if (activeThumb === 0) {
         const clamped = Math.min(newValue[0], maxRangeValue - minDistance);
         setValue([clamped, clamped + minDistance]);
+        setExternalValues.forEach((cb) => cb([clamped, clamped + minDistance]));
       } else {
         const clamped = Math.max(newValue[1], minDistance);
         setValue([clamped - minDistance, clamped]);
+        setExternalValues.forEach((cb) => cb([clamped - minDistance, clamped]));
       }
     } else {
       setValue(newValue);
-      setExternalValue(newValue);
+      setExternalValues.forEach((cb) => cb(newValue));
     }
   };
 

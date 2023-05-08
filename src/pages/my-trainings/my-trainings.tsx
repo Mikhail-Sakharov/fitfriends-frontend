@@ -1,23 +1,32 @@
 import Header from '../../components/header/header';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getCurrentRequestTrainings, getAllExistingTrainings} from '../../store/user-data/selectors';
-import {FormEvent, useEffect, useLayoutEffect, useState} from 'react';
+import {FormEvent, useEffect, useState} from 'react';
 import {fetchMyTrainingsAction} from '../../store/api-actons';
 import {nanoid} from 'nanoid';
 import TrainingThumbnail from '../../components/training-thumbnail/training-thumbnail';
-import {FILTER_QUERY_DELAY, MAX_TRAININGS_COUNT_PER_PAGE, RatingCount, TrainingCaloriesCount, TrainingPrice} from '../../const';
+import {
+  AppRoute,
+  FILTER_QUERY_DELAY,
+  MAX_TRAININGS_COUNT_PER_PAGE,
+  RatingCount,
+  TrainingCaloriesCount,
+  TrainingPrice
+} from '../../const';
 import RangeSlider from '../../components/range-slider/range-slider';
 import {Duration} from '../../types/duration.enum';
 import {debounce} from '../../helpers';
+import {useNavigate} from 'react-router-dom';
 
 function MyTrainings(): JSX.Element {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const currentRequesttrainings = useAppSelector(getCurrentRequestTrainings);
+  const currentRequestTrainings = useAppSelector(getCurrentRequestTrainings);
   const allExistingTrainings = useAppSelector(getAllExistingTrainings);
 
   const [trainingsPage, setTrainingsPage] = useState(1);
-  const pagesCount = Math.ceil(currentRequesttrainings.length / MAX_TRAININGS_COUNT_PER_PAGE);
+  const pagesCount = Math.ceil(currentRequestTrainings.length / MAX_TRAININGS_COUNT_PER_PAGE);
 
   const currentTrainingsPrices = allExistingTrainings.length !== 0
     ? allExistingTrainings.map((training) => training.price) as number[]
@@ -32,18 +41,15 @@ function MyTrainings(): JSX.Element {
   const maxCurrentCaloriesCount = Math.max(...currentTrainingsCaloriesCounts);
 
   // значения
+  const [price, setPrice] = useState<number[]>([]);
+  const [caloriesCount, setCaloriesCount] = useState<number[]>([]);
   const [duration, setDuration] = useState<Duration[]>([]);
 
   // фильтры
   const [priceFilter, setPriceFilter] = useState<number[]>([]);
   const [caloriesCountFilter, setCaloriesCountFilter] = useState<number[]>([]);
-  const [ratingFilter, setRatingFilter] = useState<number[]>([RatingCount.MIN, RatingCount.MAX]);
+  const [ratingFilter, setRatingFilter] = useState<number[]>([]);
   const [durationFilter, setDurationFilter] = useState<Duration[]>([]);
-
-  // запрос всех тренировок без фильтров
-  useLayoutEffect(() => {
-    dispatch(fetchMyTrainingsAction());
-  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchMyTrainingsAction({
@@ -75,9 +81,11 @@ function MyTrainings(): JSX.Element {
     const inputName = evt.currentTarget.name;
     switch (inputName) {
       case 'text-min':
+        setPrice([inputValue, priceFilter[1]]);
         setPriceFilterDebounced([inputValue, priceFilter[1]]);
         break;
       case 'text-max':
+        setPrice([priceFilter[0], inputValue]);
         setPriceFilterDebounced([priceFilter[0], inputValue]);
         break;
     }
@@ -88,9 +96,11 @@ function MyTrainings(): JSX.Element {
     const inputName = evt.currentTarget.name;
     switch (inputName) {
       case 'text-min-cal':
+        setCaloriesCount([inputValue, caloriesCountFilter[1]]);
         setCaloriesCountFilterDebounced([inputValue, caloriesCountFilter[1]]);
         break;
       case 'text-max-cal':
+        setCaloriesCount([caloriesCountFilter[0], inputValue]);
         setCaloriesCountFilterDebounced([caloriesCountFilter[0], inputValue]);
         break;
     }
@@ -117,7 +127,10 @@ function MyTrainings(): JSX.Element {
               <div className="my-training-form">
                 <h2 className="visually-hidden">Мои тренировки Фильтр</h2>
                 <div className="my-training-form__wrapper">
-                  <button className="btn-flat btn-flat--underlined my-training-form__btnback" type="button">
+                  <button
+                    onClick={() => navigate(AppRoute.SignUpQuestionnaireCoach)}
+                    className="btn-flat btn-flat--underlined my-training-form__btnback" type="button"
+                  >
                     <svg width="14" height="10" aria-hidden="true">
                       <use xlinkHref="#arrow-left"></use>
                     </svg>
@@ -131,7 +144,7 @@ function MyTrainings(): JSX.Element {
                         <div className="filter-price__input-text filter-price__input-text--min">
                           <input
                             onChange={handlePriceInputChange}
-                            value={priceFilter[0]}
+                            value={price[0]}
                             placeholder={minCurrentPrice.toString()}
                             type="number" id="text-min"
                             name="text-min"
@@ -141,7 +154,7 @@ function MyTrainings(): JSX.Element {
                         <div className="filter-price__input-text filter-price__input-text--max">
                           <input
                             onChange={handlePriceInputChange}
-                            value={priceFilter[1]}
+                            value={price[1]}
                             placeholder={maxCurrentPrice.toString()}
                             type="number" id="text-max"
                             name="text-max"
@@ -153,7 +166,7 @@ function MyTrainings(): JSX.Element {
                         <RangeSlider
                           minRangeValue={minCurrentPrice}
                           maxRangeValue={maxCurrentPrice}
-                          setExternalValue={setPriceFilterDebounced}
+                          setExternalValues={[setPriceFilterDebounced, setPrice]}
                         />
                       </div>
                     </div>
@@ -164,7 +177,7 @@ function MyTrainings(): JSX.Element {
                           <input
                             onChange={handleCaloriesCountInputChange}
                             placeholder={minCurrentCaloriesCount.toString()}
-                            value={caloriesCountFilter[0]}
+                            value={caloriesCount[0]}
                             type="number" id="text-min-cal" name="text-min-cal"
                           />
                           <label htmlFor="text-min-cal">от</label>
@@ -173,7 +186,7 @@ function MyTrainings(): JSX.Element {
                           <input
                             onChange={handleCaloriesCountInputChange}
                             placeholder={maxCurrentCaloriesCount.toString()}
-                            value={caloriesCountFilter[1]}
+                            value={caloriesCount[1]}
                             type="number" id="text-max-cal" name="text-max-cal"
                           />
                           <label htmlFor="text-max-cal">до</label>
@@ -183,7 +196,7 @@ function MyTrainings(): JSX.Element {
                         <RangeSlider
                           minRangeValue={minCurrentCaloriesCount}
                           maxRangeValue={maxCurrentCaloriesCount}
-                          setExternalValue={setCaloriesCountFilterDebounced}
+                          setExternalValues={[setCaloriesCountFilterDebounced, setCaloriesCount]}
                         />
                       </div>
                     </div>
@@ -193,14 +206,18 @@ function MyTrainings(): JSX.Element {
                         <RangeSlider
                           minRangeValue={RatingCount.MIN}
                           maxRangeValue={RatingCount.MAX}
-                          setExternalValue={setRaitingFilterDebounced}
+                          setExternalValues={[setRaitingFilterDebounced]}
                         />
                         <div className="filter-raiting__control">
                           <div>
-                            <span>1</span>
+                            <span>
+                              {RatingCount.MIN}
+                            </span>
                           </div>
                           <div>
-                            <span>5</span>
+                            <span>
+                              {RatingCount.MAX}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -240,7 +257,7 @@ function MyTrainings(): JSX.Element {
                 <div className="my-trainings">
                   <ul className="my-trainings__list">
                     {
-                      currentRequesttrainings.slice(0, ((trainingsPage - 1) * MAX_TRAININGS_COUNT_PER_PAGE) + MAX_TRAININGS_COUNT_PER_PAGE).map((training) => (
+                      currentRequestTrainings.slice(0, ((trainingsPage - 1) * MAX_TRAININGS_COUNT_PER_PAGE) + MAX_TRAININGS_COUNT_PER_PAGE).map((training) => (
                         <li key={nanoid()} className="my-trainings__item">
                           <TrainingThumbnail training={training}/>
                         </li>
@@ -255,7 +272,7 @@ function MyTrainings(): JSX.Element {
                             onClick={handleReturnToTopButtonClick}
                             className="btn show-more__button"
                             type="button"
-                            disabled={currentRequesttrainings.length <= MAX_TRAININGS_COUNT_PER_PAGE}
+                            disabled={currentRequestTrainings.length <= MAX_TRAININGS_COUNT_PER_PAGE}
                           >
                             Вернуться в начало
                           </button>
