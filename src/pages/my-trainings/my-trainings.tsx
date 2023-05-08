@@ -266,13 +266,12 @@ function MyTrainings(): JSX.Element {
                   </ul>
                   <div className="show-more my-trainings__show-more">
                     {
-                      trainingsPage === pagesCount
+                      trainingsPage >= pagesCount
                         ? (
                           <button
                             onClick={handleReturnToTopButtonClick}
-                            className="btn show-more__button"
+                            className={`btn show-more__button ${pagesCount <= 1 ? 'visually-hidden' : ''}`}
                             type="button"
-                            disabled={currentRequestTrainings.length <= MAX_TRAININGS_COUNT_PER_PAGE}
                           >
                             Вернуться в начало
                           </button>
