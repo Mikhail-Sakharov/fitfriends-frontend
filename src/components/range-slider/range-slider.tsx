@@ -15,7 +15,7 @@ function RangeSlider({minRangeValue, maxRangeValue, setExternalValue}: RangeSlid
     newValue: number | number[],
     activeThumb: number,
   ) => {
-    const minDistance = maxRangeValue / 10;
+    const minDistance = maxRangeValue / 5;
     if (!Array.isArray(newValue)) {
       return;
     }

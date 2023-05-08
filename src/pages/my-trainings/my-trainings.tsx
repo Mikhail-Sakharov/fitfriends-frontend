@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {fetchMyTrainingsAction} from '../../store/api-actons';
 import {nanoid} from 'nanoid';
 import TrainingThumbnail from '../../components/training-thumbnail/training-thumbnail';
-import {MAX_TRAININGS_COUNT_PER_PAGE} from '../../const';
+import {MAX_TRAININGS_COUNT_PER_PAGE, RatingCount} from '../../const';
 import RangeSlider from '../../components/range-slider/range-slider';
 
 function MyTrainings(): JSX.Element {
@@ -25,6 +25,7 @@ function MyTrainings(): JSX.Element {
 
   const [priceFilter, setPriceFilter] = useState<number[]>([minCurrentPrice, maxCurrentPrice]);
   const [caloriesCountFilter, setCaloriesCountFilter] = useState<number[]>([minCurrentCaloriesCount, maxCurrentCaloriesCount]);
+  const [ratingFilter, setRatingFilter] = useState<number[]>([RatingCount.MIN, RatingCount.MAX]);
 
   useEffect(() => {
     dispatch(fetchMyTrainingsAction());
@@ -117,20 +118,18 @@ function MyTrainings(): JSX.Element {
                     <div className="my-training-form__block my-training-form__block--raiting">
                       <h4 className="my-training-form__block-title">Рейтинг</h4>
                       <div className="filter-raiting">
-                        <div className="filter-raiting__scale">
-                          <div className="filter-raiting__bar">
-                            <span className="visually-hidden">Полоса прокрутки</span>
-                          </div>
-                        </div>
+                        <RangeSlider
+                          minRangeValue={RatingCount.MIN}
+                          maxRangeValue={RatingCount.MAX}
+                          setExternalValue={setRatingFilter}
+                        />
                         <div className="filter-raiting__control">
-                          <button className="filter-raiting__min-toggle">
-                            <span className="visually-hidden">Минимальное значение</span>
-                          </button>
-                          <span>1</span>
-                          <button className="filter-raiting__max-toggle">
-                            <span className="visually-hidden">Максимальное значение</span>
-                          </button>
-                          <span>5</span>
+                          <div>
+                            <span>1</span>
+                          </div>
+                          <div>
+                            <span>5</span>
+                          </div>
                         </div>
                       </div>
                     </div>

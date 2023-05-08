@@ -133,3 +133,8 @@ export const TrainingDescriptionLength = {
   MIN: 10,
   MAX: 140
 };
+
+export const RatingCount = {
+  MIN: 1,
+  MAX: 5
+};
