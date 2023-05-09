@@ -7,7 +7,7 @@ import {
   registerUserAction,
   signInUserAction,
   uploadCertificateAction
-} from '../api-actons';
+} from '../api-actions';
 
 type AppData = {
   dataLoadedStatus: boolean;

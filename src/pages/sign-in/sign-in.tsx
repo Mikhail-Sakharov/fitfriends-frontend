@@ -1,6 +1,6 @@
 import {FormEvent, useState} from 'react';
 import {useAppDispatch} from '../../hooks';
-import {signInUserAction} from '../../store/api-actons';
+import {signInUserAction} from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 function SignIn(): JSX.Element {

@@ -2,7 +2,7 @@ import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} fro
 import {getAccessToken, getRefreshToken} from './tokens';
 import {StatusCodes} from 'http-status-codes';
 import {store} from '../store';
-import {refreshTokensAction} from '../store/api-actons';
+import {refreshTokensAction} from '../store/api-actions';
 import {toast} from 'react-toastify';
 
 const StatusCodeMapping: Record<number, boolean> = {

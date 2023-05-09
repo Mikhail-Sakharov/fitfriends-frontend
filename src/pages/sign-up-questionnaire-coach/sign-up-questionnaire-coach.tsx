@@ -3,7 +3,7 @@ import {TrainingType} from '../../types/training-type.enum';
 import {ChangeEvent, FormEvent, useEffect, useState} from 'react';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {registerUserAction, uploadAvatarAction, uploadCertificateAction} from '../../store/api-actons';
+import {registerUserAction, uploadAvatarAction, uploadCertificateAction} from '../../store/api-actions';
 import {
   getUserName,
   getEmail,

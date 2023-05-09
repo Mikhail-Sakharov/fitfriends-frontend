@@ -56,7 +56,8 @@ export enum AuthorizationStatus {
 export enum ReducerNameSpace {
   AuthProcess = 'AUTH_PROCESS',
   UserData = 'USER_DATA',
-  AppData = 'APP_DATA'
+  AppData = 'APP_DATA',
+  TrainingData = 'TRAINING_DATA'
 }
 
 export const TrainingTypeImageMap = {

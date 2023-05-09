@@ -9,7 +9,7 @@ import {TrainingGenderType} from '../../types/training-gender.enum';
 import {useAppDispatch} from '../../hooks';
 import {useNavigate} from 'react-router-dom';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
-import {createTrainingAction} from '../../store/api-actons';
+import {createTrainingAction} from '../../store/api-actions';
 
 function CreateTraining(): JSX.Element {
   const dispatch = useAppDispatch();

@@ -9,7 +9,7 @@ import {SubwayStation} from '../../types/subway-station.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {Gender} from '../../types/gender.enum';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
-import {updateUserAction, uploadAvatarAction} from '../../store/api-actons';
+import {updateUserAction, uploadAvatarAction} from '../../store/api-actions';
 import {nanoid} from 'nanoid';
 
 function PersonalAccountUser(): JSX.Element {

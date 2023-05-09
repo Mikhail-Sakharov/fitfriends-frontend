@@ -34,7 +34,7 @@ import {
   updateUserAction,
   uploadAvatarAction,
   uploadCertificateAction
-} from '../../store/api-actons';
+} from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {Document, Page, pdfjs} from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css';

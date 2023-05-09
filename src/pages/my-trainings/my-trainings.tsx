@@ -1,6 +1,5 @@
 import Header from '../../components/header/header';
 import {useAppSelector} from '../../hooks';
-import {getCurrentRequestTrainings} from '../../store/user-data/selectors';
 import {useState} from 'react';
 import {nanoid} from 'nanoid';
 import TrainingThumbnail from '../../components/training-thumbnail/training-thumbnail';
@@ -9,6 +8,7 @@ import {
   MAX_TRAININGS_COUNT_PER_PAGE} from '../../const';
 import {useNavigate} from 'react-router-dom';
 import TrainingsFilter from '../../components/trainings-filter/trainings-filter';
+import {getCurrentRequestTrainings} from '../../store/training-data/selectors';
 
 function MyTrainings(): JSX.Element {
   const navigate = useNavigate();

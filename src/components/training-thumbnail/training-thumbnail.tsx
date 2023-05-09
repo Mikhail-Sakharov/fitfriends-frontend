@@ -3,7 +3,8 @@ import {nanoid} from 'nanoid';
 import {TrainingRdo} from '../../types/training.rdo';
 import {AppRoute} from '../../const';
 import {useAppDispatch} from '../../hooks';
-import {setCurrentTraining} from '../../store/user-data/user-data';
+import {setCurrentTraining} from '../../store/training-data/training-data';
+import {fetchUserInfoAction} from '../../store/api-actions';
 
 type TrainingThumbnailProps = {
   training: TrainingRdo;
@@ -19,6 +20,7 @@ function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
 
   const handleToTrainingCardPageLinkClick = () => {
     dispatch(setCurrentTraining(training));
+    dispatch(fetchUserInfoAction(training.coachId));
     window.scrollTo(0, 0);
   };
 

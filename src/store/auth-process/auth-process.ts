@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {AuthorizationStatus, ReducerNameSpace} from '../../const';
-import {refreshTokensAction, registerUserAction, signInUserAction} from '../api-actons';
+import {refreshTokensAction, registerUserAction, signInUserAction} from '../api-actions';
 import {UserRole} from '../../types/user-role.enum';
 
 type AuthProcess = {

@@ -5,7 +5,7 @@ import HistoryRouter from './components/history-router/history-router';
 import browserHistory from './browser-history';
 import {Provider} from 'react-redux';
 import {store} from './store';
-import {refreshTokensAction} from './store/api-actons';
+import {refreshTokensAction} from './store/api-actions';
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import {setDataLoadedStatus} from './store/app-data/app-data';

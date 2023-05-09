@@ -7,7 +7,7 @@ import {getAvatar, getUserName, getEmail, getPassword, getGender, getBirthday, g
 import {AppRoute, TrainingTypesCount, UserDailyCaloriesCount, UserTotalCaloriesCount} from '../../const';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {Duration} from '../../types/duration.enum';
-import {registerUserAction, uploadAvatarAction} from '../../store/api-actons';
+import {registerUserAction, uploadAvatarAction} from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 function SignUpQuestionnaireUser(): JSX.Element {

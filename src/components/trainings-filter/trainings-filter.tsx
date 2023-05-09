@@ -2,11 +2,11 @@ import {FormEvent, useEffect, useState} from 'react';
 import RangeSlider from '../range-slider/range-slider';
 import {Duration} from '../../types/duration.enum';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {getAllExistingTrainings} from '../../store/user-data/selectors';
 import {FILTER_QUERY_DELAY, RatingCount, TrainingCaloriesCount, TrainingPrice} from '../../const';
-import {fetchMyTrainingsAction} from '../../store/api-actons';
+import {fetchMyTrainingsAction} from '../../store/api-actions';
 import {debounce} from '../../helpers';
 import {nanoid} from 'nanoid';
+import {getAllExistingTrainings} from '../../store/training-data/selectors';
 
 function TrainingsFilter(): JSX.Element {
   const dispatch = useAppDispatch();
