@@ -1,16 +1,21 @@
 import Header from '../../components/header/header';
 import ReviewsList from '../../components/reviews-list/reviews-list';
 import {FF_USERS_URL} from '../../const';
-import {useAppSelector} from '../../hooks';
+import {useAppDispatch, useAppSelector} from '../../hooks';
 import {UserRole} from '../../types/user-role.enum';
 import {nanoid} from 'nanoid';
 import {getCurrentTraining, getUserInfo} from '../../store/training-data/selectors';
+import {useEffect} from 'react';
+import {getTrainingId} from '../../helpers';
+import {fetchTrainingInfoAction, fetchUserInfoAction} from '../../store/api-actions';
 
 type TrainingCardProps = {
   userRole: UserRole;
 };
 
 function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const training = useAppSelector(getCurrentTraining);
   const trainingAuthor = useAppSelector(getUserInfo);
   const avatar = trainingAuthor?.avatarUrl;
@@ -22,6 +27,14 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     `#${training ? training.caloriesCount : ''}ккал`,
     `#${training ? training.duration : ''}`
   ];
+
+  useEffect(() => {
+    if (!training) {
+      dispatch(fetchTrainingInfoAction(getTrainingId()));
+    } else if (!avatar || !userName) {
+      dispatch(fetchUserInfoAction(training.coachId));
+    }
+  }, [avatar, dispatch, training, userName]);
 
   return (
     <>
@@ -82,9 +95,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                           <div className="training-info__textarea">
                             <label>
                               <span className="training-info__label">Описание тренировки</span>
-                              <textarea name="description" disabled={userRole !== UserRole.Coach}>
-                                {training?.description}
-                              </textarea>
+                              <textarea name="description" disabled={userRole !== UserRole.Coach} value={training?.description}></textarea>
                             </label>
                           </div>
                         </div>

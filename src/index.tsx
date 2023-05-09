@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <Provider store = {store}>
+    <Provider store={store}>
       <HistoryRouter history={browserHistory}>
         <ToastContainer limit={1}/>
         <App />

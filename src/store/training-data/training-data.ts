@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {fetchMyTrainingsAction, fetchUserInfoAction} from '../api-actions';
+import {fetchMyTrainingsAction, fetchTrainingInfoAction, fetchUserInfoAction} from '../api-actions';
 import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
 
@@ -34,6 +34,9 @@ export const trainingData = createSlice({
       })
       .addCase(fetchUserInfoAction.fulfilled, (state, action) => {
         state.userInfo = action.payload;
+      })
+      .addCase(fetchTrainingInfoAction.fulfilled, (state, action) => {
+        state.currentTraining = action.payload;
       });
   }
 });

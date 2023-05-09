@@ -155,3 +155,15 @@ export const fetchUserInfoAction = createAsyncThunk<UserRdo, string, {
     return data;
   },
 );
+
+export const fetchTrainingInfoAction = createAsyncThunk<TrainingRdo, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'trainings/info',
+  async (trainingId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<TrainingRdo>(`${FF_SERVICE_URL}${APIRoute.Trainings}/${trainingId}`);
+    return data;
+  },
+);

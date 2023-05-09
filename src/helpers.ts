@@ -36,3 +36,16 @@ export const debounce = <T>(callback: (arg: T) => void, delay: number) => {
     timeoutId = setTimeout(() => callback(arg), delay);
   };
 };
+
+export const saveTrainingId = (trainingId: string): void => {
+  localStorage.setItem('fitfriends-trainingId', trainingId);
+};
+
+export const getTrainingId = (): string => {
+  const trainingId = localStorage.getItem('fitfriends-trainingId');
+  return trainingId ?? '';
+};
+
+export const dropTrainingId = (): void => {
+  localStorage.removeItem('fitfriends-trainingId');
+};
