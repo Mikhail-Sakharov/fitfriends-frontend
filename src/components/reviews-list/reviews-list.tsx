@@ -12,7 +12,7 @@ function ReviewsList(): JSX.Element {
   return (
     <aside className="reviews-side-bar">
       <button
-        onClick={() => navigate(AppRoute.SignUpQuestionnaireCoach)}
+        onClick={() => navigate(AppRoute.MyTrainings)}
         className="btn-flat btn-flat--underlined reviews-side-bar__back" type="button"
       >
         <svg width="14" height="10" aria-hidden="true">
