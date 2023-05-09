@@ -1,15 +1,20 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {createTrainingAction, deleteCertificateAction, refreshTokensAction, registerUserAction, signInUserAction, uploadCertificateAction} from '../api-actons';
+import {
+  createTrainingAction,
+  deleteCertificateAction,
+  refreshTokensAction,
+  registerUserAction,
+  signInUserAction,
+  uploadCertificateAction
+} from '../api-actons';
 
 type AppData = {
   dataLoadedStatus: boolean;
-  createdTrainingId: string;
 };
 
 const initialState: AppData = {
   dataLoadedStatus: false,
-  createdTrainingId: ''
 };
 
 export const appData = createSlice({
@@ -40,8 +45,7 @@ export const appData = createSlice({
       .addCase(signInUserAction.rejected, (state) => {
         state.dataLoadedStatus = false;
       })
-      .addCase(createTrainingAction.fulfilled, (state, action) => {
-        state.createdTrainingId = action.payload.id;
+      .addCase(createTrainingAction.fulfilled, (state) => {
         state.dataLoadedStatus = false;
       })
       .addCase(createTrainingAction.rejected, (state) => {
@@ -50,7 +54,13 @@ export const appData = createSlice({
       .addCase(uploadCertificateAction.fulfilled, (state) => {
         state.dataLoadedStatus = false;
       })
+      .addCase(uploadCertificateAction.rejected, (state) => {
+        state.dataLoadedStatus = false;
+      })
       .addCase(deleteCertificateAction.fulfilled, (state) => {
+        state.dataLoadedStatus = false;
+      })
+      .addCase(deleteCertificateAction.rejected, (state) => {
         state.dataLoadedStatus = false;
       });
   }
