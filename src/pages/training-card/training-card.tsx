@@ -1,6 +1,6 @@
 import Header from '../../components/header/header';
 import ReviewsList from '../../components/reviews-list/reviews-list';
-import {FF_USERS_URL} from '../../const';
+import {FF_USERS_URL, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {UserRole} from '../../types/user-role.enum';
 import {nanoid} from 'nanoid';
@@ -40,42 +40,94 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
   const [price, setPrice] = useState('');
   const [isSpecialOffer, setIsSpecialOffer] = useState(false);
 
+  // текст ошибки
+  const [titleError, setTitleTypeError] = useState('');
+  const [descriptionError, setDescriptionError] = useState('');
+  const [priceError, setPriceError] = useState('');
+
+  // валидны ли данные формы или нет
+  const [formValid, setFormValid] = useState(true);
+
   useEffect(() => {
     if (!training) {
       dispatch(fetchTrainingInfoAction(getTrainingId()));
     } else if (!avatar || !userName) {
       dispatch(fetchUserInfoAction(training.coachId));
     }
-  }, [avatar, dispatch, training, userName]);
+    if (titleError || descriptionError || priceError) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
+  }, [avatar, descriptionError, dispatch, priceError, titleError, training, userName]);
 
   const handleTitleInputChange = () => {
-    setTitle(titleInputRef.current ? titleInputRef.current.value : '');
+    const value = titleInputRef.current ? titleInputRef.current.value : '';
+    setTitle(value);
+    if (value.length < TrainingTitleLength.MIN || value.length > TrainingTitleLength.MAX) {
+      setTitleTypeError(`Длина названия от ${TrainingTitleLength.MIN} до ${TrainingTitleLength.MAX} символов`);
+      if (!value) {
+        setTitleTypeError('Укажите название тренировки');
+      }
+    } else {
+      setTitleTypeError('');
+    }
   };
 
   const handleDescriptionInputChange = () => {
-    setDescription(descriptionInputRef.current ? descriptionInputRef.current.value : '');
+    const value = descriptionInputRef.current ? descriptionInputRef.current.value : '';
+    setDescription(value);
+    setDescription(value);
+    if (value.length < TrainingDescriptionLength.MIN || value.length > TrainingDescriptionLength.MAX) {
+      setDescriptionError(`Длина описания от ${TrainingDescriptionLength.MIN} до ${TrainingDescriptionLength.MAX} символов`);
+      if (!value) {
+        setDescriptionError('Опишите тренировку');
+      }
+    } else {
+      setDescriptionError('');
+    }
   };
 
   const handlePriceInputChange = () => {
-    setPrice(priceInputRef.current ? priceInputRef.current.value : '');
+    const value = priceInputRef.current ? priceInputRef.current.value : '';
+    setPrice(value);
+    if (Number(value) < TrainingPrice.MIN || Number(value) > TrainingPrice.MAX) {
+      setPriceError(`Цена от ${TrainingPrice.MIN} до ${TrainingPrice.MAX}`);
+      if (!value) {
+        setPriceError('Укажите цену');
+      }
+    } else {
+      setPriceError('');
+    }
   };
 
   const handleEditButtonClick = () => {
-    setTitle(training ? training.title : '');
-    setDescription(training ? training.description : '');
-    setPrice(training ? String(training.price) : '');
+    if (!title && titleInputRef.current) {
+      setTitle(training ? training.title : '');
+      titleInputRef.current.value = training ? training.title : '';
+    }
+    if (!description && descriptionInputRef.current) {
+      setDescription(training ? training.description : '');
+      descriptionInputRef.current.value = training ? training.description : '';
+    }
+    if (!price && priceInputRef.current) {
+      setPrice(training ? String(training.price) : '');
+      priceInputRef.current.value = training ? String(training.price) : '';
+    }
     setIsContentEditable(true);
   };
 
   const handleSaveButtonClick = () => {
     setIsContentEditable(false);
     // TODO: валидация и отправка данных
-    console.log({
-      title,
-      description,
-      price,
-      isSpecialOffer
-    });
+    if (formValid) {
+      console.log({
+        title,
+        description,
+        price,
+        isSpecialOffer
+      });
+    }
   };
 
   return (
@@ -110,6 +162,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                           <button
                             onClick={handleSaveButtonClick}
                             className="btn-flat btn-flat--light btn-flat--underlined training-info__edit training-info__edit--save" type="button"
+                            disabled={!formValid}
                           >
                             <svg width="12" height="12" aria-hidden="true">
                               <use xlinkHref="#icon-edit"></use>
@@ -137,7 +190,13 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                     <form action="#" method="get">
                       <div className="training-info__form-wrapper">
                         <div className="training-info__info-wrapper">
-                          <div className="training-info__input training-info__input--training">
+                          <div
+                            className={`
+                              training-info__input
+                              ${titleError ? 'is-invalid' : ''}
+                              training-info__input--training
+                            `}
+                          >
                             <label>
                               <span className="training-info__label">Название тренировки</span>
                               <input
@@ -148,9 +207,16 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                                 disabled={!isContentEditable}
                               />
                             </label>
-                            <div className="training-info__error">Обязательное поле</div>
+                            <div className="training-info__error">
+                              {titleError}
+                            </div>
                           </div>
-                          <div className="training-info__textarea">
+                          <div
+                            className={`
+                              training-info__textarea
+                              ${descriptionError ? 'training-info__input is-invalid' : ''}
+                            `}
+                          >
                             <label>
                               <span className="training-info__label">Описание тренировки</span>
                               <textarea
@@ -162,6 +228,9 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                               >
                               </textarea>
                             </label>
+                            <div className="training-info__error">
+                              {descriptionError}
+                            </div>
                           </div>
                         </div>
                         <div className="training-info__rating-wrapper">
@@ -191,7 +260,13 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                           </ul>
                         </div>
                         <div className="training-info__price-wrapper">
-                          <div className="training-info__input training-info__input--price">
+                          <div
+                            className={`
+                              training-info__input
+                              ${priceError ? 'is-invalid' : ''}
+                              training-info__input--price
+                            `}
+                          >
                             <label>
                               <span className="training-info__label">Стоимость, ₽</span>
                               <input
@@ -202,7 +277,9 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                                 disabled={!isContentEditable}
                               />
                             </label>
-                            <div className="training-info__error">Введите число</div>
+                            <div className="training-info__error">
+                              {priceError}
+                            </div>
                           </div>
                           {
                             userRole === UserRole.Coach
