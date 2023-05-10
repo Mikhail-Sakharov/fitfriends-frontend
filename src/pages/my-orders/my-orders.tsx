@@ -5,23 +5,29 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getCurrentRequestOrders} from '../../store/training-data/selectors';
 import {useEffect, useState} from 'react';
 import {fetchMyOrdersAction} from '../../store/api-actions';
-import {MAX_ORDERS_COUNT_PER_PAGE} from '../../const';
+import {AppRoute, MAX_ORDERS_COUNT_PER_PAGE} from '../../const';
 import {SortType} from '../../types/sort.type';
 import {SortOrder} from '../../types/sort-order';
+import {useNavigate} from 'react-router-dom';
 
 function MyOrders(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const currentRequestOrders = useAppSelector(getCurrentRequestOrders);
 
   const [ordersPage, setOrdersPage] = useState(1);
   const pagesCount = Math.ceil(currentRequestOrders.length / MAX_ORDERS_COUNT_PER_PAGE);
 
+  // выбранный в данный момент тип сортировки
   const [activeSortType, setActiveSortType] = useState<SortType | undefined>(undefined);
+  // выбранный в данный момент порядок сортировки
   const [activeSortOrder, setActiveSortOrder] = useState<SortOrder | undefined>(undefined);
+  // состояния кнопок сортировки
   const [moneySelectedSortOrder, setMoneySelectedSortOrder] = useState<SortOrder>(SortOrder.Desc);
   const [quantitySelectedSortOrder, setQuantitySelectedSortOrder] = useState<SortOrder>(SortOrder.Desc);
 
+  // проверка и установка активного порядка сортировки
   useEffect(() => {
     switch(activeSortType) {
       case SortType.AmountOfMoney:
@@ -32,8 +38,6 @@ function MyOrders(): JSX.Element {
         break;
     }
   }, [activeSortType, moneySelectedSortOrder, quantitySelectedSortOrder]);
-
-  console.log(activeSortType, activeSortOrder);
 
   const handleSortForMoneyButtonClick = () => {
     setActiveSortType(SortType.AmountOfMoney);
@@ -58,8 +62,11 @@ function MyOrders(): JSX.Element {
   };
 
   useEffect(() => {
-    dispatch(fetchMyOrdersAction());
-  }, [dispatch]);
+    dispatch(fetchMyOrdersAction({
+      sortType: activeSortType,
+      sortOrder: activeSortOrder
+    }));
+  }, [activeSortOrder, activeSortType, dispatch]);
 
   return (
     <>
@@ -68,7 +75,10 @@ function MyOrders(): JSX.Element {
         <section className="my-orders">
           <div className="container">
             <div className="my-orders__wrapper">
-              <button className="btn-flat btn-flat--underlined my-orders__back" type="button">
+              <button
+                onClick={() => navigate(AppRoute.PersonalAccountCoach)}
+                className="btn-flat btn-flat--underlined my-orders__back" type="button"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-left"></use>
                 </svg>

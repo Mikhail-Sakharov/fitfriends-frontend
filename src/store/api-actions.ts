@@ -9,9 +9,10 @@ import {SignInUserRequestBody} from '../types/sign-in-user-request-body';
 import UpdateUserDto from '../types/update-user.dto';
 import {TrainingRdo} from '../types/training.rdo';
 import {GetTrainingsQuery} from '../types/get-trainings.query';
-import {getTrainingsQueryString} from '../helpers';
+import {getQueryString} from '../helpers';
 import UpdateTrainingDto from '../types/update-training.dto';
 import {OrderRdo} from '../types/order.rdo';
+import {GetOrdersQuery} from '../types/get-orders.query';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -144,7 +145,7 @@ export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[][], GetTrain
 }>(
   'coach/myTrainings',
   async (getTrainingsQuery, {dispatch, extra: api}) => {
-    const queryString = getTrainingsQueryString(getTrainingsQuery);
+    const queryString = getQueryString(getTrainingsQuery);
     const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.Trainings}${queryString}`);
     const allTrainings = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.Trainings}`);
     return [data, allTrainings.data];
@@ -189,14 +190,15 @@ export const updateTrainingAction = createAsyncThunk<TrainingRdo, UpdateTraining
   },
 );
 
-export const fetchMyOrdersAction = createAsyncThunk<OrderRdo[], undefined, {
+export const fetchMyOrdersAction = createAsyncThunk<OrderRdo[], GetOrdersQuery | undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
 }>(
   'getMyOrders',
-  async (_arg, {dispatch, extra: api}) => {
-    const {data} = await api[0].get<OrderRdo[]>(`${FF_SERVICE_URL}${APIRoute.Orders}`);
+  async (getOrdersQueryArgs, {dispatch, extra: api}) => {
+    const queryString = getQueryString(getOrdersQueryArgs);
+    const {data} = await api[0].get<OrderRdo[]>(`${FF_SERVICE_URL}${APIRoute.Orders}${queryString}`);
     return data;
   },
 );

@@ -8,21 +8,21 @@ export const getHumanizedDate = (date: string) => {
   return humanizedDate;
 };
 
-export const getTrainingsQueryString = (getTrainingsQuery?: GetTrainingsQuery) => {
-  if (!getTrainingsQuery) {return '';}
+export const getQueryString = (queryArgs?: GetTrainingsQuery) => {
+  if (!queryArgs) {return '';}
 
   const queryParams = [
-    `${getTrainingsQuery.minPrice ? `minPrice=${getTrainingsQuery.minPrice}` : ''}`,
-    `${getTrainingsQuery.maxPrice ? `maxPrice=${getTrainingsQuery.maxPrice}` : ''}`,
-    `${getTrainingsQuery.minCaloriesCount ? `minCaloriesCount=${getTrainingsQuery.minCaloriesCount}` : ''}`,
-    `${getTrainingsQuery.maxCaloriesCount ? `maxCaloriesCount=${getTrainingsQuery.maxCaloriesCount}` : ''}`,
-    `${getTrainingsQuery.minRating ? `minRating=${getTrainingsQuery.minRating}` : ''}`,
-    `${getTrainingsQuery.maxRating ? `maxRating=${getTrainingsQuery.maxRating}` : ''}`,
-    `${getTrainingsQuery.duration ? `duration=${getTrainingsQuery.duration}` : ''}`,
-    `${getTrainingsQuery.sortType ? `sortType=${getTrainingsQuery.sortType}` : ''}`,
-    `${getTrainingsQuery.sortOrder ? `sortOrder=${getTrainingsQuery.sortOrder}` : ''}`,
-    `${getTrainingsQuery.page ? `page=${getTrainingsQuery.page}` : ''}`,
-    `${getTrainingsQuery.limit ? `limit=${getTrainingsQuery.limit}` : ''}`,
+    `${queryArgs.minPrice ? `minPrice=${queryArgs.minPrice}` : ''}`,
+    `${queryArgs.maxPrice ? `maxPrice=${queryArgs.maxPrice}` : ''}`,
+    `${queryArgs.minCaloriesCount ? `minCaloriesCount=${queryArgs.minCaloriesCount}` : ''}`,
+    `${queryArgs.maxCaloriesCount ? `maxCaloriesCount=${queryArgs.maxCaloriesCount}` : ''}`,
+    `${queryArgs.minRating ? `minRating=${queryArgs.minRating}` : ''}`,
+    `${queryArgs.maxRating ? `maxRating=${queryArgs.maxRating}` : ''}`,
+    `${queryArgs.duration ? `duration=${queryArgs.duration}` : ''}`,
+    `${queryArgs.sortType ? `sortType=${queryArgs.sortType}` : ''}`,
+    `${queryArgs.sortOrder ? `sortOrder=${queryArgs.sortOrder}` : ''}`,
+    `${queryArgs.page ? `page=${queryArgs.page}` : ''}`,
+    `${queryArgs.limit ? `limit=${queryArgs.limit}` : ''}`,
   ];
 
   const queryString = `?${queryParams.filter((param) => param !== '').join('&')}`;
