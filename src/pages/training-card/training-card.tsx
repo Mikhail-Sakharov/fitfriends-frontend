@@ -1,6 +1,6 @@
 import Header from '../../components/header/header';
 import ReviewsList from '../../components/reviews-list/reviews-list';
-import {FF_USERS_URL, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength} from '../../const';
+import {FF_SERVICE_URL, FF_USERS_URL, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {UserRole} from '../../types/user-role.enum';
 import {nanoid} from 'nanoid';
@@ -33,6 +33,8 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const titleInputRef = useRef<HTMLInputElement | null>(null);
   const descriptionInputRef = useRef<HTMLTextAreaElement | null>(null);
+  const videoElementRef = useRef<HTMLVideoElement | null>(null);
+  const playButtonRef = useRef<HTMLButtonElement | null>(null);
 
   // значения полей
   const [title, setTitle] = useState('');
@@ -115,6 +117,26 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
       priceInputRef.current.value = training ? String(training.price) : '';
     }
     setIsContentEditable(true);
+  };
+
+  const handlePlayButtonClick = () => {
+    if (videoElementRef.current) {
+      videoElementRef.current.play();
+      videoElementRef.current.controls = true;
+    }
+    if (playButtonRef.current) {
+      playButtonRef.current.style.display = 'none';
+    }
+  };
+
+  const handlePauseControlClick = () => {
+    if (videoElementRef.current) {
+      videoElementRef.current.pause();
+      videoElementRef.current.controls = false;
+    }
+    if (playButtonRef.current) {
+      playButtonRef.current.style.display = 'flex';
+    }
   };
 
   const dispatchFormData = async () => {
@@ -321,12 +343,10 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                       ? (
                         <div className="training-video__video">
                           <div className="training-video__thumbnail">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/training-video/video-thumbnail.webp, img/content/training-video/video-thumbnail@2x.webp 2x"/>
-                              <img src="img/content/training-video/video-thumbnail.png" srcSet="img/content/training-video/video-thumbnail@2x.png 2x" width="922" height="566" alt="Обложка видео"/>
-                            </picture>
+                            <video onPause={handlePauseControlClick} ref={videoElementRef} src={`${FF_SERVICE_URL}/${training ? training?.videoUrl : ''}`}>
+                            </video>
                           </div>
-                          <button className="training-video__play-button btn-reset">
+                          <button ref={playButtonRef} onClick={handlePlayButtonClick} className="training-video__play-button btn-reset">
                             <svg width="18" height="30" aria-hidden="true">
                               <use xlinkHref="#icon-arrow"></use>
                             </svg>
