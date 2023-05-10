@@ -88,6 +88,8 @@ export const MAX_CERTIFICATES_COUNT_PER_PAGE = 3;
 
 export const MAX_TRAININGS_COUNT_PER_PAGE = 12;
 
+export const MAX_ORDERS_COUNT_PER_PAGE = 4;
+
 export const UserDailyCaloriesCount = {
   MIN: 1000,
   MAX: 5000
