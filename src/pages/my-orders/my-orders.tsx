@@ -6,6 +6,8 @@ import {getCurrentRequestOrders} from '../../store/training-data/selectors';
 import {useEffect, useState} from 'react';
 import {fetchMyOrdersAction} from '../../store/api-actions';
 import {MAX_ORDERS_COUNT_PER_PAGE} from '../../const';
+import {SortType} from '../../types/sort.type';
+import {SortOrder} from '../../types/sort-order';
 
 function MyOrders(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -14,6 +16,38 @@ function MyOrders(): JSX.Element {
 
   const [ordersPage, setOrdersPage] = useState(1);
   const pagesCount = Math.ceil(currentRequestOrders.length / MAX_ORDERS_COUNT_PER_PAGE);
+
+  const [activeSortType, setActiveSortType] = useState<SortType | undefined>(undefined);
+  const [activeSortOrder, setActiveSortOrder] = useState<SortOrder | undefined>(undefined);
+  const [moneySelectedSortOrder, setMoneySelectedSortOrder] = useState<SortOrder>(SortOrder.Desc);
+  const [quantitySelectedSortOrder, setQuantitySelectedSortOrder] = useState<SortOrder>(SortOrder.Desc);
+
+  useEffect(() => {
+    switch(activeSortType) {
+      case SortType.AmountOfMoney:
+        setActiveSortOrder(moneySelectedSortOrder);
+        break;
+      case SortType.Quantity:
+        setActiveSortOrder(quantitySelectedSortOrder);
+        break;
+    }
+  }, [activeSortType, moneySelectedSortOrder, quantitySelectedSortOrder]);
+
+  console.log(activeSortType, activeSortOrder);
+
+  const handleSortForMoneyButtonClick = () => {
+    setActiveSortType(SortType.AmountOfMoney);
+    if (activeSortType === SortType.AmountOfMoney) {
+      setMoneySelectedSortOrder((prevState) => prevState === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc);
+    }
+  };
+
+  const handleSortForQuantityButtonClick = () => {
+    setActiveSortType(SortType.Quantity);
+    if (activeSortType === SortType.Quantity) {
+      setQuantitySelectedSortOrder((prevState) => prevState === SortOrder.Desc ? SortOrder.Asc : SortOrder.Desc);
+    }
+  };
 
   const handleShowMoreButtonClick = () => {
     setOrdersPage((prevState) => prevState < pagesCount ? prevState + 1 : prevState);
@@ -45,17 +79,43 @@ function MyOrders(): JSX.Element {
                 <div className="sort-for">
                   <p>Сортировать по:</p>
                   <div className="sort-for__btn-container">
-                    <button className="btn-filter-sort" type="button">
+                    <button
+                      onClick={handleSortForMoneyButtonClick}
+                      className="btn-filter-sort" type="button"
+                    >
                       <span>Сумме</span>
-                      <svg width="16" height="10" aria-hidden="true">
-                        <use xlinkHref="#icon-sort-up"></use>
-                      </svg>
+                      {
+                        moneySelectedSortOrder === SortOrder.Desc
+                          ? (
+                            <svg width="16" height="10" aria-hidden="true">
+                              <use xlinkHref="#icon-sort-down"></use>
+                            </svg>
+                          )
+                          : (
+                            <svg width="16" height="10" aria-hidden="true">
+                              <use xlinkHref="#icon-sort-up"></use>
+                            </svg>
+                          )
+                      }
                     </button>
-                    <button className="btn-filter-sort" type="button">
+                    <button
+                      onClick={handleSortForQuantityButtonClick}
+                      className="btn-filter-sort" type="button"
+                    >
                       <span>Количеству</span>
-                      <svg width="16" height="10" aria-hidden="true">
-                        <use xlinkHref="#icon-sort-down"></use>
-                      </svg>
+                      {
+                        quantitySelectedSortOrder === SortOrder.Desc
+                          ? (
+                            <svg width="16" height="10" aria-hidden="true">
+                              <use xlinkHref="#icon-sort-down"></use>
+                            </svg>
+                          )
+                          : (
+                            <svg width="16" height="10" aria-hidden="true">
+                              <use xlinkHref="#icon-sort-up"></use>
+                            </svg>
+                          )
+                      }
                     </button>
                   </div>
                 </div>
