@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AxiosInstance} from 'axios';
-import {APIRoute, FF_SERVICE_URL, FF_USERS_URL} from '../const';
+import {APIRoute, FF_NOTIFIER_URL, FF_SERVICE_URL, FF_USERS_URL} from '../const';
 import {UserRdo, UserResponse} from '../types/user.response';
 import {RegisterUserRequestBody} from '../types/register-user-request-body';
 import {AppDispatch, State} from '../types/state';
@@ -13,6 +13,7 @@ import {getQueryString} from '../helpers';
 import UpdateTrainingDto from '../types/update-training.dto';
 import {OrderRdo} from '../types/order.rdo';
 import {GetOrdersQuery} from '../types/get-orders.query';
+import {UserRequestRdo} from '../types/user-request.rdo';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -199,6 +200,30 @@ export const fetchMyOrdersAction = createAsyncThunk<OrderRdo[], GetOrdersQuery |
   async (getOrdersQueryArgs, {dispatch, extra: api}) => {
     const queryString = getQueryString(getOrdersQueryArgs);
     const {data} = await api[0].get<OrderRdo[]>(`${FF_SERVICE_URL}${APIRoute.Orders}${queryString}`);
+    return data;
+  },
+);
+
+export const fetchMyFriendsAction = createAsyncThunk<UserRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'getMyFriends',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<UserRdo[]>(`${FF_USERS_URL}${APIRoute.Friends}`);
+    return data;
+  },
+);
+
+export const fetchUserRequestsForTraining = createAsyncThunk<UserRequestRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchUserRequestsForTraining',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<UserRequestRdo[]>(`${FF_NOTIFIER_URL}${APIRoute.UserRequests}`);
     return data;
   },
 );

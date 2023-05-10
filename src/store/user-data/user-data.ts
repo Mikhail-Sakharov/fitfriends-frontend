@@ -5,6 +5,8 @@ import {Gender} from '../../types/gender.enum';
 import {UserRole} from '../../types/user-role.enum';
 import {
   deleteCertificateAction,
+  fetchMyFriendsAction,
+  fetchUserRequestsForTraining,
   refreshTokensAction,
   registerUserAction,
   signInUserAction,
@@ -15,6 +17,8 @@ import {
 import {TrainingType} from '../../types/training-type.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {CoachQuestionnaire, UserQuestionnaire} from '../../types/user.interface';
+import {UserRdo} from '../../types/user.response';
+import {UserRequestRdo} from '../../types/user-request.rdo';
 
 type UserData = {
   avatar: string;
@@ -31,6 +35,8 @@ type UserData = {
   gender: Gender | null;
   userRole: UserRole | null;
   certificates: string[];
+  myFriends: UserRdo[];
+  myRequests: UserRequestRdo[];
 };
 
 const initialState: UserData = {
@@ -47,7 +53,9 @@ const initialState: UserData = {
   birthday: '',
   gender: null,
   userRole: null,
-  certificates: []
+  certificates: [],
+  myFriends: [],
+  myRequests: []
 };
 
 export const userData = createSlice({
@@ -205,6 +213,12 @@ export const userData = createSlice({
         state.location = action.payload.location;
         state.gender = action.payload.gender;
         state.certificates = (action.payload.questionnaire as CoachQuestionnaire).certificates;
+      })
+      .addCase(fetchMyFriendsAction.fulfilled, (state, action) => {
+        state.myFriends = action.payload;
+      })
+      .addCase(fetchUserRequestsForTraining.fulfilled, (state, action) => {
+        state.myRequests = action.payload;
       });
   }
 });

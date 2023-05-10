@@ -31,6 +31,8 @@ export const FF_USERS_URL = 'http://localhost:5678';
 
 export const FF_SERVICE_URL = 'http://localhost:5679';
 
+export const FF_NOTIFIER_URL = 'http://localhost:5681';
+
 export enum APIRoute {
   Register = '/auth/register',
   Login = '/auth/login',
@@ -46,6 +48,7 @@ export enum APIRoute {
   Trainings = '/trainings',
   TrainingVideo = '/trainings/video',
   Orders = '/orders/trainings',
+  UserRequests = '/user-requests'
 }
 
 export enum AuthorizationStatus {

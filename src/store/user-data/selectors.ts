@@ -4,7 +4,9 @@ import {State} from '../../types/state';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {TrainingType} from '../../types/training-type.enum';
+import {UserRequestRdo} from '../../types/user-request.rdo';
 import {UserRole} from '../../types/user-role.enum';
+import {UserRdo} from '../../types/user.response';
 
 export const getAvatar = (state: State): string => state[ReducerNameSpace.UserData].avatar;
 export const getUserName = (state: State): string => state[ReducerNameSpace.UserData].userName;
@@ -21,4 +23,7 @@ export const getIsReadyToGetTrained = (state: State): boolean => state[ReducerNa
 export const getTrainingTypes = (state: State): TrainingType[] => state[ReducerNameSpace.UserData].trainingTypes;
 export const getTrainingLevel = (state: State): TrainingLevel | null => state[ReducerNameSpace.UserData].trainingLevel;
 export const getCertificates = (state: State): string[] => state[ReducerNameSpace.UserData].certificates;
+
+export const getMyFriends = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].myFriends;
+export const getMyRequests = (state: State): UserRequestRdo[] => state[ReducerNameSpace.UserData].myRequests;
 
