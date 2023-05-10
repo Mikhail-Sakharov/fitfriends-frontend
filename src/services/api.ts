@@ -4,11 +4,13 @@ import {StatusCodes} from 'http-status-codes';
 import {store} from '../store';
 import {refreshTokensAction} from '../store/api-actions';
 import {toast} from 'react-toastify';
+import {redirect} from 'react-router-dom';
+import {AppRoute} from '../const';
 
 const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.FORBIDDEN]: true,
   [StatusCodes.BAD_REQUEST]: true,
-  [StatusCodes.UNAUTHORIZED]: true,
+  // [StatusCodes.UNAUTHORIZED]: true,
   [StatusCodes.NOT_FOUND]: true
 };
 
@@ -36,7 +38,7 @@ export const createRefreshTokensAPI = (): AxiosInstance => {
   api.interceptors.response.use(
     (response) => response,
     (error: AxiosError) => {
-      if (error.response && shouldDisplayError(error.response)) {
+      if (error.response?.status === 401) {
         toast.warn(error.response.statusText, {
           position: 'top-right',
           autoClose: 5000,
@@ -47,6 +49,8 @@ export const createRefreshTokensAPI = (): AxiosInstance => {
           progress: undefined,
           theme: 'colored'
         });
+
+        redirect(AppRoute.Intro);
       }
 
       throw error;

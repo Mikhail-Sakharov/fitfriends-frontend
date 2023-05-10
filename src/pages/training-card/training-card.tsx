@@ -56,6 +56,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
   const [formValid, setFormValid] = useState(true);
 
   useEffect(() => {
+    // если страница перезагружалась, заново запрашиваем данные о тренировке
     if (!training) {
       dispatch(fetchTrainingInfoAction(getTrainingId()));
     } else if (!avatar || !userName) {
@@ -200,7 +201,6 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
           isSpecialOffer
         }
       }));
-      dispatch(fetchTrainingInfoAction(getTrainingId()));
     }
   };
 
