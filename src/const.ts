@@ -45,6 +45,7 @@ export enum APIRoute {
   RemoveFriend = '/users/friends/remove',
   Trainings = '/trainings',
   TrainingVideo = '/trainings/video',
+  Orders = '/orders/trainings',
 }
 
 export enum AuthorizationStatus {

@@ -1,12 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {fetchMyTrainingsAction, fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../api-actions';
+import {fetchMyOrdersAction, fetchMyTrainingsAction, fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../api-actions';
 import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
+import {OrderRdo} from '../../types/order.rdo';
 
 type TrainingData = {
   currentTraining: TrainingRdo | null;
   currentRequestTrainings: TrainingRdo[];
+  currentRequestOrders: OrderRdo[];
   allExistingTrainings: TrainingRdo[];
   userInfo: UserRdo | null;
 };
@@ -14,6 +16,7 @@ type TrainingData = {
 const initialState: TrainingData = {
   currentTraining: null,
   currentRequestTrainings: [],
+  currentRequestOrders: [],
   allExistingTrainings: [],
   userInfo: null
 };
@@ -43,6 +46,9 @@ export const trainingData = createSlice({
       })
       .addCase(uploadVideoFileAction.fulfilled, (state, action) => {
         state.currentTraining = action.payload;
+      })
+      .addCase(fetchMyOrdersAction.fulfilled, (state, action) => {
+        state.currentRequestOrders = action.payload;
       });
   }
 });

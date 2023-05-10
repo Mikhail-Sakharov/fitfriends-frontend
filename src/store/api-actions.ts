@@ -11,6 +11,7 @@ import {TrainingRdo} from '../types/training.rdo';
 import {GetTrainingsQuery} from '../types/get-trainings.query';
 import {getTrainingsQueryString} from '../helpers';
 import UpdateTrainingDto from '../types/update-training.dto';
+import {OrderRdo} from '../types/order.rdo';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -184,6 +185,18 @@ export const updateTrainingAction = createAsyncThunk<TrainingRdo, UpdateTraining
     const trainingId = updateTrainingArgs.trainingId;
     const updateTrainingDto = updateTrainingArgs.updateTrainingDto;
     const {data} = await api[0].patch<TrainingRdo>(`${FF_SERVICE_URL}${APIRoute.Trainings}/${trainingId}`, updateTrainingDto);
+    return data;
+  },
+);
+
+export const fetchMyOrdersAction = createAsyncThunk<OrderRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'getMyOrders',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<OrderRdo[]>(`${FF_SERVICE_URL}${APIRoute.Orders}`);
     return data;
   },
 );
