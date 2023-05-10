@@ -10,6 +10,7 @@ import UpdateUserDto from '../types/update-user.dto';
 import {TrainingRdo} from '../types/training.rdo';
 import {GetTrainingsQuery} from '../types/get-trainings.query';
 import {getTrainingsQueryString} from '../helpers';
+import UpdateTrainingDto from '../types/update-training.dto';
 
 export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserRequestBody, {
   dispatch: AppDispatch;
@@ -164,6 +165,25 @@ export const fetchTrainingInfoAction = createAsyncThunk<TrainingRdo, string, {
   'trainings/info',
   async (trainingId, {dispatch, extra: api}) => {
     const {data} = await api[0].get<TrainingRdo>(`${FF_SERVICE_URL}${APIRoute.Trainings}/${trainingId}`);
+    return data;
+  },
+);
+
+type UpdateTrainingArgs = {
+  trainingId: string;
+  updateTrainingDto: UpdateTrainingDto;
+};
+
+export const updateTrainingAction = createAsyncThunk<TrainingRdo, UpdateTrainingArgs, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'trainings/update',
+  async (updateTrainingArgs, {dispatch, extra: api}) => {
+    const trainingId = updateTrainingArgs.trainingId;
+    const updateTrainingDto = updateTrainingArgs.updateTrainingDto;
+    const {data} = await api[0].patch<TrainingRdo>(`${FF_SERVICE_URL}${APIRoute.Trainings}/${trainingId}`, updateTrainingDto);
     return data;
   },
 );

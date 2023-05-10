@@ -7,7 +7,7 @@ import {nanoid} from 'nanoid';
 import {getCurrentTraining, getUserInfo} from '../../store/training-data/selectors';
 import {useEffect, useRef, useState} from 'react';
 import {getTrainingId} from '../../helpers';
-import {fetchTrainingInfoAction, fetchUserInfoAction} from '../../store/api-actions';
+import {fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction} from '../../store/api-actions';
 
 type TrainingCardProps = {
   userRole: UserRole;
@@ -117,17 +117,24 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     setIsContentEditable(true);
   };
 
-  const handleSaveButtonClick = () => {
-    setIsContentEditable(false);
-    // TODO: валидация и отправка данных
+  const dispatchFormData = async () => {
     if (formValid) {
-      console.log({
-        title,
-        description,
-        price,
-        isSpecialOffer
-      });
+      await dispatch(updateTrainingAction({
+        trainingId: getTrainingId(),
+        updateTrainingDto: {
+          title,
+          description,
+          price: Number(price),
+          isSpecialOffer
+        }
+      }));
+      dispatch(fetchTrainingInfoAction(getTrainingId()));
     }
+  };
+
+  const handleSaveButtonClick = () => {
+    dispatchFormData();
+    setIsContentEditable(false);
   };
 
   return (
