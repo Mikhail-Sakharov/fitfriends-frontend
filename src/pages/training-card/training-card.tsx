@@ -1,13 +1,14 @@
 import Header from '../../components/header/header';
 import ReviewsList from '../../components/reviews-list/reviews-list';
-import {FF_SERVICE_URL, FF_USERS_URL, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength} from '../../const';
+import {FF_SERVICE_URL, FF_USERS_URL, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength, VIDEO_FILE_TYPES} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {UserRole} from '../../types/user-role.enum';
 import {nanoid} from 'nanoid';
 import {getCurrentTraining, getUserInfo} from '../../store/training-data/selectors';
-import {useEffect, useRef, useState} from 'react';
+import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {getTrainingId} from '../../helpers';
-import {fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction} from '../../store/api-actions';
+import {fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../../store/api-actions';
+import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 type TrainingCardProps = {
   userRole: UserRole;
@@ -30,6 +31,8 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
 
   const [isContentEditable, setIsContentEditable] = useState(false);
 
+  const [isCurrentVideoMarkedForDeleting, setIsCurrentVideoMarkedForDeleting] = useState(false);
+
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const titleInputRef = useRef<HTMLInputElement | null>(null);
   const descriptionInputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -41,11 +44,13 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [isSpecialOffer, setIsSpecialOffer] = useState(false);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
 
   // текст ошибки
   const [titleError, setTitleTypeError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
   const [priceError, setPriceError] = useState('');
+  const [videoFileError, setVideoFileError] = useState('');
 
   // валидны ли данные формы или нет
   const [formValid, setFormValid] = useState(true);
@@ -56,12 +61,12 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     } else if (!avatar || !userName) {
       dispatch(fetchUserInfoAction(training.coachId));
     }
-    if (titleError || descriptionError || priceError) {
+    if (titleError || descriptionError || priceError || videoFileError) {
       setFormValid(false);
     } else {
       setFormValid(true);
     }
-  }, [avatar, descriptionError, dispatch, priceError, titleError, training, userName]);
+  }, [avatar, descriptionError, dispatch, priceError, titleError, training, userName, videoFileError]);
 
   const handleTitleInputChange = () => {
     const value = titleInputRef.current ? titleInputRef.current.value : '';
@@ -137,6 +142,51 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     if (playButtonRef.current) {
       playButtonRef.current.style.display = 'flex';
     }
+  };
+
+  const handleDeleteVideoButtonClick = () => {
+    setIsCurrentVideoMarkedForDeleting(true);
+    setVideoFileError('Загрузите видео');
+  };
+
+  const handleVideoFileInputChange = (evt: ChangeEvent<HTMLInputElement>) => {
+    const file = evt.currentTarget.files && evt.currentTarget.files[0];
+    const fileName = file ? file.name.toLowerCase() : '';
+    const matches = VIDEO_FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
+
+    if (matches && file) {
+      setVideoFile(file);
+
+      setVideoFileError('');
+    } else if (!matches && file) {
+      setVideoFileError('Загрузите сюда файлы формата PDF, JPG или PNG');
+    } else {
+      setVideoFileError('Добавьте подтверждающий документ');
+    }
+  };
+
+  const dispatchVideoFile = async () => {
+    if (videoFile) {
+      dispatch(setDataLoadedStatus(true));
+
+      const formData = new FormData();
+
+      const videoFileName = videoFile.name;
+      const videoFileType = videoFile.type.match(/(?<=\/).+/);
+
+      formData.append('video', videoFile, `${videoFileName}.${videoFileType ? videoFileType[0] : ''}`);
+
+      await dispatch(uploadVideoFileAction({
+        videoFileFormData: formData,
+        createdTrainingId: getTrainingId()
+      }));
+
+      dispatch(setDataLoadedStatus(false));
+    }
+  };
+
+  const handleSaveVideoButtonClick = () => {
+    dispatchVideoFile();
   };
 
   const dispatchFormData = async () => {
@@ -336,10 +386,16 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                     </form>
                   </div>
                 </div>
-                <div className={`training-video ${training?.videoUrl === '' || training?.bgImageUrl === '' ? 'training-video--load' : ''}`}>
+                <div
+                  className={`
+                    training-video
+                    ${isCurrentVideoMarkedForDeleting ? 'training-video--load' : ''}
+                    ${training?.videoUrl === '' || training?.bgImageUrl === '' ? 'training-video--load' : ''}
+                  `}
+                >
                   <h2 className="training-video__title">Видео</h2>
                   {
-                    training?.videoUrl !== '' && training?.bgImageUrl !== ''
+                    training?.videoUrl !== '' && !isCurrentVideoMarkedForDeleting
                       ? (
                         <div className="training-video__video">
                           <div className="training-video__thumbnail">
@@ -358,14 +414,20 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                           <form action="#" method="post">
                             <div className="training-video__form-wrapper">
                               <div className="drag-and-drop">
-                                <label>
+                                <label className={`${videoFileError ? 'custom-input--error' : ''}`}>
                                   <span className="drag-and-drop__label" tabIndex={0}>
                                     Загрузите сюда файлы формата MOV, AVI или MP4
                                     <svg width="20" height="20" aria-hidden="true">
                                       <use xlinkHref="#icon-import-video"></use>
                                     </svg>
                                   </span>
-                                  <input type="file" name="import" tabIndex={-1} accept=".mov, .avi, .mp4"/>
+                                  <input
+                                    onChange={handleVideoFileInputChange}
+                                    type="file" name="import" tabIndex={-1} accept=".mov, .avi, .mp4"
+                                  />
+                                  <span className="custom-input__error">
+                                    {videoFileError}
+                                  </span>
                                 </label>
                               </div>
                             </div>
@@ -376,11 +438,23 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                   <div className="training-video__buttons-wrapper">
                     <button className="btn training-video__button training-video__button--start" type="button" disabled={userRole === UserRole.Coach}>Приступить</button>
                     {
-                      userRole === UserRole.Coach
+                      userRole === UserRole.Coach && isContentEditable
                         ? (
                           <div className="training-video__edit-buttons">
-                            <button className="btn" type="button">Сохранить</button>
-                            <button className="btn btn--outlined" type="button">Удалить</button>
+                            <button
+                              onClick={handleSaveVideoButtonClick}
+                              className="btn" type="button"
+                              disabled={!videoFile}
+                            >
+                              Сохранить
+                            </button>
+                            <button
+                              onClick={handleDeleteVideoButtonClick}
+                              className="btn btn--outlined" type="button"
+                              disabled={isCurrentVideoMarkedForDeleting}
+                            >
+                              Удалить
+                            </button>
                           </div>
                         )
                         : (

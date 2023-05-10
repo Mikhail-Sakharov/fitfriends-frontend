@@ -12,6 +12,16 @@ import {GetTrainingsQuery} from '../types/get-trainings.query';
 import {getTrainingsQueryString} from '../helpers';
 import UpdateTrainingDto from '../types/update-training.dto';
 
+type UploadVideoFileDto = {
+  videoFileFormData: FormData;
+  createdTrainingId: string;
+};
+
+type UpdateTrainingArgs = {
+  trainingId: string;
+  updateTrainingDto: UpdateTrainingDto;
+};
+
 export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserRequestBody, {
   dispatch: AppDispatch;
   state: State;
@@ -111,25 +121,20 @@ export const createTrainingAction = createAsyncThunk<TrainingRdo, FormData, {
   },
 );
 
-/* type CreateTrainingRequestBody = {
-  formData: FormData;
-  createdTrainingId: string;
-};
-
-export const uploadVideoFileAction = createAsyncThunk<TrainingRdo, CreateTrainingRequestBody, {
+export const uploadVideoFileAction = createAsyncThunk<TrainingRdo, UploadVideoFileDto, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
 }>(
-  'trainings/video',
-  async (createTrainingRequestBody, {dispatch, extra: api}) => {
+  'trainings/uploadVideo',
+  async (uploadVideoFileDto, {dispatch, extra: api}) => {
+    const trainingId = uploadVideoFileDto.createdTrainingId;
+    const requestBody = uploadVideoFileDto.videoFileFormData;
     const {data} = await api[0].post<TrainingRdo>(
-      `${FF_SERVICE_URL}${APIRoute.TrainingVideo}/${createTrainingRequestBody.createdTrainingId}`,
-      createTrainingRequestBody.formData
-    );
+      `${FF_SERVICE_URL}${APIRoute.TrainingVideo}/${trainingId}`, requestBody);
     return data;
   },
-); */
+);
 
 export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[][], GetTrainingsQuery | undefined, {
   dispatch: AppDispatch;
@@ -168,11 +173,6 @@ export const fetchTrainingInfoAction = createAsyncThunk<TrainingRdo, string, {
     return data;
   },
 );
-
-type UpdateTrainingArgs = {
-  trainingId: string;
-  updateTrainingDto: UpdateTrainingDto;
-};
 
 export const updateTrainingAction = createAsyncThunk<TrainingRdo, UpdateTrainingArgs, {
   dispatch: AppDispatch;
