@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Header from '../../components/header/header';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {fetchMyFriendsAction, fetchIncomingUserRequestsForTraining, fetchOutgoingUserRequestsForTraining} from '../../store/api-actions';
@@ -7,14 +7,28 @@ import FriendsListItem from '../../components/friends-list-item/friends-list-ite
 import {nanoid} from 'nanoid';
 import {getUserRole} from '../../store/auth-process/selectors';
 import {UserRole} from '../../types/user-role.enum';
+import {AppRoute, MAX_FRIENDS_ITEMS_COUNT_PER_PAGE} from '../../const';
+import {useNavigate} from 'react-router-dom';
 
 function FriendsList(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const myUserRole = useAppSelector(getUserRole);
   const myFriends = useAppSelector(getMyFriends);
   const myIncomingRequests = useAppSelector(getMyIncomingRequests);
   const myOutgoingRequests = useAppSelector(getMyOutgoingRequests);
+
+  const [currentListPage, setCurrentListPage] = useState(1);
+  const pagesCount = Math.ceil(myFriends.length / MAX_FRIENDS_ITEMS_COUNT_PER_PAGE);
+
+  const handleShowMoreButtonClick = () => {
+    setCurrentListPage((prevState) => prevState < pagesCount ? prevState + 1 : prevState);
+  };
+
+  const handleReturnToTopButtonClick = () => {
+    window.scrollTo(0, 0);
+  };
 
   const findIncomingRequest = (friendId: string) => {
     const friendRequest = myIncomingRequests.find((request) => request.initiatorId === friendId);
@@ -41,7 +55,10 @@ function FriendsList(): JSX.Element {
         <section className="friends-list">
           <div className="container">
             <div className="friends-list__wrapper">
-              <button className="btn-flat friends-list__back" type="button">
+              <button
+                onClick={() => navigate(AppRoute.Intro)}
+                className="btn-flat friends-list__back" type="button"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-left"></use>
                 </svg>
@@ -63,7 +80,7 @@ function FriendsList(): JSX.Element {
               </div>
               <ul className="friends-list__list">
                 {
-                  myFriends.map((friend) => (
+                  myFriends.slice(0, ((currentListPage - 1) * MAX_FRIENDS_ITEMS_COUNT_PER_PAGE) + MAX_FRIENDS_ITEMS_COUNT_PER_PAGE).map((friend) => (
                     <FriendsListItem
                       key={nanoid()}
                       friend={friend}
@@ -74,8 +91,25 @@ function FriendsList(): JSX.Element {
                 }
               </ul>
               <div className="show-more friends-list__show-more">
-                <button className="btn show-more__button show-more__button--more" type="button">Показать еще</button>
-                <button className="btn show-more__button show-more__button--to-top" type="button">Вернуться в начало</button>
+                {
+                  currentListPage >= pagesCount
+                    ? (
+                      <button
+                        onClick={handleReturnToTopButtonClick}
+                        className={`btn show-more__button ${pagesCount <= 1 ? 'show-more__button--to-top' : ''}`}
+                      >
+                        Вернуться в начало
+                      </button>
+                    )
+                    : (
+                      <button
+                        onClick={handleShowMoreButtonClick}
+                        className="btn show-more__button show-more__button--more" type="button"
+                      >
+                        Показать еще
+                      </button>
+                    )
+                }
               </div>
             </div>
           </div>
