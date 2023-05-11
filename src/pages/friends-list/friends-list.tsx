@@ -1,26 +1,38 @@
 import {useEffect} from 'react';
 import Header from '../../components/header/header';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {fetchMyFriendsAction, fetchUserRequestsForTraining} from '../../store/api-actions';
-import {getMyFriends, getMyRequests} from '../../store/user-data/selectors';
+import {fetchMyFriendsAction, fetchIncomingUserRequestsForTraining, fetchOutgoingUserRequestsForTraining} from '../../store/api-actions';
+import {getMyFriends, getMyIncomingRequests, getMyOutgoingRequests} from '../../store/user-data/selectors';
 import FriendsListItem from '../../components/friends-list-item/friends-list-item';
 import {nanoid} from 'nanoid';
+import {getUserRole} from '../../store/auth-process/selectors';
+import {UserRole} from '../../types/user-role.enum';
 
 function FriendsList(): JSX.Element {
   const dispatch = useAppDispatch();
 
+  const myUserRole = useAppSelector(getUserRole);
   const myFriends = useAppSelector(getMyFriends);
-  const myRequests = useAppSelector(getMyRequests);
+  const myIncomingRequests = useAppSelector(getMyIncomingRequests);
+  const myOutgoingRequests = useAppSelector(getMyOutgoingRequests);
 
-  const findRequest = (friendId: string) => {
-    const friendRequest = myRequests.find((request) => request.initiatorId === friendId);
+  const findIncomingRequest = (friendId: string) => {
+    const friendRequest = myIncomingRequests.find((request) => request.initiatorId === friendId);
+    return friendRequest;
+  };
+
+  const findOutgoingRequest = (friendId: string) => {
+    const friendRequest = myOutgoingRequests.find((request) => request.userId === friendId);
     return friendRequest;
   };
 
   useEffect(() => {
     dispatch(fetchMyFriendsAction());
-    dispatch(fetchUserRequestsForTraining());
-  }, [dispatch]);
+    dispatch(fetchIncomingUserRequestsForTraining());
+    if (myUserRole === UserRole.User) {
+      dispatch(fetchOutgoingUserRequestsForTraining());
+    }
+  }, [dispatch, myUserRole]);
 
   return (
     <>
@@ -55,7 +67,8 @@ function FriendsList(): JSX.Element {
                     <FriendsListItem
                       key={nanoid()}
                       friend={friend}
-                      request={findRequest(friend.id)}
+                      request={findIncomingRequest(friend.id) ?? findOutgoingRequest(friend.id)}
+                      userRole={myUserRole}
                     />
                   ))
                 }

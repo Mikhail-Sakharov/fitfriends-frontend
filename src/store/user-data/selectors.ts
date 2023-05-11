@@ -25,5 +25,6 @@ export const getTrainingLevel = (state: State): TrainingLevel | null => state[Re
 export const getCertificates = (state: State): string[] => state[ReducerNameSpace.UserData].certificates;
 
 export const getMyFriends = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].myFriends;
-export const getMyRequests = (state: State): UserRequestRdo[] => state[ReducerNameSpace.UserData].myRequests;
+export const getMyIncomingRequests = (state: State): UserRequestRdo[] => state[ReducerNameSpace.UserData].myIncomingRequests;
+export const getMyOutgoingRequests = (state: State): UserRequestRdo[] => state[ReducerNameSpace.UserData].myOutgoingRequests;
 

@@ -14,6 +14,8 @@ import UpdateTrainingDto from '../types/update-training.dto';
 import {OrderRdo} from '../types/order.rdo';
 import {GetOrdersQuery} from '../types/get-orders.query';
 import {UserRequestRdo} from '../types/user-request.rdo';
+import {UserRequestType} from '../types/user-request-type.enum';
+import {Status} from '../types/status.enum';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -23,6 +25,16 @@ type UploadVideoFileDto = {
 type UpdateTrainingArgs = {
   trainingId: string;
   updateTrainingDto: UpdateTrainingDto;
+};
+
+type TrainingRequestDto = {
+  type: UserRequestType;
+  userId: string;
+};
+
+type ChangeRequestStatusDto = {
+  trainingRequestStatus: Status;
+  requestId: string;
 };
 
 export const registerUserAction = createAsyncThunk<UserResponse, RegisterUserRequestBody, {
@@ -216,14 +228,54 @@ export const fetchMyFriendsAction = createAsyncThunk<UserRdo[], undefined, {
   },
 );
 
-export const fetchUserRequestsForTraining = createAsyncThunk<UserRequestRdo[], undefined, {
+export const fetchIncomingUserRequestsForTraining = createAsyncThunk<UserRequestRdo[], undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
 }>(
-  'fetchUserRequestsForTraining',
+  'fetchIncomingUserRequestsForTraining',
   async (_arg, {dispatch, extra: api}) => {
-    const {data} = await api[0].get<UserRequestRdo[]>(`${FF_NOTIFIER_URL}${APIRoute.UserRequests}`);
+    const {data} = await api[0].get<UserRequestRdo[]>(`${FF_NOTIFIER_URL}${APIRoute.UserIncomingRequests}`);
+    return data;
+  },
+);
+
+export const fetchOutgoingUserRequestsForTraining = createAsyncThunk<UserRequestRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchOutgoingUserRequestsForTraining',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<UserRequestRdo[]>(`${FF_NOTIFIER_URL}${APIRoute.UserOutgoingRequests}`);
+    return data;
+  },
+);
+
+export const sendTrainingRequestAction = createAsyncThunk<UserRequestRdo, TrainingRequestDto, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'sendTrainingRequestAction',
+  async (trainingRequest, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<UserRequestRdo>(`${FF_NOTIFIER_URL}${APIRoute.UserRequests}`, trainingRequest);
+    return data;
+  },
+);
+
+export const changeTrainingRequestStatusAction = createAsyncThunk<UserRequestRdo, ChangeRequestStatusDto, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'changeTrainingRequestStatusAction',
+  async (changeRequestStatusDto, {dispatch, extra: api}) => {
+    const requestId = changeRequestStatusDto.requestId;
+    const updateUserRequestDto = {
+      status: changeRequestStatusDto.trainingRequestStatus
+    };
+    const {data} = await api[0].patch<UserRequestRdo>(`${FF_NOTIFIER_URL}${APIRoute.UserRequests}/${requestId}`, updateUserRequestDto);
     return data;
   },
 );

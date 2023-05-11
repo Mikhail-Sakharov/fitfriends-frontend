@@ -48,7 +48,9 @@ export enum APIRoute {
   Trainings = '/trainings',
   TrainingVideo = '/trainings/video',
   Orders = '/orders/trainings',
-  UserRequests = '/user-requests'
+  UserRequests = '/user-requests',
+  UserIncomingRequests = '/user-requests/incoming',
+  UserOutgoingRequests = '/user-requests/outgoing'
 }
 
 export enum AuthorizationStatus {

@@ -5,17 +5,71 @@ import {CoachQuestionnaire, UserQuestionnaire} from '../../types/user.interface'
 import {UserRdo} from '../../types/user.response';
 import {UserRequestRdo} from '../../types/user-request.rdo';
 import {Status} from '../../types/status.enum';
+import {useAppDispatch} from '../../hooks';
+import {UserRequestType} from '../../types/user-request-type.enum';
+import {changeTrainingRequestStatusAction, fetchIncomingUserRequestsForTraining, fetchOutgoingUserRequestsForTraining, sendTrainingRequestAction} from '../../store/api-actions';
+import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 type FriendsListItemProps = {
   friend: UserRdo;
   request: UserRequestRdo | undefined;
+  userRole: UserRole;
 };
 
-function FriendsListItem({friend, request}: FriendsListItemProps): JSX.Element {
+function FriendsListItem({friend, request, userRole}: FriendsListItemProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const isUserOnline = true; // TODO: временная заглушка - удалить !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const isReadyForTraining = friend.userRole === UserRole.User
     ? (friend.questionnaire as UserQuestionnaire).isReadyToGetTrained
     : (friend.questionnaire as CoachQuestionnaire).isReadyToTrain;
+
+  const handleInviteButtonClick = async () => {
+    dispatch(setDataLoadedStatus(true));
+    await dispatch(sendTrainingRequestAction({
+      type: UserRequestType.Training,
+      userId: friend.id
+    }));
+    dispatch(fetchIncomingUserRequestsForTraining());
+    if (userRole === UserRole.User) {
+      dispatch(fetchOutgoingUserRequestsForTraining());
+    }
+    dispatch(setDataLoadedStatus(false));
+  };
+
+  const dispatchAcceptRequest = async () => {
+    if (request) {
+      await dispatch(changeTrainingRequestStatusAction({
+        trainingRequestStatus: Status.Accepted,
+        requestId: request.id
+      }));
+      dispatch(fetchIncomingUserRequestsForTraining());
+      if (userRole === UserRole.User) {
+        dispatch(fetchOutgoingUserRequestsForTraining());
+      }
+    }
+  };
+
+  const dispatchRejectRequest = async () => {
+    if (request) {
+      await dispatch(changeTrainingRequestStatusAction({
+        trainingRequestStatus: Status.Rejected,
+        requestId: request.id
+      }));
+      dispatch(fetchIncomingUserRequestsForTraining());
+      if (userRole === UserRole.User) {
+        dispatch(fetchOutgoingUserRequestsForTraining());
+      }
+    }
+  };
+
+  const handleAcceptTrainingRequestButtonClick = () => {
+    dispatchAcceptRequest();
+  };
+
+  const handleRejectTrainingRequestButtonClick = () => {
+    dispatchRejectRequest();
+  };
 
   return (
     <li className="friends-list__item">
@@ -75,12 +129,21 @@ function FriendsListItem({friend, request}: FriendsListItemProps): JSX.Element {
                   <div className="thumbnail-friend__ready-status thumbnail-friend__ready-status--is-ready">
                     <span>Готов к&nbsp;тренировке</span>
                   </div>
-                  <button className="thumbnail-friend__invite-button" type="button">
-                    <svg width="43" height="46" aria-hidden="true" focusable="false">
-                      <use xlinkHref="#icon-invite"></use>
-                    </svg>
-                    <span className="visually-hidden">Пригласить друга на совместную тренировку</span>
-                  </button>
+                  {
+                    userRole === UserRole.User
+                      && (
+                        <button
+                          onClick={() => handleInviteButtonClick}
+                          className="thumbnail-friend__invite-button" type="button"
+                          disabled={!!request}
+                        >
+                          <svg width="43" height="46" aria-hidden="true" focusable="false">
+                            <use xlinkHref="#icon-invite"></use>
+                          </svg>
+                          <span className="visually-hidden">Пригласить друга на совместную тренировку</span>
+                        </button>
+                      )
+                  }
                 </div>
               )
               : (
@@ -93,30 +156,62 @@ function FriendsListItem({friend, request}: FriendsListItemProps): JSX.Element {
           }
         </div>
         {
-          friend.userRole === UserRole.User && request?.status === Status.Pending
+          request?.status === Status.Pending && friend.id === request.initiatorId
             && (
               <div className="thumbnail-friend__request-status thumbnail-friend__request-status--role-user">
                 <p className="thumbnail-friend__request-text">Запрос на&nbsp;персональную тренировку</p>
                 <div className="thumbnail-friend__button-wrapper">
-                  <button className="btn btn--medium btn--dark-bg thumbnail-friend__button" type="button">Принять</button>
-                  <button className="btn btn--medium btn--outlined btn--dark-bg thumbnail-friend__button" type="button">Отклонить</button>
+                  <button
+                    onClick={handleAcceptTrainingRequestButtonClick}
+                    className="btn btn--medium btn--dark-bg thumbnail-friend__button" type="button"
+                  >
+                    Принять
+                  </button>
+                  <button
+                    onClick={handleRejectTrainingRequestButtonClick}
+                    className="btn btn--medium btn--outlined btn--dark-bg thumbnail-friend__button" type="button"
+                  >
+                    Отклонить
+                  </button>
                 </div>
               </div>
             )
         }
         {
-          request?.status === Status.Accepted
+          request?.status === Status.Accepted && friend.id === request.userId
             && (
               <div className="thumbnail-friend__request-status thumbnail-friend__request-status--role-user">
-                <p className="thumbnail-friend__request-text">Запрос на&nbsp;совместную тренировку принят</p>
+                {
+                  friend.userRole === UserRole.Coach
+                    && (
+                      <p className="thumbnail-friend__request-text">Запрос на&nbsp;персональную тренировку принят</p>
+                    )
+                }
+                {
+                  friend.userRole === UserRole.User
+                    && (
+                      <p className="thumbnail-friend__request-text">Запрос на&nbsp;совместную тренировку принят</p>
+                    )
+                }
               </div>
             )
         }
         {
-          request?.status === Status.Rejected
+          request?.status === Status.Rejected && friend.id === request.userId
             && (
               <div className="thumbnail-friend__request-status thumbnail-friend__request-status--role-coach">
-                <p className="thumbnail-friend__request-text">Запрос на&nbsp;персональную тренировку отклонён</p>
+                {
+                  friend.userRole === UserRole.Coach
+                    && (
+                      <p className="thumbnail-friend__request-text">Запрос на&nbsp;персональную тренировку отклонён</p>
+                    )
+                }
+                {
+                  friend.userRole === UserRole.User
+                    && (
+                      <p className="thumbnail-friend__request-text">Запрос на&nbsp;совместную тренировку отклонён</p>
+                    )
+                }
               </div>
             )
         }

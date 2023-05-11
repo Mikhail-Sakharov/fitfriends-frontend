@@ -6,13 +6,14 @@ import {UserRole} from '../../types/user-role.enum';
 import {
   deleteCertificateAction,
   fetchMyFriendsAction,
-  fetchUserRequestsForTraining,
+  fetchIncomingUserRequestsForTraining,
   refreshTokensAction,
   registerUserAction,
   signInUserAction,
   updateUserAction,
   uploadAvatarAction,
-  uploadCertificateAction
+  uploadCertificateAction,
+  fetchOutgoingUserRequestsForTraining
 } from '../api-actions';
 import {TrainingType} from '../../types/training-type.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
@@ -36,7 +37,8 @@ type UserData = {
   userRole: UserRole | null;
   certificates: string[];
   myFriends: UserRdo[];
-  myRequests: UserRequestRdo[];
+  myIncomingRequests: UserRequestRdo[];
+  myOutgoingRequests: UserRequestRdo[];
 };
 
 const initialState: UserData = {
@@ -55,7 +57,8 @@ const initialState: UserData = {
   userRole: null,
   certificates: [],
   myFriends: [],
-  myRequests: []
+  myIncomingRequests: [],
+  myOutgoingRequests: []
 };
 
 export const userData = createSlice({
@@ -217,8 +220,11 @@ export const userData = createSlice({
       .addCase(fetchMyFriendsAction.fulfilled, (state, action) => {
         state.myFriends = action.payload;
       })
-      .addCase(fetchUserRequestsForTraining.fulfilled, (state, action) => {
-        state.myRequests = action.payload;
+      .addCase(fetchIncomingUserRequestsForTraining.fulfilled, (state, action) => {
+        state.myIncomingRequests = action.payload;
+      })
+      .addCase(fetchOutgoingUserRequestsForTraining.fulfilled, (state, action) => {
+        state.myOutgoingRequests = action.payload;
       });
   }
 });
