@@ -50,7 +50,8 @@ export enum APIRoute {
   Orders = '/orders/trainings',
   UserRequests = '/user-requests',
   UserIncomingRequests = '/user-requests/incoming',
-  UserOutgoingRequests = '/user-requests/outgoing'
+  UserOutgoingRequests = '/user-requests/outgoing',
+  Notifications = '/notifications'
 }
 
 export enum AuthorizationStatus {

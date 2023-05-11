@@ -13,13 +13,15 @@ import {
   updateUserAction,
   uploadAvatarAction,
   uploadCertificateAction,
-  fetchOutgoingUserRequestsForTraining
+  fetchOutgoingUserRequestsForTraining,
+  fetchNotificationsAction
 } from '../api-actions';
 import {TrainingType} from '../../types/training-type.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {CoachQuestionnaire, UserQuestionnaire} from '../../types/user.interface';
 import {UserRdo} from '../../types/user.response';
 import {UserRequestRdo} from '../../types/user-request.rdo';
+import {NotificationRdo} from '../../types/notification.rdo';
 
 type UserData = {
   avatar: string;
@@ -39,6 +41,7 @@ type UserData = {
   myFriends: UserRdo[];
   myIncomingRequests: UserRequestRdo[];
   myOutgoingRequests: UserRequestRdo[];
+  notifications: NotificationRdo[];
 };
 
 const initialState: UserData = {
@@ -58,7 +61,8 @@ const initialState: UserData = {
   certificates: [],
   myFriends: [],
   myIncomingRequests: [],
-  myOutgoingRequests: []
+  myOutgoingRequests: [],
+  notifications: []
 };
 
 export const userData = createSlice({
@@ -225,6 +229,9 @@ export const userData = createSlice({
       })
       .addCase(fetchOutgoingUserRequestsForTraining.fulfilled, (state, action) => {
         state.myOutgoingRequests = action.payload;
+      })
+      .addCase(fetchNotificationsAction.fulfilled, (state, action) => {
+        state.notifications = action.payload;
       });
   }
 });

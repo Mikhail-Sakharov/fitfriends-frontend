@@ -16,6 +16,7 @@ import {GetOrdersQuery} from '../types/get-orders.query';
 import {UserRequestRdo} from '../types/user-request.rdo';
 import {UserRequestType} from '../types/user-request-type.enum';
 import {Status} from '../types/status.enum';
+import {NotificationRdo} from '../types/notification.rdo';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -276,6 +277,18 @@ export const changeTrainingRequestStatusAction = createAsyncThunk<UserRequestRdo
       status: changeRequestStatusDto.trainingRequestStatus
     };
     const {data} = await api[0].patch<UserRequestRdo>(`${FF_NOTIFIER_URL}${APIRoute.UserRequests}/${requestId}`, updateUserRequestDto);
+    return data;
+  },
+);
+
+export const fetchNotificationsAction = createAsyncThunk<NotificationRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchNotificationsAction',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<NotificationRdo[]>(`${FF_NOTIFIER_URL}${APIRoute.Notifications}`);
     return data;
   },
 );

@@ -1,5 +1,6 @@
 import {ReducerNameSpace} from '../../const';
 import {Gender} from '../../types/gender.enum';
+import {NotificationRdo} from '../../types/notification.rdo';
 import {State} from '../../types/state';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
@@ -27,4 +28,5 @@ export const getCertificates = (state: State): string[] => state[ReducerNameSpac
 export const getMyFriends = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].myFriends;
 export const getMyIncomingRequests = (state: State): UserRequestRdo[] => state[ReducerNameSpace.UserData].myIncomingRequests;
 export const getMyOutgoingRequests = (state: State): UserRequestRdo[] => state[ReducerNameSpace.UserData].myOutgoingRequests;
+export const getNotifications = (state: State): NotificationRdo[] => state[ReducerNameSpace.UserData].notifications;
 
