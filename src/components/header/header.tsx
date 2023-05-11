@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import {dropTokens} from '../../services/tokens';
 import {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {fetchNotificationsAction} from '../../store/api-actions';
+import {deleteNotificationAction, fetchNotificationsAction} from '../../store/api-actions';
 import {getNotifications} from '../../store/user-data/selectors';
 import {nanoid} from 'nanoid';
 import {getNotificationDate} from '../../helpers';
@@ -18,6 +18,15 @@ function Header(): JSX.Element {
     dropTokens();
   };
   //-------------------------------------------------------
+
+  const dispatchDeleteNotification = async (notificationId: string) => {
+    await dispatch(deleteNotificationAction(notificationId));
+    dispatch(fetchNotificationsAction());
+  };
+
+  const handleNotificationClick = (notificationId: string) => {
+    dispatchDeleteNotification(notificationId);
+  };
 
   useEffect(() => {
     dispatch(fetchNotificationsAction());
@@ -61,12 +70,23 @@ function Header(): JSX.Element {
                 </svg>
               </Link>
               <div className="main-nav__dropdown">
-                <p className="main-nav__label">Оповещения</p>
+                {
+                  notifications.length !== 0
+                    ? (
+                      <p className="main-nav__label">Оповещения</p>
+                    )
+                    : (
+                      <p className="main-nav__label">Оповещений нет</p>
+                    )
+                }
                 <ul className="main-nav__sublist">
                   {
                     notifications.map((notification) => (
                       <li key={nanoid()} className="main-nav__subitem">
-                        <Link className="notification is-active" to="#">
+                        <Link
+                          onClick={() => handleNotificationClick(notification.id)}
+                          className="notification is-active" to="#"
+                        >
                           <p className="notification__text">
                             {notification.text}
                           </p>

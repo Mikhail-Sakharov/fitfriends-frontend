@@ -292,3 +292,15 @@ export const fetchNotificationsAction = createAsyncThunk<NotificationRdo[], unde
     return data;
   },
 );
+
+export const deleteNotificationAction = createAsyncThunk<undefined, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'deleteNotificationAction',
+  async (notificationId, {dispatch, extra: api}) => {
+    const {data} = await api[0].delete<undefined>(`${FF_NOTIFIER_URL}${APIRoute.Notifications}/${notificationId}`);
+    return data;
+  },
+);
