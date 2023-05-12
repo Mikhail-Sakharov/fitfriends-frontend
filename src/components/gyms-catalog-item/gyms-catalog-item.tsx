@@ -1,5 +1,7 @@
 import {Link} from 'react-router-dom';
 import {GymRdo} from '../../types/gym.rdo';
+import {useAppDispatch} from '../../hooks';
+import {addGymToFavoritesAction, fetchMyFavoriteGymsAction, removeGymFromFavoritesAction} from '../../store/api-actions';
 
 type GymsCatalogItemProps = {
   gym: GymRdo;
@@ -7,6 +9,26 @@ type GymsCatalogItemProps = {
 };
 
 function GymsCatalogItem({gym, isInFavorites}: GymsCatalogItemProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const dispatchAddGymToFavorites = async () => {
+    await dispatch(addGymToFavoritesAction(gym.id));
+    dispatch(fetchMyFavoriteGymsAction());
+  };
+
+  const dispatchRemoveGymFromFavorites = async () => {
+    await dispatch(removeGymFromFavoritesAction(gym.id));
+    dispatch(fetchMyFavoriteGymsAction());
+  };
+
+  const handleAddToFavoritesButtonClick = () => {
+    dispatchAddGymToFavorites();
+  };
+
+  const handleRemoveFromFavoritesButtonClick = () => {
+    dispatchRemoveGymFromFavorites();
+  };
+
   return (
     <li className="gyms-catalog__item">
       <div className="thumbnail-gym">
@@ -28,7 +50,10 @@ function GymsCatalogItem({gym, isInFavorites}: GymsCatalogItemProps): JSX.Elemen
         {
           isInFavorites
             ? (
-              <button className="thumbnail-gym__favourite-button is-active">
+              <button
+                onClick={handleRemoveFromFavoritesButtonClick}
+                className="thumbnail-gym__favourite-button is-active"
+              >
                 <span className="visually-hidden">Удалить из Избранного</span>
                 <svg width="12" height="11" aria-hidden="true">
                   <use xlinkHref="#icon-heart-filled"></use>
@@ -36,7 +61,10 @@ function GymsCatalogItem({gym, isInFavorites}: GymsCatalogItemProps): JSX.Elemen
               </button>
             )
             : (
-              <button className="thumbnail-gym__favourite-button">
+              <button
+                onClick={handleAddToFavoritesButtonClick}
+                className="thumbnail-gym__favourite-button"
+              >
                 <span className="visually-hidden">Добавить в Избранное</span>
                 <svg width="14" height="13" aria-hidden="true">
                   <use xlinkHref="#icon-heart"></use>

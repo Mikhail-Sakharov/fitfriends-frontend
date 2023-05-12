@@ -332,3 +332,27 @@ export const fetchMyFavoriteGymsAction = createAsyncThunk<FavoriteGymRdo[], unde
     return data;
   },
 );
+
+export const addGymToFavoritesAction = createAsyncThunk<undefined, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'addGymToFavoritesAction',
+  async (gymId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<undefined>(`${FF_SERVICE_URL}${APIRoute.AddGymToFavorites}/${gymId}`);
+    return data;
+  },
+);
+
+export const removeGymFromFavoritesAction = createAsyncThunk<undefined, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'removeGymFromFavoritesAction',
+  async (gymId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<undefined>(`${FF_SERVICE_URL}${APIRoute.RemoveGymFromFavorites}/${gymId}`);
+    return data;
+  },
+);

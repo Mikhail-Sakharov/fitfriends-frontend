@@ -12,7 +12,7 @@ function GymsCatalog(): JSX.Element {
   const gymsCatalog = useAppSelector(getGymsCatalog);
   const myFavoriteGyms = useAppSelector(getMyFavoriteGyms);
 
-  const getFavoriteStatus = (gymId: string) => myFavoriteGyms.some((gym) => gym.id === gymId);
+  const getFavoriteStatus = (gymId: string) => myFavoriteGyms.some((gym) => gym.gym.id === gymId);
 
   useEffect(() => {
     dispatch(fetchGymsCatalogAction());

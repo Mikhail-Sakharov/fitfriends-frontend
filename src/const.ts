@@ -53,7 +53,9 @@ export enum APIRoute {
   UserOutgoingRequests = '/user-requests/outgoing',
   Notifications = '/notifications',
   Gyms = '/gyms',
-  FavoriteGyms = '/gyms/favorites'
+  FavoriteGyms = '/gyms/favorites',
+  AddGymToFavorites = '/gyms/favorites/add',
+  RemoveGymFromFavorites = '/gyms/favorites/remove'
 }
 
 export enum AuthorizationStatus {
