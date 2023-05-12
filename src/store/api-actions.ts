@@ -308,7 +308,7 @@ export const deleteNotificationAction = createAsyncThunk<undefined, string, {
   },
 );
 
-export const fetchGymsCatalogAction = createAsyncThunk<GymRdo[], GetGymsQuery | undefined, {
+export const fetchGymsCatalogAction = createAsyncThunk<GymRdo[][], GetGymsQuery | undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
@@ -316,8 +316,9 @@ export const fetchGymsCatalogAction = createAsyncThunk<GymRdo[], GetGymsQuery | 
   'fetchGymsCatalogAction',
   async (getGymsQueryArgs, {dispatch, extra: api}) => {
     const queryString = getQueryString(getGymsQueryArgs);
-    const {data} = await api[0].get<GymRdo[]>(`${FF_SERVICE_URL}${APIRoute.Gyms}${queryString}`);
-    return data;
+    const filteredRequest = await api[0].get<GymRdo[]>(`${FF_SERVICE_URL}${APIRoute.Gyms}${queryString}`);
+    const allTheGyms = await api[0].get<GymRdo[]>(`${FF_SERVICE_URL}${APIRoute.Gyms}`);
+    return [filteredRequest.data, allTheGyms.data];
   },
 );
 
