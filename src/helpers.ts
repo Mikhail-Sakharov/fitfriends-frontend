@@ -54,7 +54,9 @@ export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery) => 
     `${queryArgs.limit ? `limit=${queryArgs.limit}` : ''}`,
   ];
 
-  const queryString = `?${queryParams.filter((param) => param !== '').join('&')}`;
+  const isNotEmptyString = queryParams.filter((param) => param !== '').join('') !== '';
+
+  const queryString = isNotEmptyString ? `?${queryParams.filter((param) => param !== '').join('&')}` : '';
   return queryString;
 };
 

@@ -7,6 +7,7 @@ import {getAllTheGyms} from '../../store/gyms-data/selectors';
 import {fetchGymsCatalogAction, fetchMyFavoriteGymsAction} from '../../store/api-actions';
 import {nanoid} from 'nanoid';
 import {SubwayStation} from '../../types/subway-station.enum';
+import {GymFeatures} from '../../types/gym-features.enum';
 
 export const MAX_LOCATION_TYPES_COUNT_PER_PAGE = 4;
 
@@ -16,14 +17,17 @@ function GymsCatalogFilter(): JSX.Element {
   const minPriceRef = useRef<HTMLInputElement | null>(null);
   const maxPriceRef = useRef<HTMLInputElement | null>(null);
 
+  // формирование набора чекбокс-фильтров на основе всех имеющихся вариантов (зависит от данных в БД)
+  // ----- если нужно формировать динамически - изменить селектор на getCurrentRequestGyms
   const allTheGyms = useAppSelector(getAllTheGyms);
 
-  // данные о ценах из запроса без фильтров
+  // данные о ценах из запроса залов без фильтров
   const existingPrices = allTheGyms.map((gym) => gym.price);
   const minCurrentCatalogPrice = Math.min(...existingPrices);
   const maxCurrentCatalogPrice = Math.max(...existingPrices);
 
-  // данные о локациях из запроса без фильтров
+  // данные о локациях из запроса залов без фильтров (для отрисовки чекбоксов)
+  // ----- т.е. учитываются и отрисовываются только варианты, имеющиеся в БД
   const existingLocations = Array.from(new Set(allTheGyms.map((gym) => gym.location)));
   const [curentLocationTypesPage, setCurentLocationTypesPage] = useState(1);
   const locationTypesPagesCount = Math.ceil(existingLocations.length / MAX_LOCATION_TYPES_COUNT_PER_PAGE);
@@ -34,20 +38,26 @@ function GymsCatalogFilter(): JSX.Element {
     }
   };
 
+  // данные об опциях залов из запроса залов без фильтров (для отрисовки чекбоксов)
+  // ----- т.е. учитываются и отрисовываются только варианты, имеющиеся в БД
+  const existingFeatures = Array.from(new Set(allTheGyms.reduce((res, gym) => res.concat(gym.features), [] as GymFeatures[])));
+
   // значения фильтров
   const [priceFilter, setPriceFilter] = useState<number[]>([]);
   const [locationFilter, setLocationFilter] = useState<SubwayStation[]>([]);
+  const [featuresFilter, setFeaturesFilter] = useState<GymFeatures[]>([]);
+  const [isVerifiedFilter, setIsVerifiedFilter] = useState(false);
 
   useEffect(() => {
     dispatch(fetchGymsCatalogAction({
       minPrice: priceFilter[0],
       maxPrice: priceFilter[1],
       location: locationFilter.join(','),
-      // features:
-      // isVerified:
+      features: featuresFilter.join(','),
+      isVerified: isVerifiedFilter
     }));
     dispatch(fetchMyFavoriteGymsAction());
-  }, [dispatch, locationFilter, priceFilter]);
+  }, [dispatch, featuresFilter, isVerifiedFilter, locationFilter, priceFilter]);
 
   const setPriceDebounced = debounce<number[]>((arg) => setPriceFilter(arg), FILTER_QUERY_DELAY);
 
@@ -70,6 +80,21 @@ function GymsCatalogFilter(): JSX.Element {
         return [...prevState, location];
       }
     });
+  };
+
+  const handleFeatureInputChange = (feature: GymFeatures) => {
+    setFeaturesFilter((prevState) => {
+      const isInFeaturesState = prevState.some((item) => item === feature);
+      if (isInFeaturesState) {
+        return prevState.filter((item) => item !== feature);
+      } else {
+        return [...prevState, feature];
+      }
+    });
+  };
+
+  const handleIsVerifiedInputChange = () => {
+    setIsVerifiedFilter((prevState) => !prevState);
   };
 
   return (
@@ -151,78 +176,40 @@ function GymsCatalogFilter(): JSX.Element {
       <div className="gym-hall-form__block gym-hall-form__block--addition">
         <h4 className="gym-hall-form__block-title">Дополнительно</h4>
         <ul className="gym-hall-form__check-list">
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="addition-1" name="addition"/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Бассейн</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="addition-1" name="addition"/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Парковка</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="addition-1" name="addition"/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Массаж</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="addition-1" name="addition"/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Детская комната</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="addition-1" name="addition" checked/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Сауна</span>
-              </label>
-            </div>
-          </li>
+          {
+            existingFeatures.map((feature) => (
+              <li key={nanoid()} className="gym-hall-form__check-list-item">
+                <div className="custom-toggle custom-toggle--checkbox">
+                  <label>
+                    <input
+                      onChange={() => handleFeatureInputChange(feature)}
+                      type="checkbox" value="addition-1" name="addition"
+                      checked={featuresFilter.includes(feature)}
+                    />
+                    <span className="custom-toggle__icon">
+                      <svg width="9" height="6" aria-hidden="true">
+                        <use xlinkHref="#arrow-check"></use>
+                      </svg>
+                    </span>
+                    <span className="custom-toggle__label">
+                      {feature}
+                    </span>
+                  </label>
+                </div>
+              </li>
+            ))
+          }
         </ul>
       </div>
       <div className="gym-hall-form__block">
         <h3 className="gym-hall-form__title gym-hall-form__title--status">Статус</h3>
         <div className="custom-toggle custom-toggle--switch">
           <label>
-            <input type="checkbox" value="status-1" name="status"/>
+            <input
+              onChange={handleIsVerifiedInputChange}
+              type="checkbox" value="status-1" name="status"
+              checked={isVerifiedFilter}
+            />
             <span className="custom-toggle__icon">
               <svg width="9" height="6" aria-hidden="true">
                 <use xlinkHref="#arrow-check"></use>
