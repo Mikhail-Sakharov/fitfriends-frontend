@@ -5,6 +5,10 @@ import {debounce} from '../../helpers';
 import {FILTER_QUERY_DELAY} from '../../const';
 import {getAllTheGyms} from '../../store/gyms-data/selectors';
 import {fetchGymsCatalogAction, fetchMyFavoriteGymsAction} from '../../store/api-actions';
+import {nanoid} from 'nanoid';
+import {SubwayStation} from '../../types/subway-station.enum';
+
+export const MAX_LOCATION_TYPES_COUNT_PER_PAGE = 4;
 
 function GymsCatalogFilter(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -13,38 +17,59 @@ function GymsCatalogFilter(): JSX.Element {
   const maxPriceRef = useRef<HTMLInputElement | null>(null);
 
   const allTheGyms = useAppSelector(getAllTheGyms);
+
+  // данные о ценах из запроса без фильтров
   const existingPrices = allTheGyms.map((gym) => gym.price);
   const minCurrentCatalogPrice = Math.min(...existingPrices);
   const maxCurrentCatalogPrice = Math.max(...existingPrices);
 
+  // данные о локациях из запроса без фильтров
+  const existingLocations = Array.from(new Set(allTheGyms.map((gym) => gym.location)));
+  const [curentLocationTypesPage, setCurentLocationTypesPage] = useState(1);
+  const locationTypesPagesCount = Math.ceil(existingLocations.length / MAX_LOCATION_TYPES_COUNT_PER_PAGE);
+
+  const handleShowMoreLocationsButtonClick = () => {
+    if (curentLocationTypesPage < locationTypesPagesCount) {
+      setCurentLocationTypesPage((prevState) => prevState + 1);
+    }
+  };
+
   // значения фильтров
-  const [price, setPrice] = useState<number[]>([]);
+  const [priceFilter, setPriceFilter] = useState<number[]>([]);
+  const [locationFilter, setLocationFilter] = useState<SubwayStation[]>([]);
 
   useEffect(() => {
     dispatch(fetchGymsCatalogAction({
-      minPrice: price[0],
-      maxPrice: price[1],
-      // location:
+      minPrice: priceFilter[0],
+      maxPrice: priceFilter[1],
+      location: locationFilter.join(','),
       // features:
       // isVerified:
-      // sortType:
-      // sortOrder:
-      // page:
-      // limit:
     }));
     dispatch(fetchMyFavoriteGymsAction());
-  }, [dispatch, price]);
+  }, [dispatch, locationFilter, priceFilter]);
 
-  const setPriceDebounced = debounce<number[]>((arg) => setPrice(arg), FILTER_QUERY_DELAY);
+  const setPriceDebounced = debounce<number[]>((arg) => setPriceFilter(arg), FILTER_QUERY_DELAY);
 
   const handleMinPriceInputChange = () => {
     const value = Number(minPriceRef.current?.value);
-    setPriceDebounced([value, price[1]]);
+    setPriceDebounced([value, priceFilter[1]]);
   };
 
   const handleMaxPriceInputChange = () => {
     const value = Number(maxPriceRef.current?.value);
-    setPriceDebounced([price[0], value]);
+    setPriceDebounced([priceFilter[0], value]);
+  };
+
+  const handleLocationInputChange = (location: SubwayStation) => {
+    setLocationFilter((prevState) => {
+      const isInLocationState = prevState.some((item) => item === location);
+      if (isInLocationState) {
+        return prevState.filter((item) => item !== location);
+      } else {
+        return [...prevState, location];
+      }
+    });
   };
 
   return (
@@ -84,78 +109,44 @@ function GymsCatalogFilter(): JSX.Element {
       <div className="gym-hall-form__block gym-hall-form__block--location">
         <h4 className="gym-hall-form__block-title">Локация, станция метро</h4>
         <ul className="gym-hall-form__check-list">
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="location-1" name="location" checked/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Автово</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="location-1" name="location" checked/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Адмиралтейская</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="location-1" name="location" checked/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Академическая</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="location-1" name="location"/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Балтийская</span>
-              </label>
-            </div>
-          </li>
-          <li className="gym-hall-form__check-list-item">
-            <div className="custom-toggle custom-toggle--checkbox">
-              <label>
-                <input type="checkbox" value="location-1" name="location"/>
-                <span className="custom-toggle__icon">
-                  <svg width="9" height="6" aria-hidden="true">
-                    <use xlinkHref="#arrow-check"></use>
-                  </svg>
-                </span>
-                <span className="custom-toggle__label">Бухарестская</span>
-              </label>
-            </div>
-          </li>
+          {
+            existingLocations.slice(0, curentLocationTypesPage * MAX_LOCATION_TYPES_COUNT_PER_PAGE).map((location) => (
+              <li key={nanoid()} className="gym-hall-form__check-list-item">
+                <div className="custom-toggle custom-toggle--checkbox">
+                  <label>
+                    <input
+                      onChange={() => handleLocationInputChange(location)}
+                      type="checkbox" value="location-1" name="location"
+                      checked={locationFilter.includes(location)}
+                    />
+                    <span className="custom-toggle__icon">
+                      <svg width="9" height="6" aria-hidden="true">
+                        <use xlinkHref="#arrow-check"></use>
+                      </svg>
+                    </span>
+                    <span className="custom-toggle__label">
+                      {location}
+                    </span>
+                  </label>
+                </div>
+              </li>
+            ))
+          }
         </ul>
-        <button className="btn-show-more gym-hall-form__btn-show" type="button">
-          <span>Посмотреть все</span>
-          <svg className="btn-show-more__icon" width="10" height="4" aria-hidden="true">
-            <use xlinkHref="#arrow-down"></use>
-          </svg>
-        </button>
+        {
+          curentLocationTypesPage < locationTypesPagesCount
+            && (
+              <button
+                onClick={handleShowMoreLocationsButtonClick}
+                className="btn-show-more gym-hall-form__btn-show" type="button"
+              >
+                <span>Посмотреть все</span>
+                <svg className="btn-show-more__icon" width="10" height="4" aria-hidden="true">
+                  <use xlinkHref="#arrow-down"></use>
+                </svg>
+              </button>
+            )
+        }
       </div>
       <div className="gym-hall-form__block gym-hall-form__block--addition">
         <h4 className="gym-hall-form__block-title">Дополнительно</h4>
