@@ -19,6 +19,7 @@ import {Status} from '../types/status.enum';
 import {NotificationRdo} from '../types/notification.rdo';
 import {GymRdo} from '../types/gym.rdo';
 import {GetGymsQuery} from '../types/get-gyms.query';
+import {FavoriteGymRdo} from '../types/favorite-gym.rdo';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -316,6 +317,18 @@ export const fetchGymsCatalogAction = createAsyncThunk<GymRdo[], GetGymsQuery | 
   async (getGymsQueryArgs, {dispatch, extra: api}) => {
     const queryString = getQueryString(getGymsQueryArgs);
     const {data} = await api[0].get<GymRdo[]>(`${FF_SERVICE_URL}${APIRoute.Gyms}${queryString}`);
+    return data;
+  },
+);
+
+export const fetchMyFavoriteGymsAction = createAsyncThunk<FavoriteGymRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchMyFavoriteGymsAction',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<FavoriteGymRdo[]>(`${FF_SERVICE_URL}${APIRoute.FavoriteGyms}`);
     return data;
   },
 );

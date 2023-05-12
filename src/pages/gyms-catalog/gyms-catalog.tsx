@@ -3,16 +3,20 @@ import {nanoid} from 'nanoid';
 import GymsCatalogItem from '../../components/gyms-catalog-item/gyms-catalog-item';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {useEffect} from 'react';
-import {getGymsCatalog} from '../../store/gyms-data/selectors';
-import {fetchGymsCatalogAction} from '../../store/api-actions';
+import {getGymsCatalog, getMyFavoriteGyms} from '../../store/gyms-data/selectors';
+import {fetchGymsCatalogAction, fetchMyFavoriteGymsAction} from '../../store/api-actions';
 
 function GymsCatalog(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const gymsCatalog = useAppSelector(getGymsCatalog);
+  const myFavoriteGyms = useAppSelector(getMyFavoriteGyms);
+
+  const getFavoriteStatus = (gymId: string) => myFavoriteGyms.some((gym) => gym.id === gymId);
 
   useEffect(() => {
     dispatch(fetchGymsCatalogAction());
+    dispatch(fetchMyFavoriteGymsAction());
   }, [dispatch]);
 
   return (
@@ -229,7 +233,11 @@ function GymsCatalog(): JSX.Element {
                 <ul className="gyms-catalog__list">
                   {
                     gymsCatalog.map((gym) => (
-                      <GymsCatalogItem key={nanoid()} gym={gym}/>
+                      <GymsCatalogItem
+                        key={nanoid()}
+                        gym={gym}
+                        isInFavorites={getFavoriteStatus(gym.id)}
+                      />
                     ))
                   }
                 </ul>

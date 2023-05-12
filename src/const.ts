@@ -52,7 +52,8 @@ export enum APIRoute {
   UserIncomingRequests = '/user-requests/incoming',
   UserOutgoingRequests = '/user-requests/outgoing',
   Notifications = '/notifications',
-  Gyms = '/gyms'
+  Gyms = '/gyms',
+  FavoriteGyms = '/gyms/favorites'
 }
 
 export enum AuthorizationStatus {
