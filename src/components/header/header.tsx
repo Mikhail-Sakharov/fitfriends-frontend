@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {dropTokens} from '../../services/tokens';
 import {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
@@ -6,9 +6,13 @@ import {deleteNotificationAction, fetchNotificationsAction} from '../../store/ap
 import {getNotifications} from '../../store/user-data/selectors';
 import {nanoid} from 'nanoid';
 import {getNotificationDate} from '../../helpers';
+import {AppRoute} from '../../const';
 
 function Header(): JSX.Element {
   const dispatch = useAppDispatch();
+
+  const location = useLocation();
+  const pathName = location.pathname;
 
   const notifications = useAppSelector(getNotifications);
 
@@ -43,21 +47,39 @@ function Header(): JSX.Element {
         <nav className="main-nav">
           <ul className="main-nav__list">
             <li className="main-nav__item">
-              <Link className="main-nav__link is-active" to="#" aria-label="На главную">
+              <Link
+                className={`
+                  main-nav__link
+                  ${pathName === AppRoute.Main ? 'is-active' : ''}
+                `}
+                to={AppRoute.Main} aria-label="На главную"
+              >
                 <svg width="18" height="18" aria-hidden="true">
                   <use xlinkHref="#icon-home"></use>
                 </svg>
               </Link>
             </li>
             <li className="main-nav__item">
-              <Link className="main-nav__link" to="#" aria-label="Личный кабинет">
+              <Link
+                className={`
+                main-nav__link
+                ${pathName === AppRoute.PersonalAccountCoach || pathName === AppRoute.PersonalAccountUser ? 'is-active' : ''}
+              `}
+                to={AppRoute.Intro} aria-label="Личный кабинет"
+              >
                 <svg width="16" height="18" aria-hidden="true">
                   <use xlinkHref="#icon-user"></use>
                 </svg>
               </Link>
             </li>
             <li className="main-nav__item">
-              <Link className="main-nav__link" to="#" aria-label="Друзья">
+              <Link
+                className={`
+                main-nav__link
+                ${pathName === AppRoute.FriendsList ? 'is-active' : ''}
+              `}
+                to={AppRoute.FriendsList} aria-label="Друзья"
+              >
                 <svg width="22" height="16" aria-hidden="true">
                   <use xlinkHref="#icon-friends"></use>
                 </svg>
