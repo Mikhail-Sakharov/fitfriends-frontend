@@ -1,3 +1,4 @@
+import {GetGymsQuery} from './types/get-gyms.query';
 import {GetTrainingsQuery} from './types/get-trainings.query';
 
 export const getHumanizedDate = (date: string) => {
@@ -33,7 +34,7 @@ export const getNotificationDate = (date: string) => {
   return notificationDate;
 };
 
-export const getQueryString = (queryArgs?: GetTrainingsQuery) => {
+export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery) => {
   if (!queryArgs) {return '';}
 
   const queryParams = [
@@ -44,6 +45,9 @@ export const getQueryString = (queryArgs?: GetTrainingsQuery) => {
     `${queryArgs.minRating ? `minRating=${queryArgs.minRating}` : ''}`,
     `${queryArgs.maxRating ? `maxRating=${queryArgs.maxRating}` : ''}`,
     `${queryArgs.duration ? `duration=${queryArgs.duration}` : ''}`,
+    `${queryArgs.location ? `location=${queryArgs.location}` : ''}`,
+    `${queryArgs.features ? `features=${queryArgs.features}` : ''}`,
+    `${queryArgs.isVerified !== undefined ? `isVerified=${queryArgs.isVerified.toString()}` : ''}`,
     `${queryArgs.sortType ? `sortType=${queryArgs.sortType}` : ''}`,
     `${queryArgs.sortOrder ? `sortOrder=${queryArgs.sortOrder}` : ''}`,
     `${queryArgs.page ? `page=${queryArgs.page}` : ''}`,

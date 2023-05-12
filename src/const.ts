@@ -51,7 +51,8 @@ export enum APIRoute {
   UserRequests = '/user-requests',
   UserIncomingRequests = '/user-requests/incoming',
   UserOutgoingRequests = '/user-requests/outgoing',
-  Notifications = '/notifications'
+  Notifications = '/notifications',
+  Gyms = '/gyms'
 }
 
 export enum AuthorizationStatus {
@@ -64,7 +65,8 @@ export enum ReducerNameSpace {
   AuthProcess = 'AUTH_PROCESS',
   UserData = 'USER_DATA',
   AppData = 'APP_DATA',
-  TrainingData = 'TRAINING_DATA'
+  TrainingData = 'TRAINING_DATA',
+  GymsData = 'GYMS_DATA'
 }
 
 export const TrainingTypeImageMap = {

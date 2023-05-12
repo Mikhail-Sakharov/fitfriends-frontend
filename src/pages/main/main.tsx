@@ -1,5 +1,6 @@
 import {Link} from 'react-router-dom';
 import Header from '../../components/header/header';
+import {AppRoute} from '../../const';
 
 function Main(): JSX.Element {
   return (
@@ -190,7 +191,7 @@ function Main(): JSX.Element {
                 </div>
                 <div className="thumbnail-spec-gym__button-wrapper">
                   <Link className="btn btn--small thumbnail-spec-gym__button" to="#">Подробнее</Link>
-                  <Link className="btn btn--small btn--outlined thumbnail-spec-gym__button" to="#">Все залы</Link>
+                  <Link className="btn btn--small btn--outlined thumbnail-spec-gym__button" to={AppRoute.GymsCatalog}>Все залы</Link>
                 </div>
               </div>
             </div>

@@ -17,6 +17,8 @@ import {UserRequestRdo} from '../types/user-request.rdo';
 import {UserRequestType} from '../types/user-request-type.enum';
 import {Status} from '../types/status.enum';
 import {NotificationRdo} from '../types/notification.rdo';
+import {GymRdo} from '../types/gym.rdo';
+import {GetGymsQuery} from '../types/get-gyms.query';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -301,6 +303,19 @@ export const deleteNotificationAction = createAsyncThunk<undefined, string, {
   'deleteNotificationAction',
   async (notificationId, {dispatch, extra: api}) => {
     const {data} = await api[0].delete<undefined>(`${FF_NOTIFIER_URL}${APIRoute.Notifications}/${notificationId}`);
+    return data;
+  },
+);
+
+export const fetchGymsCatalogAction = createAsyncThunk<GymRdo[], GetGymsQuery | undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchGymsCatalogAction',
+  async (getGymsQueryArgs, {dispatch, extra: api}) => {
+    const queryString = getQueryString(getGymsQueryArgs);
+    const {data} = await api[0].get<GymRdo[]>(`${FF_SERVICE_URL}${APIRoute.Gyms}${queryString}`);
     return data;
   },
 );
