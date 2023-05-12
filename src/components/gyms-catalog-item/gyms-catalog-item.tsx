@@ -2,6 +2,7 @@ import {Link} from 'react-router-dom';
 import {GymRdo} from '../../types/gym.rdo';
 import {useAppDispatch} from '../../hooks';
 import {addGymToFavoritesAction, fetchMyFavoriteGymsAction, removeGymFromFavoritesAction} from '../../store/api-actions';
+import {AppRoute} from '../../const';
 
 type GymsCatalogItemProps = {
   gym: GymRdo;
@@ -91,7 +92,7 @@ function GymsCatalogItem({gym, isInFavorites}: GymsCatalogItemProps): JSX.Elemen
           </p>
         </div>
         <div className="thumbnail-gym__buttons-wrapper">
-          <Link className="btn btn--small thumbnail-gym__button" to="#">Подробнее</Link>
+          <Link className="btn btn--small thumbnail-gym__button" to={`${AppRoute.GymCard}/${gym.id}`}>Подробнее</Link>
         </div>
       </div>
     </li>

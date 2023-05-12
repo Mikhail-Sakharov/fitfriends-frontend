@@ -357,3 +357,15 @@ export const removeGymFromFavoritesAction = createAsyncThunk<undefined, string, 
     return data;
   },
 );
+
+export const fetchGymInfoAction = createAsyncThunk<GymRdo, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchGymInfoAction',
+  async (gymId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<GymRdo>(`${FF_SERVICE_URL}${APIRoute.Gyms}/${gymId}`);
+    return data;
+  },
+);

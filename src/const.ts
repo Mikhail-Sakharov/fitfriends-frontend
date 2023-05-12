@@ -22,6 +22,7 @@ export enum AppRoute {
   FoodDiary = '/food-diary',
   GymsCatalog = '/gyms-catalog',
   GymCard = '/gym-card',
+  GymCardId = '/gym-card/:id',
   UsersCatalog = '/users-catalog',
   UserCard = '/user-card',
   NotFound = '*'

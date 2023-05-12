@@ -253,7 +253,7 @@ function App(): JSX.Element {
         }
       />
       <Route
-        path={AppRoute.GymCard}
+        path={AppRoute.GymCardId}
         element={
           <PrivateRoute authorizationStatus={authorizationStatus}>
             {

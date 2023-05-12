@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {fetchGymsCatalogAction, fetchMyFavoriteGymsAction} from '../api-actions';
+import {fetchGymInfoAction, fetchGymsCatalogAction, fetchMyFavoriteGymsAction} from '../api-actions';
 import {GymRdo} from '../../types/gym.rdo';
 import {FavoriteGymRdo} from '../../types/favorite-gym.rdo';
 
@@ -8,12 +8,14 @@ type GymsData = {
   gymsCatalog: GymRdo[];
   allTheGyms: GymRdo[];
   myFavoriteGyms: FavoriteGymRdo[];
+  currentGym: GymRdo | null;
 };
 
 const initialState: GymsData = {
   gymsCatalog: [],
   allTheGyms: [],
-  myFavoriteGyms: []
+  myFavoriteGyms: [],
+  currentGym: null
 };
 
 export const gymsData = createSlice({
@@ -28,6 +30,9 @@ export const gymsData = createSlice({
       })
       .addCase(fetchMyFavoriteGymsAction.fulfilled, (state, action) => {
         state.myFavoriteGyms = action.payload;
+      })
+      .addCase(fetchGymInfoAction.fulfilled, (state, action) => {
+        state.currentGym = action.payload;
       });
   }
 });

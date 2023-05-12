@@ -1,6 +1,24 @@
+import {useParams} from 'react-router-dom';
 import Header from '../../components/header/header';
+import {useEffect} from 'react';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {fetchGymInfoAction} from '../../store/api-actions';
+import {getCurrentGym} from '../../store/gyms-data/selectors';
+import {nanoid} from 'nanoid';
 
 function GymCard(): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const gymId = useParams().id;
+
+  const gymInfo = useAppSelector(getCurrentGym);
+
+  useEffect(() => {
+    if (gymId) {
+      dispatch(fetchGymInfoAction(gymId));
+    }
+  }, [dispatch, gymId]);
+
   return (
     <>
       <Header />
@@ -20,7 +38,9 @@ function GymCard(): JSX.Element {
                   <div className="gym-card__wrapper">
                     <div className="gym-card__content">
                       <div className="gym-card__head">
-                        <h2 className="gym-card__title">World sport</h2>
+                        <h2 className="gym-card__title">
+                          {gymInfo?.title}
+                        </h2>
                         <div className="gym-card__icon">
                           <svg className="gym-card__verify-bold" width="12" height="12" aria-hidden="true">
                             <use xlinkHref="#icon-verify-bold"></use>
@@ -31,47 +51,32 @@ function GymCard(): JSX.Element {
                         <svg className="gym-card__icon-location" width="12" height="14" aria-hidden="true">
                           <use xlinkHref="#icon-location"></use>
                         </svg>
-                        <span>м. Адмиралтейская</span>
+                        <span>
+                          {gymInfo?.location}
+                        </span>
                       </p>
                       <ul className="gym-card__hashtag-list">
-                        <li className="gym-card__hashtag-item">
-                          <div className="hashtag hashtag--white">
-                            <span>#бассейн</span>
-                          </div>
-                        </li>
-                        <li className="gym-card__hashtag-item">
-                          <div className="hashtag hashtag--white">
-                            <span>#парковка</span>
-                          </div>
-                        </li>
-                        <li className="gym-card__hashtag-item">
-                          <div className="hashtag hashtag--white">
-                            <span>#массаж</span>
-                          </div>
-                        </li>
-                        <li className="gym-card__hashtag-item">
-                          <div className="hashtag hashtag--white">
-                            <span>#для_детей</span>
-                          </div>
-                        </li>
+                        {
+                          gymInfo?.features.map((feature) => (
+                            <li key={nanoid()} className="gym-card__hashtag-item">
+                              <div className="hashtag hashtag--white">
+                                <span>
+                                  {`#${feature}`}
+                                </span>
+                              </div>
+                            </li>
+                          ))
+                        }
                       </ul>
                       <div className="gym-card__text">
-                        <p>Огромный зал с&nbsp;отдельной зоной кроссфит. Разнообразное оборудование для занятий практически любым видом спорта.</p>
-                        <p>Фитнес-клуб World Sport предоставляет полный комплекс фитнес-программ, бассейны, групповой и&nbsp;индивидуальный тренинг, тренажерные залы, детские комнаты, 3&nbsp;вида саун, SPA салоны.</p>
+                        {gymInfo?.description}
                       </div>
                       <div className="gym-card__rating-price">
-                        <div className="gym-card__rating">
-                          <div className="rating">
-                            <svg className="rating__icon" width="18" height="18" aria-hidden="true">
-                              <use xlinkHref="#icon-star"></use>
-                            </svg>
-                            <span className="rating__count">4</span>
-                          </div>
-                        </div>
                         <div className="gym-card__price">
                           <div className="price-service">
                             <p className="price-service__price">
-                              500₽&nbsp;
+                              {gymInfo?.price}
+                              ₽&nbsp;
                               <span>&#47;</span>
 &nbsp;занятие
                             </p>
@@ -97,30 +102,18 @@ function GymCard(): JSX.Element {
                             </svg>
                           </button>
                         </li>
-                        <li className="slider-gyms__slide slider-gyms__slide slider-gyms__slide--current">
-                          <div className="slider-gyms__img">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/slider-gyms/gym-01.webp, img/content/slider-gyms/gym-01@2x.webp 2x"/>
-                              <img src="img/content/slider-gyms/gym-01.jpg" srcSet="img/content/slider-gyms/gym-01@2x.jpg 2x" width="826" height="773" alt="Фото спортивного снаряжения."/>
-                            </picture>
-                          </div>
-                        </li>
-                        <li className="slider-gyms__slide slider-gyms__slide">
-                          <div className="slider-gyms__img">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/slider-gyms/gym-02.webp, img/content/slider-gyms/gym-02@2x.webp 2x"/>
-                              <img src="img/content/slider-gyms/gym-02.jpg" srcSet="img/content/slider-gyms/gym-02@2x.jpg 2x" width="826" height="773" alt="Фото тренажёров."/>
-                            </picture>
-                          </div>
-                        </li>
-                        <li className="slider-gyms__slide slider-gyms__slide">
-                          <div className="slider-gyms__img">
-                            <picture>
-                              <source type="image/webp" srcSet="img/content/slider-gyms/gym-03.webp, img/content/slider-gyms/gym-03@2x.webp 2x"/>
-                              <img src="img/content/slider-gyms/gym-03.jpg" srcSet="img/content/slider-gyms/gym-03@2x.jpg 2x" width="826" height="773" alt="Фото бассейна."/>
-                            </picture>
-                          </div>
-                        </li>
+                        {
+                          gymInfo?.images.map((image) => (
+                            <li key={nanoid()} className="slider-gyms__slide slider-gyms__slide slider-gyms__slide--current">
+                              <div className="slider-gyms__img">
+                                <picture>
+                                  <source type="image/webp" srcSet="img/content/slider-gyms/gym-01.webp, img/content/slider-gyms/gym-01@2x.webp 2x"/>
+                                  <img src="img/content/slider-gyms/gym-01.jpg" srcSet="img/content/slider-gyms/gym-01@2x.jpg 2x" width="826" height="773" alt="Фото спортивного снаряжения."/>
+                                </picture>
+                              </div>
+                            </li>
+                          ))
+                        }
                       </ul>
                     </section>
                   </div>
