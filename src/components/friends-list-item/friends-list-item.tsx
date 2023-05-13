@@ -24,7 +24,7 @@ function FriendsListItem({friend, request, userRole}: FriendsListItemProps): JSX
     ? (friend.questionnaire as UserQuestionnaire).isReadyToGetTrained
     : (friend.questionnaire as CoachQuestionnaire).isReadyToTrain;
 
-  const handleInviteButtonClick = async () => {
+  const createUserRequest = async () => {
     dispatch(setDataLoadedStatus(true));
     await dispatch(sendTrainingRequestAction({
       type: UserRequestType.Training,
@@ -35,6 +35,10 @@ function FriendsListItem({friend, request, userRole}: FriendsListItemProps): JSX
       dispatch(fetchOutgoingUserRequestsForTraining());
     }
     dispatch(setDataLoadedStatus(false));
+  };
+
+  const handleInviteButtonClick = () => {
+    createUserRequest();
   };
 
   const dispatchAcceptRequest = async () => {
@@ -133,7 +137,7 @@ function FriendsListItem({friend, request, userRole}: FriendsListItemProps): JSX
                     userRole === UserRole.User
                       && (
                         <button
-                          onClick={() => handleInviteButtonClick}
+                          onClick={handleInviteButtonClick}
                           className="thumbnail-friend__invite-button" type="button"
                           disabled={!!request}
                         >
