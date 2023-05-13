@@ -2,14 +2,12 @@ import {useRef, useState, useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import RangeSlider from '../range-slider/range-slider';
 import {debounce} from '../../helpers';
-import {FILTER_QUERY_DELAY} from '../../const';
+import {FILTER_QUERY_DELAY, MAX_LOCATION_TYPES_COUNT_PER_PAGE} from '../../const';
 import {getAllTheGyms} from '../../store/gyms-data/selectors';
 import {fetchGymsCatalogAction, fetchMyFavoriteGymsAction} from '../../store/api-actions';
 import {nanoid} from 'nanoid';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {GymFeatures} from '../../types/gym-features.enum';
-
-export const MAX_LOCATION_TYPES_COUNT_PER_PAGE = 4;
 
 function GymsCatalogFilter(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -29,11 +27,11 @@ function GymsCatalogFilter(): JSX.Element {
   // данные о локациях из запроса залов без фильтров (для отрисовки чекбоксов)
   // ----- т.е. учитываются и отрисовываются только варианты, имеющиеся в БД
   const existingLocations = Array.from(new Set(allTheGyms.map((gym) => gym.location)));
-  const [curentLocationTypesPage, setCurentLocationTypesPage] = useState(1);
+  const [currentLocationTypesPage, setCurentLocationTypesPage] = useState(1);
   const locationTypesPagesCount = Math.ceil(existingLocations.length / MAX_LOCATION_TYPES_COUNT_PER_PAGE);
 
   const handleShowMoreLocationsButtonClick = () => {
-    if (curentLocationTypesPage < locationTypesPagesCount) {
+    if (currentLocationTypesPage < locationTypesPagesCount) {
       setCurentLocationTypesPage((prevState) => prevState + 1);
     }
   };
@@ -135,7 +133,7 @@ function GymsCatalogFilter(): JSX.Element {
         <h4 className="gym-hall-form__block-title">Локация, станция метро</h4>
         <ul className="gym-hall-form__check-list">
           {
-            existingLocations.slice(0, curentLocationTypesPage * MAX_LOCATION_TYPES_COUNT_PER_PAGE).map((location) => (
+            existingLocations.slice(0, currentLocationTypesPage * MAX_LOCATION_TYPES_COUNT_PER_PAGE).map((location) => (
               <li key={nanoid()} className="gym-hall-form__check-list-item">
                 <div className="custom-toggle custom-toggle--checkbox">
                   <label>
@@ -159,7 +157,7 @@ function GymsCatalogFilter(): JSX.Element {
           }
         </ul>
         {
-          curentLocationTypesPage < locationTypesPagesCount
+          currentLocationTypesPage < locationTypesPagesCount
             && (
               <button
                 onClick={handleShowMoreLocationsButtonClick}

@@ -1,23 +1,48 @@
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import Header from '../../components/header/header';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {fetchGymInfoAction} from '../../store/api-actions';
 import {getCurrentGym} from '../../store/gyms-data/selectors';
 import {nanoid} from 'nanoid';
+import {AppRoute} from '../../const';
 
 function GymCard(): JSX.Element {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const gymId = useParams().id;
 
   const gymInfo = useAppSelector(getCurrentGym);
 
+  const slidesCount = gymInfo?.images.length;
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
   useEffect(() => {
     if (gymId) {
       dispatch(fetchGymInfoAction(gymId));
     }
   }, [dispatch, gymId]);
+
+  const handlePrevButtonClick = () => {
+    setCurrentSlideIndex((prevState) => {
+      if (prevState > 0) {
+        return prevState - 1;
+      } else {
+        return prevState;
+      }
+    });
+  };
+
+  const handleNextButtonClick = () => {
+    setCurrentSlideIndex((prevState) => {
+      if (slidesCount && prevState < slidesCount - 1) {
+        return prevState + 1;
+      } else {
+        return prevState;
+      }
+    });
+  };
 
   return (
     <>
@@ -26,7 +51,10 @@ function GymCard(): JSX.Element {
         <div className="inner-page inner-page--no-sidebar">
           <div className="container">
             <div className="inner-page__wrapper">
-              <button className="btn-flat inner-page__back" type="button">
+              <button
+                onClick={() => navigate(AppRoute.GymsCatalog)}
+                className="btn-flat inner-page__back" type="button"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-left"></use>
                 </svg>
@@ -69,7 +97,9 @@ function GymCard(): JSX.Element {
                         }
                       </ul>
                       <div className="gym-card__text">
-                        {gymInfo?.description}
+                        <p>
+                          {gymInfo?.description}
+                        </p>
                       </div>
                       <div className="gym-card__rating-price">
                         <div className="gym-card__price">
@@ -91,24 +121,35 @@ function GymCard(): JSX.Element {
                       <h2 className="visually-hidden">Слайдер с фотографиями спортивных залов.</h2>
                       <ul className="slider-gyms__list">
                         <li>
-                          <button className="btn-icon slider-gyms__btn slider-gyms__btn--prev" type="button" aria-label="prev">
+                          <button
+                            onClick={handlePrevButtonClick}
+                            className="btn-icon slider-gyms__btn slider-gyms__btn--prev" type="button" aria-label="prev"
+                          >
                             <svg width="16" height="14" aria-hidden="true">
                               <use xlinkHref="#arrow-left"></use>
                             </svg>
                           </button>
-                          <button className="btn-icon slider-gyms__btn slider-gyms__btn--next" type="button" aria-label="next">
+                          <button
+                            onClick={handleNextButtonClick}
+                            className="btn-icon slider-gyms__btn slider-gyms__btn--next" type="button" aria-label="next"
+                          >
                             <svg width="16" height="14" aria-hidden="true">
                               <use xlinkHref="#arrow-right"></use>
                             </svg>
                           </button>
                         </li>
                         {
-                          gymInfo?.images.map((image) => (
-                            <li key={nanoid()} className="slider-gyms__slide slider-gyms__slide slider-gyms__slide--current">
+                          gymInfo?.images.map((image, index) => (
+                            <li
+                              className={`
+                                slider-gyms__slide slider-gyms__slide
+                                ${index === currentSlideIndex ? 'slider-gyms__slide--current' : ''}
+                              `}
+                              key={nanoid()}
+                            >
                               <div className="slider-gyms__img">
                                 <picture>
-                                  <source type="image/webp" srcSet="img/content/slider-gyms/gym-01.webp, img/content/slider-gyms/gym-01@2x.webp 2x"/>
-                                  <img src="img/content/slider-gyms/gym-01.jpg" srcSet="img/content/slider-gyms/gym-01@2x.jpg 2x" width="826" height="773" alt="Фото спортивного снаряжения."/>
+                                  <img src={image} width="826" height="773" alt="Фото спортивного снаряжения."/>
                                 </picture>
                               </div>
                             </li>

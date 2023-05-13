@@ -104,6 +104,10 @@ export const MAX_ORDERS_COUNT_PER_PAGE = 4;
 
 export const MAX_FRIENDS_ITEMS_COUNT_PER_PAGE = 9;
 
+export const MAX_LOCATION_TYPES_COUNT_PER_PAGE = 4;
+
+export const MAX_GYM_ITEMS_COUNT_PER_PAGE = 6;
+
 export const UserDailyCaloriesCount = {
   MIN: 1000,
   MAX: 5000
