@@ -20,7 +20,7 @@ import {NotificationRdo} from '../types/notification.rdo';
 import {GymRdo} from '../types/gym.rdo';
 import {GetGymsQuery} from '../types/get-gyms.query';
 import {FavoriteGymRdo} from '../types/favorite-gym.rdo';
-import {OnlineStatus} from '../types/online-status.enum';
+import {PurchaseRdo} from '../types/purchase.rdo';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -371,14 +371,14 @@ export const fetchGymInfoAction = createAsyncThunk<GymRdo, string, {
   },
 );
 
-export const getUserOnlineStatusAction = createAsyncThunk<OnlineStatus, string, {
+export const fetchMyPurchasesAction = createAsyncThunk<PurchaseRdo[], undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
 }>(
-  'getUserOnlineStatusAction',
-  async (userId, {dispatch, extra: api}) => {
-    const {data} = await api[0].get<OnlineStatus>(`${FF_USERS_URL}${APIRoute.OnlineStatus}/${userId}`);
+  'fetchMyPurchasesAction',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<PurchaseRdo[]>(`${FF_SERVICE_URL}${APIRoute.Purchases}`);
     return data;
   },
 );
