@@ -20,6 +20,7 @@ import {NotificationRdo} from '../types/notification.rdo';
 import {GymRdo} from '../types/gym.rdo';
 import {GetGymsQuery} from '../types/get-gyms.query';
 import {FavoriteGymRdo} from '../types/favorite-gym.rdo';
+import {OnlineStatus} from '../types/online-status.enum';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -366,6 +367,18 @@ export const fetchGymInfoAction = createAsyncThunk<GymRdo, string, {
   'fetchGymInfoAction',
   async (gymId, {dispatch, extra: api}) => {
     const {data} = await api[0].get<GymRdo>(`${FF_SERVICE_URL}${APIRoute.Gyms}/${gymId}`);
+    return data;
+  },
+);
+
+export const getUserOnlineStatusAction = createAsyncThunk<OnlineStatus, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'getUserOnlineStatusAction',
+  async (userId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<OnlineStatus>(`${FF_USERS_URL}${APIRoute.OnlineStatus}/${userId}`);
     return data;
   },
 );

@@ -7,7 +7,8 @@ import {Questionnaire, User} from './user.interface';
 
 export class UserRdo {
   public id!: string;
-  public createdAt!: string[];
+  public createdAt!: string;
+  public updatedAt!: string;
   public userName!: string;
   public email!: string;
   public avatarUrl!: string;

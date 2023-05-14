@@ -46,6 +46,7 @@ export enum APIRoute {
   DeleteCertificate = '/users/certificate/delete',
   AddFriend = '/users/friends/add',
   RemoveFriend = '/users/friends/remove',
+  OnlineStatus = '/users/online',
   Trainings = '/trainings',
   TrainingVideo = '/trainings/video',
   Orders = '/orders/trainings',
@@ -107,6 +108,8 @@ export const MAX_FRIENDS_ITEMS_COUNT_PER_PAGE = 9;
 export const MAX_LOCATION_TYPES_COUNT_PER_PAGE = 4;
 
 export const MAX_GYM_ITEMS_COUNT_PER_PAGE = 6;
+
+export const MAX_DIFF_IN_MILLISECONDS = 900000;
 
 export const UserDailyCaloriesCount = {
   MIN: 1000,

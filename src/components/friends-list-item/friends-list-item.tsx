@@ -1,5 +1,5 @@
 import {nanoid} from 'nanoid';
-import {FF_USERS_URL} from '../../const';
+import {FF_USERS_URL, MAX_DIFF_IN_MILLISECONDS} from '../../const';
 import {UserRole} from '../../types/user-role.enum';
 import {CoachQuestionnaire, UserQuestionnaire} from '../../types/user.interface';
 import {UserRdo} from '../../types/user.response';
@@ -7,7 +7,12 @@ import {UserRequestRdo} from '../../types/user-request.rdo';
 import {Status} from '../../types/status.enum';
 import {useAppDispatch} from '../../hooks';
 import {UserRequestType} from '../../types/user-request-type.enum';
-import {changeTrainingRequestStatusAction, fetchIncomingUserRequestsForTraining, fetchOutgoingUserRequestsForTraining, sendTrainingRequestAction} from '../../store/api-actions';
+import {
+  changeTrainingRequestStatusAction,
+  fetchIncomingUserRequestsForTraining,
+  fetchOutgoingUserRequestsForTraining,
+  sendTrainingRequestAction
+} from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 type FriendsListItemProps = {
@@ -19,7 +24,11 @@ type FriendsListItemProps = {
 function FriendsListItem({friend, request, userRole}: FriendsListItemProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const isUserOnline = true; // TODO: временная заглушка - удалить !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  const timeNow = Number(new Date());
+  const lastTimeUpdated = Number(new Date(friend.updatedAt));
+  const timeDiff = Math.abs(timeNow - lastTimeUpdated);
+
+  const isUserOnline = !(timeDiff > MAX_DIFF_IN_MILLISECONDS);
   const isReadyForTraining = friend.userRole === UserRole.User
     ? (friend.questionnaire as UserQuestionnaire).isReadyToGetTrained
     : (friend.questionnaire as CoachQuestionnaire).isReadyToTrain;
