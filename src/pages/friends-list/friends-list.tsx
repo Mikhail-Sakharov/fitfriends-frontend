@@ -7,8 +7,9 @@ import FriendsListItem from '../../components/friends-list-item/friends-list-ite
 import {nanoid} from 'nanoid';
 import {getUserRole} from '../../store/auth-process/selectors';
 import {UserRole} from '../../types/user-role.enum';
-import {AppRoute, MAX_FRIENDS_ITEMS_COUNT_PER_PAGE} from '../../const';
+import {AppRoute, MAX_DIFF_IN_MILLISECONDS, MAX_FRIENDS_ITEMS_COUNT_PER_PAGE} from '../../const';
 import {useNavigate} from 'react-router-dom';
+import {UserRdo} from '../../types/user.response';
 
 function FriendsList(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -21,6 +22,20 @@ function FriendsList(): JSX.Element {
 
   const [currentListPage, setCurrentListPage] = useState(1);
   const pagesCount = Math.ceil(myFriends.length / MAX_FRIENDS_ITEMS_COUNT_PER_PAGE);
+
+  const [onlineFilterChecked, setOnlineFilterChecked] = useState(false);
+
+  const filterOfflineUsers = (user: UserRdo) => {
+    const timeNow = Number(new Date());
+    const lastTimeUpdated = Number(new Date(user.updatedAt));
+    const timeDiff = Math.abs(timeNow - lastTimeUpdated);
+
+    if (onlineFilterChecked && timeDiff > MAX_DIFF_IN_MILLISECONDS) {
+      return null;
+    } else {
+      return user;
+    }
+  };
 
   const handleShowMoreButtonClick = () => {
     setCurrentListPage((prevState) => prevState < pagesCount ? prevState + 1 : prevState);
@@ -48,6 +63,10 @@ function FriendsList(): JSX.Element {
     }
   }, [dispatch, myUserRole]);
 
+  const handleOnlineStatusInputChange = () => {
+    setOnlineFilterChecked((prevState) => !prevState);
+  };
+
   return (
     <>
       <Header />
@@ -68,7 +87,10 @@ function FriendsList(): JSX.Element {
                 <h1 className="friends-list__title">Мои друзья</h1>
                 <div className="custom-toggle custom-toggle--switch custom-toggle--switch-right" data-validate-type="checkbox">
                   <label>
-                    <input type="checkbox" value="user-agreement-1" name="user-agreement"/>
+                    <input
+                      onChange={handleOnlineStatusInputChange}
+                      type="checkbox" value="user-agreement-1" name="user-agreement"
+                    />
                     <span className="custom-toggle__icon">
                       <svg width="9" height="6" aria-hidden="true">
                         <use xlinkHref="#arrow-check"></use>
@@ -80,14 +102,16 @@ function FriendsList(): JSX.Element {
               </div>
               <ul className="friends-list__list">
                 {
-                  myFriends.slice(0, ((currentListPage - 1) * MAX_FRIENDS_ITEMS_COUNT_PER_PAGE) + MAX_FRIENDS_ITEMS_COUNT_PER_PAGE).map((friend) => (
-                    <FriendsListItem
-                      key={nanoid()}
-                      friend={friend}
-                      request={findIncomingRequest(friend.id) ?? findOutgoingRequest(friend.id)}
-                      userRole={myUserRole}
-                    />
-                  ))
+                  myFriends
+                    .filter(filterOfflineUsers)
+                    .slice(0, ((currentListPage - 1) * MAX_FRIENDS_ITEMS_COUNT_PER_PAGE) + MAX_FRIENDS_ITEMS_COUNT_PER_PAGE).map((friend) => (
+                      <FriendsListItem
+                        key={nanoid()}
+                        friend={friend}
+                        request={findIncomingRequest(friend.id) ?? findOutgoingRequest(friend.id)}
+                        userRole={myUserRole}
+                      />
+                    ))
                 }
               </ul>
               <div className="show-more friends-list__show-more">
