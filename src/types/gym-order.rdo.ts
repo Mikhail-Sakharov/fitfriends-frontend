@@ -1,16 +1,15 @@
-import {TrainingRdo} from './training.rdo';
+import {GymRdo} from './gym.rdo';
 import {OrderType, PaymentMethod} from './order.rdo';
 
-export class PurchaseRdo {
+export class GymOrderRdo {
   public id!: string;
   public createdAt!: string;
   public orderType!: OrderType;
-  public training!: TrainingRdo;
+  public gym!: GymRdo;
   public price!: number;
   public quantity!: number;
   public totalOrderPrice!: number;
   public paymentMethod!: PaymentMethod;
-  public coachId!: string;
   public traineeId!: string;
-  public isCompleted!: string;
+  public isCompleted!: boolean;
 }

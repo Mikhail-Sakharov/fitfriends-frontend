@@ -54,11 +54,12 @@ function GymsCatalog(): JSX.Element {
                 <ul className="gyms-catalog__list">
                   {
                     currentRequestGyms.slice(0, ((currentListPage - 1) * MAX_GYM_ITEMS_COUNT_PER_PAGE) + MAX_GYM_ITEMS_COUNT_PER_PAGE).map((gym) => (
-                      <GymsCatalogItem
-                        key={nanoid()}
-                        gym={gym}
-                        isInFavorites={getFavoriteStatus(gym.id)}
-                      />
+                      <li key={nanoid()} className="gyms-catalog__item">
+                        <GymsCatalogItem
+                          gym={gym}
+                          isInFavorites={getFavoriteStatus(gym.id)}
+                        />
+                      </li>
                     ))
                   }
                 </ul>

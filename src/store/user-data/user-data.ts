@@ -23,7 +23,7 @@ import {CoachQuestionnaire, UserQuestionnaire} from '../../types/user.interface'
 import {UserRdo} from '../../types/user.response';
 import {UserRequestRdo} from '../../types/user-request.rdo';
 import {NotificationRdo} from '../../types/notification.rdo';
-import {PurchaseRdo} from '../../types/purchase.rdo';
+import {Purchase} from '../../types/purchase.type';
 
 type UserData = {
   avatar: string;
@@ -44,7 +44,7 @@ type UserData = {
   myIncomingRequests: UserRequestRdo[];
   myOutgoingRequests: UserRequestRdo[];
   notifications: NotificationRdo[];
-  myPurchases: PurchaseRdo[];
+  myPurchases: Purchase[];
 };
 
 const initialState: UserData = {
