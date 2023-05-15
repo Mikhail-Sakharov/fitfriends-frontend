@@ -1,5 +1,7 @@
+import {FavoriteGymRdo} from './types/favorite-gym.rdo';
 import {GetGymsQuery} from './types/get-gyms.query';
 import {GetTrainingsQuery} from './types/get-trainings.query';
+import {SubwayStation, SubwayStationLocationMap} from './types/subway-station.enum';
 
 export const getHumanizedDate = (date: string) => {
   const day = `${date[8]}${date[9]}`;
@@ -79,4 +81,19 @@ export const getTrainingId = (): string => {
 
 export const dropTrainingId = (): void => {
   localStorage.removeItem('fitfriends-trainingId');
+};
+
+export const getNearestPoints = (allPoints: FavoriteGymRdo[], myLocation: SubwayStation | null) => {
+  if (myLocation) {
+    const vectors = allPoints.map((point) => ({
+      id: point.id,
+      vector: Math.sqrt(Math.pow((SubwayStationLocationMap[point.gym.location].latitude - SubwayStationLocationMap[myLocation].latitude), 2) + Math.pow((SubwayStationLocationMap[point.gym.location].longitude - SubwayStationLocationMap[myLocation].longitude), 2))
+    }));
+    const sortedHypots = vectors.sort((n, c) => n.vector - c.vector);
+    const sortedPoints = sortedHypots.map((hypot) => allPoints.find((point) => point.id === hypot.id));
+    const nearestPoints = sortedPoints.slice(0, 3);
+    return nearestPoints;
+  }/*  else {
+    return allPoints;
+  } */
 };

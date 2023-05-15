@@ -7,6 +7,9 @@ import {useEffect, useState} from 'react';
 import {fetchMyFavoriteGymsAction} from '../../store/api-actions';
 import {AppRoute, MAX_MY_GYMS_COUNT_PER_PAGE} from '../../const';
 import {useNavigate} from 'react-router-dom';
+import {getLocation} from '../../store/user-data/selectors';
+import {FavoriteGymRdo} from '../../types/favorite-gym.rdo';
+import {getNearestPoints} from '../../helpers';
 
 function MyGyms(): JSX.Element {
   const navigate = useNavigate();
@@ -14,8 +17,23 @@ function MyGyms(): JSX.Element {
 
   const myGyms = useAppSelector(getMyFavoriteGyms);
 
+  const myLocation = useAppSelector(getLocation);
+  const nearestGyms = getNearestPoints(myGyms, myLocation);
+
+  const [onlyNearestChecked, setOnlyNearestChecked] = useState(false);
+
+  const filterNearestPoints = (point: FavoriteGymRdo) => {
+    if (onlyNearestChecked) {
+      return nearestGyms?.some((gym) => gym?.id === point.id);
+    } else {
+      return point;
+    }
+  };
+
   const [currentListPage, setCurrentListPage] = useState(1);
-  const pagesCount = Math.ceil(myGyms.length / MAX_MY_GYMS_COUNT_PER_PAGE);
+  const pagesCount = onlyNearestChecked && nearestGyms
+    ? Math.ceil(nearestGyms.length / MAX_MY_GYMS_COUNT_PER_PAGE)
+    : Math.ceil(myGyms.length / MAX_MY_GYMS_COUNT_PER_PAGE);
 
   useEffect(() => {
     dispatch(fetchMyFavoriteGymsAction());
@@ -27,6 +45,10 @@ function MyGyms(): JSX.Element {
 
   const handleReturnToTopButtonClick = () => {
     window.scrollTo(0, 0);
+  };
+
+  const handleOnlyNearestInputChange = () => {
+    setOnlyNearestChecked((prevState) => !prevState);
   };
 
   return (
@@ -49,7 +71,11 @@ function MyGyms(): JSX.Element {
                 <h1 className="my-gyms__title">Мои залы</h1>
                 <div className="custom-toggle custom-toggle--switch custom-toggle--switch-right" data-validate-type="checkbox">
                   <label>
-                    <input type="checkbox" value="user-agreement-1" name="user-agreement"/>
+                    <input
+                      onChange={handleOnlyNearestInputChange}
+                      type="checkbox" value="user-agreement-1" name="user-agreement"
+                      checked={onlyNearestChecked}
+                    />
                     <span className="custom-toggle__icon">
                       <svg width="9" height="6" aria-hidden="true">
                         <use xlinkHref="#arrow-check"></use>
@@ -61,11 +87,13 @@ function MyGyms(): JSX.Element {
               </div>
               <ul className="my-gyms__list">
                 {
-                  myGyms.map((gym) => (
-                    <li key={nanoid()} className="my-gyms__item">
-                      <GymsCatalogItem gym={gym.gym} isInFavorites/>
-                    </li>
-                  ))
+                  myGyms
+                    .filter(filterNearestPoints)
+                    .slice(0, ((currentListPage - 1) * MAX_MY_GYMS_COUNT_PER_PAGE) + MAX_MY_GYMS_COUNT_PER_PAGE).map((gym) => (
+                      <li key={nanoid()} className="my-gyms__item">
+                        <GymsCatalogItem gym={gym.gym} isInFavorites/>
+                      </li>
+                    ))
                 }
               </ul>
               <div className="show-more my-gyms__show-more">

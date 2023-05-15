@@ -1,14 +1,12 @@
-import {useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import Header from '../../components/header/header';
 import {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {fetchGymInfoAction} from '../../store/api-actions';
 import {getCurrentGym} from '../../store/gyms-data/selectors';
 import {nanoid} from 'nanoid';
-import {AppRoute} from '../../const';
 
 function GymCard(): JSX.Element {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const gymId = useParams().id;
@@ -52,7 +50,7 @@ function GymCard(): JSX.Element {
           <div className="container">
             <div className="inner-page__wrapper">
               <button
-                onClick={() => navigate(AppRoute.GymsCatalog)}
+                onClick={() => window.history.back()}
                 className="btn-flat inner-page__back" type="button"
               >
                 <svg width="14" height="10" aria-hidden="true">

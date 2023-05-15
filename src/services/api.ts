@@ -10,7 +10,6 @@ import {AppRoute} from '../const';
 const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.FORBIDDEN]: true,
   [StatusCodes.BAD_REQUEST]: true,
-  // [StatusCodes.UNAUTHORIZED]: true,
   [StatusCodes.NOT_FOUND]: true
 };
 
