@@ -40,13 +40,14 @@ export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery) => 
   if (!queryArgs) {return '';}
 
   const queryParams = [
-    `${queryArgs.minPrice ? `minPrice=${queryArgs.minPrice}` : ''}`,
-    `${queryArgs.maxPrice ? `maxPrice=${queryArgs.maxPrice}` : ''}`,
+    `${queryArgs.minPrice !== undefined ? `minPrice=${queryArgs.minPrice}` : ''}`,
+    `${queryArgs.maxPrice !== undefined ? `maxPrice=${queryArgs.maxPrice}` : ''}`,
     `${queryArgs.minCaloriesCount ? `minCaloriesCount=${queryArgs.minCaloriesCount}` : ''}`,
     `${queryArgs.maxCaloriesCount ? `maxCaloriesCount=${queryArgs.maxCaloriesCount}` : ''}`,
     `${queryArgs.minRating ? `minRating=${queryArgs.minRating}` : ''}`,
     `${queryArgs.maxRating ? `maxRating=${queryArgs.maxRating}` : ''}`,
     `${queryArgs.duration ? `duration=${queryArgs.duration}` : ''}`,
+    `${queryArgs.trainingType ? `trainingType=${queryArgs.trainingType}` : ''}`,
     `${queryArgs.location ? `location=${queryArgs.location}` : ''}`,
     `${queryArgs.features ? `features=${queryArgs.features}` : ''}`,
     `${queryArgs.isVerified !== undefined ? `isVerified=${queryArgs.isVerified.toString()}` : ''}`,
@@ -93,7 +94,5 @@ export const getNearestPoints = (allPoints: FavoriteGymRdo[], myLocation: Subway
     const sortedPoints = sortedHypots.map((hypot) => allPoints.find((point) => point.id === hypot.id));
     const nearestPoints = sortedPoints.slice(0, 3);
     return nearestPoints;
-  }/*  else {
-    return allPoints;
-  } */
+  }
 };

@@ -1,8 +1,12 @@
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Header from '../../components/header/header';
 import {AppRoute} from '../../const';
+import {useAppDispatch} from '../../hooks';
 
 function Main(): JSX.Element {
+  // const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   return (
     <>
       <Header />
@@ -202,7 +206,10 @@ function Main(): JSX.Element {
             <div className="popular-trainings__wrapper">
               <div className="popular-trainings__title-wrapper">
                 <h2 className="popular-trainings__title">Популярные тренировки</h2>
-                <button className="btn-flat popular-trainings__button" type="button">
+                <button
+                  onClick={() => navigate(AppRoute.TrainingCatalog)}
+                  className="btn-flat popular-trainings__button" type="button"
+                >
                   <span>Смотреть все</span>
                   <svg width="14" height="10" aria-hidden="true">
                     <use xlinkHref="#arrow-right"></use>

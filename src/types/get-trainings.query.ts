@@ -9,6 +9,7 @@ export class GetTrainingsQuery {
   public minRating?: number;
   public maxRating?: number;
   public duration?: string;
+  public trainingType?: string;
   public sortType?: SortType;
   public sortOrder?: SortOrder;
   public page?: number;

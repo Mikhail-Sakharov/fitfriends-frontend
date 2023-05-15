@@ -382,3 +382,17 @@ export const fetchMyPurchasesAction = createAsyncThunk<Purchase[], undefined, {
     return data;
   },
 );
+
+export const fetchTrainingCatalogAction = createAsyncThunk<TrainingRdo[][], GetTrainingsQuery | undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchTrainingCatalogAction',
+  async (getTrainingsQuery, {dispatch, extra: api}) => {
+    const queryString = getQueryString(getTrainingsQuery);
+    const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingCatalog}${queryString}`);
+    const allCatalogTrainings = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingCatalog}`);
+    return [data, allCatalogTrainings.data];
+  },
+);

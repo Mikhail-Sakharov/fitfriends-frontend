@@ -35,10 +35,18 @@ function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
           </picture>
         </div>
         <p className="thumbnail-training__price">
-          <span className="thumbnail-training__price-value">
-            {training.price}
-          </span>
-          <span>₽</span>
+          {
+            training.price !== 0
+              ? (
+                <>
+                  <span className="thumbnail-training__price-value">
+                    {training.price}
+                  </span>
+                  <span>₽</span>
+                </>
+              )
+              : (<span>Бесплатно</span>)
+          }
         </p>
         <h3 className="thumbnail-training__title">
           {training.title}

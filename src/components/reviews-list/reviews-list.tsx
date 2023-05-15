@@ -1,18 +1,15 @@
-import {useNavigate} from 'react-router-dom';
 import {useAppSelector} from '../../hooks';
 import {getUserRole} from '../../store/auth-process/selectors';
 import {UserRole} from '../../types/user-role.enum';
-import {AppRoute} from '../../const';
 
 function ReviewsList(): JSX.Element {
-  const navigate = useNavigate();
 
   const userRole = useAppSelector(getUserRole);
 
   return (
     <aside className="reviews-side-bar">
       <button
-        onClick={() => navigate(AppRoute.MyTrainings)}
+        onClick={() => window.history.back()}
         className="btn-flat btn-flat--underlined reviews-side-bar__back" type="button"
       >
         <svg width="14" height="10" aria-hidden="true">

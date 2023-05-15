@@ -9,3 +9,5 @@ export const getAllExistingTrainings = (state: State): TrainingRdo[] => state[Re
 export const getCurrentTraining = (state: State): TrainingRdo | null => state[ReducerNameSpace.TrainingData].currentTraining;
 export const getUserInfo = (state: State): UserRdo | null => state[ReducerNameSpace.TrainingData].userInfo;
 export const getCurrentRequestOrders = (state: State): OrderRdo[] => state[ReducerNameSpace.TrainingData].currentRequestOrders;
+export const getFilteredTrainingCatalog = (state: State): TrainingRdo[] => state[ReducerNameSpace.TrainingData].filteredTrainingCatalog;
+export const getTrainingCatalog = (state: State): TrainingRdo[] => state[ReducerNameSpace.TrainingData].trainingCatalog;
