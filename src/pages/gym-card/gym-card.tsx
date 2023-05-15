@@ -5,6 +5,7 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {fetchGymInfoAction} from '../../store/api-actions';
 import {getCurrentGym} from '../../store/gyms-data/selectors';
 import {nanoid} from 'nanoid';
+import PopupGymMap from '../../components/popup-gym-map/popup-gym-map';
 
 function GymCard(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -15,6 +16,8 @@ function GymCard(): JSX.Element {
 
   const slidesCount = gymInfo?.images.length;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+
+  const [popupOpened, setPopupOpened] = useState(false);
 
   useEffect(() => {
     if (gymId) {
@@ -40,6 +43,10 @@ function GymCard(): JSX.Element {
         return prevState;
       }
     });
+  };
+
+  const handleLocationClick = () => {
+    setPopupOpened(true);
   };
 
   return (
@@ -73,7 +80,10 @@ function GymCard(): JSX.Element {
                           </svg>
                         </div>
                       </div>
-                      <p className="gym-card__address">
+                      <p
+                        onClick={handleLocationClick}
+                        className="gym-card__address"
+                      >
                         <svg className="gym-card__icon-location" width="12" height="14" aria-hidden="true">
                           <use xlinkHref="#icon-location"></use>
                         </svg>
@@ -162,6 +172,9 @@ function GymCard(): JSX.Element {
           </div>
         </div>
       </main>
+      {
+        popupOpened && <PopupGymMap setPopupOpened={setPopupOpened}/>
+      }
     </>
   );
 }
