@@ -173,7 +173,7 @@ function GymCard(): JSX.Element {
         </div>
       </main>
       {
-        popupOpened && <PopupGymMap setPopupOpened={setPopupOpened}/>
+        popupOpened && <PopupGymMap location={gymInfo?.location} title={gymInfo?.title} setPopupOpened={setPopupOpened}/>
       }
     </>
   );

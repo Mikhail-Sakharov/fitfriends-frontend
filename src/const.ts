@@ -116,6 +116,8 @@ export const MAX_MY_GYMS_COUNT_PER_PAGE = 8;
 
 export const MAX_DIFF_IN_MILLISECONDS = 900000;
 
+export const URL_MARKER = '../img/sprite/icon-pin.svg';
+
 export const UserDailyCaloriesCount = {
   MIN: 1000,
   MAX: 5000
