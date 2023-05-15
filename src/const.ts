@@ -112,6 +112,8 @@ export const MAX_GYM_ITEMS_COUNT_PER_PAGE = 6;
 
 export const MAX_PURCHASES_ITEMS_COUNT_PER_PAGE = 8;
 
+export const MAX_MY_GYMS_COUNT_PER_PAGE = 8;
+
 export const MAX_DIFF_IN_MILLISECONDS = 900000;
 
 export const UserDailyCaloriesCount = {
