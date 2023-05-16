@@ -15,7 +15,8 @@ import {
   uploadCertificateAction,
   fetchOutgoingUserRequestsForTraining,
   fetchNotificationsAction,
-  fetchMyPurchasesAction
+  fetchMyPurchasesAction,
+  fetchUsersCatalogAction
 } from '../api-actions';
 import {TrainingType} from '../../types/training-type.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
@@ -45,6 +46,7 @@ type UserData = {
   myOutgoingRequests: UserRequestRdo[];
   notifications: NotificationRdo[];
   myPurchases: Purchase[];
+  fullUsersCatalog: UserRdo[];
 };
 
 const initialState: UserData = {
@@ -66,7 +68,8 @@ const initialState: UserData = {
   myIncomingRequests: [],
   myOutgoingRequests: [],
   notifications: [],
-  myPurchases: []
+  myPurchases: [],
+  fullUsersCatalog: []
 };
 
 export const userData = createSlice({
@@ -239,6 +242,9 @@ export const userData = createSlice({
       })
       .addCase(fetchMyPurchasesAction.fulfilled, (state, action) => {
         state.myPurchases = action.payload;
+      })
+      .addCase(fetchUsersCatalogAction.fulfilled, (state, action) => {
+        state.fullUsersCatalog = action.payload;
       });
   }
 });
