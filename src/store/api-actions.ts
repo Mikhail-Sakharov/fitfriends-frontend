@@ -171,14 +171,23 @@ export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[][], GetTrain
   },
 );
 
-export const fetchTrainingsAction = createAsyncThunk<TrainingRdo[], string, {
+type FetchTrainingsParams = {
+  coachId: string;
+  queryParams?: {
+    page: number;
+    limit: number;
+  };
+};
+
+export const fetchTrainingsAction = createAsyncThunk<TrainingRdo[], FetchTrainingsParams, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
 }>(
   'fetchTrainingsAction',
-  async (coachId, {dispatch, extra: api}) => {
-    const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingsCoach}/${coachId}`);
+  async (fetchTrainingsParams, {dispatch, extra: api}) => {
+    const queryString = getQueryString(fetchTrainingsParams.queryParams);
+    const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingsCoach}/${fetchTrainingsParams.coachId}${queryString}`);
     return data;
   },
 );

@@ -5,7 +5,9 @@ import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getMyFriends} from '../../store/user-data/selectors';
-import {addFriendAction, fetchMyFriendsAction, removeFriendAction} from '../../store/api-actions';
+import {addFriendAction, fetchMyFriendsAction, fetchTrainingsAction, removeFriendAction} from '../../store/api-actions';
+import {MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
+import {useEffect, useState} from 'react';
 
 enum FriendAction {
   Add = 'add',
@@ -21,6 +23,18 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const myFriends = useAppSelector(getMyFriends);
+
+  const [trainingsCurrentPage, setTrainingsCurrentPage] = useState(1);
+
+  useEffect(() => {
+    dispatch(fetchTrainingsAction({
+      coachId: user.id,
+      queryParams: {
+        page: trainingsCurrentPage,
+        limit: MAX_TRAININGS_COUNT_USER_CARD
+      }
+    }));
+  }, [dispatch, trainings?.length, trainingsCurrentPage, user.id]);
 
   const handleFriendRelations = async (type: FriendAction) => {
     switch(type) {
@@ -40,6 +54,14 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
 
   const handleRemoveFriendButtonClick = () => {
     handleFriendRelations(FriendAction.Remove);
+  };
+
+  const handleBackArrowButtonClick = () => {
+    setTrainingsCurrentPage((prevState) => prevState > 1 ? prevState - 1 : prevState);
+  };
+
+  const handleNextArrowButtonClick = () => {
+    setTrainingsCurrentPage((prevState) => trainings && trainings.length < MAX_TRAININGS_COUNT_USER_CARD ? prevState : prevState + 1);
   };
 
   return (
@@ -142,12 +164,18 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
           <div className="user-card-coach__training-head">
             <h2 className="user-card-coach__training-title">Тренировки</h2>
             <div className="user-card-coach__training-bts">
-              <button className="btn-icon user-card-coach__training-btn" type="button" aria-label="back">
+              <button
+                onClick={handleBackArrowButtonClick}
+                className="btn-icon user-card-coach__training-btn" type="button" aria-label="back"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-left"></use>
                 </svg>
               </button>
-              <button className="btn-icon user-card-coach__training-btn" type="button" aria-label="next">
+              <button
+                onClick={handleNextArrowButtonClick}
+                className="btn-icon user-card-coach__training-btn" type="button" aria-label="next"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-right"></use>
                 </svg>
@@ -170,7 +198,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
           }
           <form className="user-card-coach__training-form">
             {
-              (user.questionnaire as CoachQuestionnaire).isReadyToTrain
+              ((user.questionnaire as CoachQuestionnaire).isReadyToTrain && myFriends.some((friend) => friend.id === user.id))
                 && (
                   <button className="btn user-card-coach__btn-training" type="button">Хочу персональную тренировку</button>
                 )

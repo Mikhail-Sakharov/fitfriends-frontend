@@ -3,13 +3,15 @@ import Header from '../../components/header/header';
 import UserCardCoach from '../../components/user-card-coach/user-card-coach';
 import UserCardUser from '../../components/user-card-user/user-card-user';
 import {UserRole} from '../../types/user-role.enum';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {fetchMyFriendsAction, fetchTrainingsAction, fetchUserInfoAction} from '../../store/api-actions';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getUserInfo, getUserTrainings} from '../../store/training-data/selectors';
 import {getMyFriends} from '../../store/user-data/selectors';
+import {AppRoute, MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
 
 function UserCard(): JSX.Element {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const userId = useParams().id;
@@ -26,7 +28,13 @@ function UserCard(): JSX.Element {
       dispatch(fetchUserInfoAction(userId));
     }
     if (trainings.length === 0 && userId && user?.userRole === UserRole.Coach) {
-      dispatch(fetchTrainingsAction(userId));
+      dispatch(fetchTrainingsAction({
+        coachId: userId,
+        queryParams: {
+          page: 1,
+          limit: MAX_TRAININGS_COUNT_USER_CARD
+        }
+      }));
     }
   }, [dispatch, myFriends, trainings, user, user?.userRole, userId]);
 
@@ -37,7 +45,10 @@ function UserCard(): JSX.Element {
         <div className="inner-page inner-page--no-sidebar">
           <div className="container">
             <div className="inner-page__wrapper">
-              <button className="btn-flat inner-page__back" type="button">
+              <button
+                onClick={() => navigate(AppRoute.UsersCatalog)}
+                className="btn-flat inner-page__back" type="button"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-left"></use>
                 </svg>
