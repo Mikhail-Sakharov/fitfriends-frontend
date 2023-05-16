@@ -47,6 +47,7 @@ type UserData = {
   notifications: NotificationRdo[];
   myPurchases: Purchase[];
   fullUsersCatalog: UserRdo[];
+  filteredUsersCatalog: UserRdo[];
 };
 
 const initialState: UserData = {
@@ -69,7 +70,8 @@ const initialState: UserData = {
   myOutgoingRequests: [],
   notifications: [],
   myPurchases: [],
-  fullUsersCatalog: []
+  fullUsersCatalog: [],
+  filteredUsersCatalog: [],
 };
 
 export const userData = createSlice({
@@ -244,7 +246,8 @@ export const userData = createSlice({
         state.myPurchases = action.payload;
       })
       .addCase(fetchUsersCatalogAction.fulfilled, (state, action) => {
-        state.fullUsersCatalog = action.payload;
+        state.fullUsersCatalog = action.payload[0];
+        state.filteredUsersCatalog = action.payload[1];
       });
   }
 });

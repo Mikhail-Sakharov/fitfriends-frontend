@@ -21,6 +21,7 @@ import {GymRdo} from '../types/gym.rdo';
 import {GetGymsQuery} from '../types/get-gyms.query';
 import {FavoriteGymRdo} from '../types/favorite-gym.rdo';
 import {Purchase} from '../types/purchase.type';
+import {GetUsersQuery} from '../types/get-users.query';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -397,16 +398,16 @@ export const fetchTrainingCatalogAction = createAsyncThunk<TrainingRdo[][], GetT
   },
 );
 
-export const fetchUsersCatalogAction = createAsyncThunk<UserRdo[], undefined, {
+export const fetchUsersCatalogAction = createAsyncThunk<UserRdo[][], GetUsersQuery, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];
 }>(
   'fetchUsersCatalogAction',
-  async (_getTrainingsQuery, {dispatch, extra: api}) => {
-    // const queryString = getQueryString(getTrainingsQuery);
-    const {data} = await api[0].get<UserRdo[]>(`${FF_USERS_URL}${APIRoute.Users}`);
-    // const allCatalogTrainings = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingCatalog}`);
-    return data;
+  async (getUsersQuery, {dispatch, extra: api}) => {
+    const queryString = getQueryString(getUsersQuery);
+    const fullUsersCatalog = await api[0].get<UserRdo[]>(`${FF_USERS_URL}${APIRoute.Users}`);
+    const filteredUsersCatalog = await api[0].get<UserRdo[]>(`${FF_USERS_URL}${APIRoute.Users}${queryString}`);
+    return [fullUsersCatalog.data, filteredUsersCatalog.data];
   },
 );

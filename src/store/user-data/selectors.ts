@@ -32,4 +32,5 @@ export const getMyOutgoingRequests = (state: State): UserRequestRdo[] => state[R
 export const getNotifications = (state: State): NotificationRdo[] => state[ReducerNameSpace.UserData].notifications;
 export const getMyPurchases = (state: State): Purchase[] => state[ReducerNameSpace.UserData].myPurchases;
 export const getFullUsersCatalog = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].fullUsersCatalog;
+export const getFilteredUsersCatalog = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].filteredUsersCatalog;
 

@@ -1,6 +1,7 @@
 import {FavoriteGymRdo} from './types/favorite-gym.rdo';
 import {GetGymsQuery} from './types/get-gyms.query';
 import {GetTrainingsQuery} from './types/get-trainings.query';
+import {GetUsersQuery} from './types/get-users.query';
 import {SubwayStation, SubwayStationLocationMap} from './types/subway-station.enum';
 
 export const getHumanizedDate = (date: string) => {
@@ -36,7 +37,7 @@ export const getNotificationDate = (date: string) => {
   return notificationDate;
 };
 
-export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery) => {
+export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery & GetUsersQuery) => {
   if (!queryArgs) {return '';}
 
   const queryParams = [
@@ -55,6 +56,9 @@ export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery) => 
     `${queryArgs.sortOrder ? `sortOrder=${queryArgs.sortOrder}` : ''}`,
     `${queryArgs.page ? `page=${queryArgs.page}` : ''}`,
     `${queryArgs.limit ? `limit=${queryArgs.limit}` : ''}`,
+    `${queryArgs.trainingTypes ? `trainingTypes=${queryArgs.trainingTypes}` : ''}`,
+    `${queryArgs.trainingLevel ? `trainingLevel=${queryArgs.trainingLevel}` : ''}`,
+    `${queryArgs.userRole ? `userRole=${queryArgs.userRole}` : ''}`,
   ];
 
   const isNotEmptyString = queryParams.filter((param) => param !== '').join('') !== '';

@@ -2,11 +2,11 @@ import Header from '../../components/header/header';
 import UsersCatalogItem from '../../components/users-catalog-item/users-catalog-item';
 import {useAppSelector} from '../../hooks';
 import UsersCatalogFilter from '../../components/users-catalog-filter/users-catalog-filter';
-import {getFullUsersCatalog} from '../../store/user-data/selectors';
+import {getFilteredUsersCatalog} from '../../store/user-data/selectors';
 import {nanoid} from 'nanoid';
 
 function UsersCatalog(): JSX.Element {
-  const usersCatalog = useAppSelector(getFullUsersCatalog);
+  const usersCatalog = useAppSelector(getFilteredUsersCatalog);
 
   return (
     <>
