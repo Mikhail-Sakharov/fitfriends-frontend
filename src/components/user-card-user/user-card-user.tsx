@@ -1,7 +1,7 @@
-import {User} from '../../types/user.interface';
+import {UserRdo} from '../../types/user.response';
 
 type UserCardUserProps = {
-  user: User;
+  user: UserRdo | null;
 };
 
 function UserCardUser({user}: UserCardUserProps): JSX.Element {

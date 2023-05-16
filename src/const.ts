@@ -25,6 +25,7 @@ export enum AppRoute {
   GymCardId = '/gym-card/:id',
   UsersCatalog = '/users-catalog',
   UserCard = '/user-card',
+  UserCardId = '/user-card/:id',
   NotFound = '*'
 }
 
@@ -46,8 +47,8 @@ export enum APIRoute {
   DeleteCertificate = '/users/certificate/delete',
   AddFriend = '/users/friends/add',
   RemoveFriend = '/users/friends/remove',
-  OnlineStatus = '/users/online',
   Trainings = '/trainings',
+  TrainingsCoach = '/trainings/coach',
   TrainingVideo = '/trainings/video',
   TrainingCatalog = '/trainings/catalog',
   Orders = '/orders/trainings',

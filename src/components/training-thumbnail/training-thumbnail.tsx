@@ -31,7 +31,7 @@ function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
       <div className="thumbnail-training__inner">
         <div className="thumbnail-training__image">
           <picture>
-            <img src={training.bgImageUrl} width="330" height="190" alt="training thumbnail"/>
+            <img src={`../${training.bgImageUrl}`} width="330" height="190" alt="training thumbnail"/>
           </picture>
         </div>
         <p className="thumbnail-training__price">

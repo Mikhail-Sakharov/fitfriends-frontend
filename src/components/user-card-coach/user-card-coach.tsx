@@ -1,14 +1,47 @@
-import {CoachQuestionnaire, User} from '../../types/user.interface';
+import {CoachQuestionnaire} from '../../types/user.interface';
 import {nanoid} from 'nanoid';
 import TrainingThumbnail from '../training-thumbnail/training-thumbnail';
 import {TrainingRdo} from '../../types/training.rdo';
+import {UserRdo} from '../../types/user.response';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {getMyFriends} from '../../store/user-data/selectors';
+import {addFriendAction, fetchMyFriendsAction, removeFriendAction} from '../../store/api-actions';
+
+enum FriendAction {
+  Add = 'add',
+  Remove = 'remove'
+}
 
 type UserCardCoachProps = {
-  user: User;
+  user: UserRdo;
   trainings?: TrainingRdo[];
 };
 
 function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const myFriends = useAppSelector(getMyFriends);
+
+  const handleFriendRelations = async (type: FriendAction) => {
+    switch(type) {
+      case FriendAction.Add:
+        await dispatch(addFriendAction(user.id));
+        break;
+      case FriendAction.Remove:
+        await dispatch(removeFriendAction(user.id));
+        break;
+    }
+    dispatch(fetchMyFriendsAction());
+  };
+
+  const handleAddFriendButtonClick = () => {
+    handleFriendRelations(FriendAction.Add);
+  };
+
+  const handleRemoveFriendButtonClick = () => {
+    handleFriendRelations(FriendAction.Remove);
+  };
+
   return (
     <section className="user-card-coach">
       <h1 className="visually-hidden">Карточка пользователя роль тренер</h1>
@@ -74,7 +107,25 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
                 ))
               }
             </ul>
-            <button className="btn user-card-coach__btn" type="button">Добавить в друзья</button>
+            {
+              myFriends.some((friend) => friend.id === user.id)
+                ? (
+                  <button
+                    onClick={handleRemoveFriendButtonClick}
+                    className="btn user-card-coach__btn" type="button"
+                  >
+                    Удалить из друзей
+                  </button>
+                )
+                : (
+                  <button
+                    onClick={handleAddFriendButtonClick}
+                    className="btn user-card-coach__btn" type="button"
+                  >
+                    Добавить в друзья
+                  </button>
+                )
+            }
           </div>
           <div className="user-card-coach__gallary">
             <ul className="user-card-coach__gallary-list">
@@ -127,7 +178,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
             <div className="user-card-coach__training-check">
               <div className="custom-toggle custom-toggle--checkbox">
                 <label>
-                  <input type="checkbox" value="user-agreement-1" name="user-agreement" checked/>
+                  <input type="checkbox" value="user-agreement-1" name="user-agreement"/>
                   <span className="custom-toggle__icon">
                     <svg width="9" height="6" aria-hidden="true">
                       <use xlinkHref="#arrow-check"></use>

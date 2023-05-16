@@ -277,7 +277,7 @@ function App(): JSX.Element {
         }
       />
       <Route
-        path={AppRoute.UserCard}
+        path={AppRoute.UserCardId}
         element={
           <PrivateRoute authorizationStatus={authorizationStatus}>
             <UserCard />

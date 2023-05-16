@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {AxiosInstance} from 'axios';
+import {AxiosInstance, AxiosResponse} from 'axios';
 import {APIRoute, FF_NOTIFIER_URL, FF_SERVICE_URL, FF_USERS_URL} from '../const';
 import {UserRdo, UserResponse} from '../types/user.response';
 import {RegisterUserRequestBody} from '../types/register-user-request-body';
@@ -168,6 +168,18 @@ export const fetchMyTrainingsAction = createAsyncThunk<TrainingRdo[][], GetTrain
     const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.Trainings}${queryString}`);
     const allTrainings = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.Trainings}`);
     return [data, allTrainings.data];
+  },
+);
+
+export const fetchTrainingsAction = createAsyncThunk<TrainingRdo[], string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchTrainingsAction',
+  async (coachId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingsCoach}/${coachId}`);
+    return data;
   },
 );
 
@@ -410,4 +422,22 @@ export const fetchUsersCatalogAction = createAsyncThunk<UserRdo[][], GetUsersQue
     const filteredUsersCatalog = await api[0].get<UserRdo[]>(`${FF_USERS_URL}${APIRoute.Users}${queryString}`);
     return [fullUsersCatalog.data, filteredUsersCatalog.data];
   },
+);
+
+export const removeFriendAction = createAsyncThunk<AxiosResponse<undefined>, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'removeFriendAction',
+  async (friendId, {dispatch, extra: api}) => await api[0].get<undefined>(`${FF_USERS_URL}${APIRoute.RemoveFriend}/${friendId}`),
+);
+
+export const addFriendAction = createAsyncThunk<AxiosResponse<undefined>, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'addFriendAction',
+  async (friendId, {dispatch, extra: api}) => await api[0].get<undefined>(`${FF_USERS_URL}${APIRoute.AddFriend}/${friendId}`),
 );

@@ -1,6 +1,6 @@
 import {Link} from 'react-router-dom';
 import {UserRdo} from '../../types/user.response';
-import {FF_USERS_URL} from '../../const';
+import {AppRoute, FF_USERS_URL} from '../../const';
 import {nanoid} from 'nanoid';
 import {UserRole} from '../../types/user-role.enum';
 
@@ -9,7 +9,7 @@ type UsersCatalogItemProps = {
 };
 
 function UsersCatalogItem({user}: UsersCatalogItemProps): JSX.Element {
-  const isUserTop = true; // временно. Удалить!
+  const isUserTop = true; // использовать для определения статуса "топ-пользователь" при необходимости
 
   return (
     <li className="users-catalog__item">
@@ -21,7 +21,12 @@ function UsersCatalogItem({user}: UsersCatalogItemProps): JSX.Element {
       >
         <div className="thumbnail-user__image">
           <picture>
-            <img src={`${FF_USERS_URL}/${user.avatarUrl}`} width="82" height="82" alt=""/>
+            {
+              user.avatarUrl
+                && (
+                  <img src={`${FF_USERS_URL}/${user.avatarUrl}`} width="82" height="82" alt="user avatar"/>
+                )
+            }
           </picture>
         </div>
         {
@@ -69,7 +74,8 @@ function UsersCatalogItem({user}: UsersCatalogItemProps): JSX.Element {
           className={`
             btn btn--medium thumbnail-user__button
             ${user.userRole === UserRole.Coach ? 'btn--dark-bg' : ''}
-          `} to="#"
+          `}
+          to={`${AppRoute.UserCard}/${user.id}`}
         >
           Подробнее
         </Link>
