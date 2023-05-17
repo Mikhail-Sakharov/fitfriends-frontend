@@ -53,7 +53,7 @@ function GymsCatalog(): JSX.Element {
               <div className="gyms-catalog">
                 <ul className="gyms-catalog__list">
                   {
-                    currentRequestGyms.slice(0, ((currentListPage - 1) * MAX_GYM_ITEMS_COUNT_PER_PAGE) + MAX_GYM_ITEMS_COUNT_PER_PAGE).map((gym) => (
+                    currentRequestGyms.slice(0, currentListPage * MAX_GYM_ITEMS_COUNT_PER_PAGE).map((gym) => (
                       <li key={nanoid()} className="gyms-catalog__item">
                         <GymsCatalogItem
                           gym={gym}

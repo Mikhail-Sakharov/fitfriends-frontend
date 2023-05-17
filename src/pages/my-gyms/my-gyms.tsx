@@ -89,7 +89,7 @@ function MyGyms(): JSX.Element {
                 {
                   myGyms
                     .filter(filterNearestPoints)
-                    .slice(0, ((currentListPage - 1) * MAX_MY_GYMS_COUNT_PER_PAGE) + MAX_MY_GYMS_COUNT_PER_PAGE).map((gym) => (
+                    .slice(0, currentListPage * MAX_MY_GYMS_COUNT_PER_PAGE).map((gym) => (
                       <li key={nanoid()} className="my-gyms__item">
                         <GymsCatalogItem gym={gym.gym} isInFavorites/>
                       </li>

@@ -132,7 +132,7 @@ function MyOrders(): JSX.Element {
               </div>
               <ul className="my-orders__list">
                 {
-                  currentRequestOrders.slice(0, ((ordersPage - 1) * MAX_ORDERS_COUNT_PER_PAGE) + MAX_ORDERS_COUNT_PER_PAGE).map((order) => (
+                  currentRequestOrders.slice(0, ordersPage * MAX_ORDERS_COUNT_PER_PAGE).map((order) => (
                     <MyOrdersItem key={nanoid()} order={order}/>
                   ))
                 }

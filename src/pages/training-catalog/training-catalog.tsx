@@ -51,7 +51,7 @@ function TrainingCatalog(): JSX.Element {
               <div className="training-catalog">
                 <ul className="training-catalog__list">
                   {
-                    filteredTrainingCatalog.slice(0, ((trainingsPage - 1) * MAX_TRAININGS_COUNT_PER_PAGE) + MAX_TRAININGS_COUNT_PER_PAGE).map((training) => (
+                    filteredTrainingCatalog.slice(0, trainingsPage * MAX_TRAININGS_COUNT_PER_PAGE).map((training) => (
                       <li key={nanoid()} className="training-catalog__item">
                         <TrainingThumbnail training={training}/>
                       </li>

@@ -104,7 +104,7 @@ function FriendsList(): JSX.Element {
                 {
                   myFriends
                     .filter(filterOfflineUsers)
-                    .slice(0, ((currentListPage - 1) * MAX_FRIENDS_ITEMS_COUNT_PER_PAGE) + MAX_FRIENDS_ITEMS_COUNT_PER_PAGE).map((friend) => (
+                    .slice(0, currentListPage * MAX_FRIENDS_ITEMS_COUNT_PER_PAGE).map((friend) => (
                       <FriendsListItem
                         key={nanoid()}
                         friend={friend}

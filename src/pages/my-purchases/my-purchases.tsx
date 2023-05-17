@@ -29,8 +29,7 @@ function MyPurchases(): JSX.Element {
   const [currentListPage, setCurrentListPage] = useState(1);
   const currentPurchasesLength = myPurchases
     .filter((purchase) => isOnlyActiveFilterChecked ? purchase.isCompleted === false : purchase)
-    .filter((purchase) => purchase.orderType === purchaseType)
-    .slice(0, ((currentListPage - 1) * MAX_PURCHASES_ITEMS_COUNT_PER_PAGE) + MAX_PURCHASES_ITEMS_COUNT_PER_PAGE).length;
+    .filter((purchase) => purchase.orderType === purchaseType).length;
   const pagesCount = Math.ceil(currentPurchasesLength / MAX_PURCHASES_ITEMS_COUNT_PER_PAGE);
 
   const handleShowMoreButtonClick = () => {
@@ -120,7 +119,7 @@ function MyPurchases(): JSX.Element {
                   myPurchases
                     .filter((purchase) => isOnlyActiveFilterChecked ? purchase.isCompleted === false : purchase)
                     .filter((purchase) => purchase.orderType === purchaseType)
-                    .slice(0, ((currentListPage - 1) * MAX_PURCHASES_ITEMS_COUNT_PER_PAGE) + MAX_PURCHASES_ITEMS_COUNT_PER_PAGE).map((purchase) => (
+                    .slice(0, currentListPage * MAX_PURCHASES_ITEMS_COUNT_PER_PAGE).map((purchase) => (
                       purchase.orderType === OrderType.Gym
                         ? (
                           <li key={nanoid()} className="my-purchases__item">

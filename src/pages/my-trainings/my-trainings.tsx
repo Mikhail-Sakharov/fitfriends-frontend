@@ -54,7 +54,7 @@ function MyTrainings(): JSX.Element {
                 <div className="my-trainings">
                   <ul className="my-trainings__list">
                     {
-                      currentRequestTrainings.slice(0, ((trainingsPage - 1) * MAX_TRAININGS_COUNT_PER_PAGE) + MAX_TRAININGS_COUNT_PER_PAGE).map((training) => (
+                      currentRequestTrainings.slice(0, trainingsPage * MAX_TRAININGS_COUNT_PER_PAGE).map((training) => (
                         <li key={nanoid()} className="my-trainings__item">
                           <TrainingThumbnail training={training}/>
                         </li>
