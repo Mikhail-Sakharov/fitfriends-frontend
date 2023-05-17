@@ -36,10 +36,8 @@ import {
   uploadCertificateAction
 } from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
-import {Document, Page, pdfjs} from 'react-pdf';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+import CertificateItem from '../../components/certificate-item/certificate-item';
 
 function PersonalAccountCoach(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -667,24 +665,7 @@ function PersonalAccountCoach(): JSX.Element {
                                 ${isCertificatesEditable ? 'certificate-card--edit' : ''}
                               `}
                             >
-                              <div className="certificate-card__image">
-                                <picture>
-                                  {
-                                    certificateItem.match(/.+.pdf/)
-                                      ? (
-                                        <Document file={`${FF_USERS_URL}/${certificateItem}`}>
-                                          <Page renderAnnotationLayer={false} height={360} pageNumber={1} renderTextLayer={false}/>
-                                        </Document>
-                                      )
-                                      : (
-                                        <>
-                                          <source type="image/webp" srcSet={`${FF_USERS_URL}/${certificateItem}`}/>
-                                          <img src={`${FF_USERS_URL}/${certificateItem}`} srcSet={`${FF_USERS_URL}/${certificateItem} 2x`} width="294" height="360" alt="Сертификат"/>
-                                        </>
-                                      )
-                                  }
-                                </picture>
-                              </div>
+                              <CertificateItem certificateItem={certificateItem}/>
                               <div className="certificate-card__buttons">
                                 {
                                   isCertificatesEditable && (editableCertificateItem === certificateItem)
