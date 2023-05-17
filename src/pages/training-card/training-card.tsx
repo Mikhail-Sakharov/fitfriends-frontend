@@ -481,9 +481,12 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
         </section>
       </main>
       {
-        isBuyTrainingModalOpened
+        (isBuyTrainingModalOpened && training)
           && (
-            <PopupBuyTraining setModalOpened={setIsBuyTrainingModalOpened}/>
+            <PopupBuyTraining
+              training={training}
+              setModalOpened={setIsBuyTrainingModalOpened}
+            />
           )
       }
     </>

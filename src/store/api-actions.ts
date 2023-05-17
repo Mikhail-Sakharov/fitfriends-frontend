@@ -23,6 +23,7 @@ import {FavoriteGymRdo} from '../types/favorite-gym.rdo';
 import {Purchase} from '../types/purchase.type';
 import {GetUsersQuery} from '../types/get-users.query';
 import {SubscriptionStatus} from '../types/subscription-status.enum';
+import CreateOrderDto from '../types/create-order.dto';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -469,6 +470,18 @@ export const checkSubscriptionStatusAction = createAsyncThunk<SubscriptionStatus
   'checkSubscriptionStatusAction',
   async (coachId, {dispatch, extra: api}) => {
     const {data} = await api[0].get<SubscriptionStatus>(`${FF_NOTIFIER_URL}${APIRoute.SubscriptionStatus}/${coachId}`);
+    return data;
+  },
+);
+
+export const buyTrainingAction = createAsyncThunk<OrderRdo, CreateOrderDto, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'buyTrainingAction',
+  async (createOrderDto, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<OrderRdo>(`${FF_SERVICE_URL}${APIRoute.Orders}`, createOrderDto);
     return data;
   },
 );
