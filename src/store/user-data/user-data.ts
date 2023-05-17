@@ -29,6 +29,7 @@ import {Purchase} from '../../types/purchase.type';
 import {SubscriptionStatus} from '../../types/subscription-status.enum';
 
 type UserData = {
+  id: string;
   avatar: string;
   userName: string;
   description: string;
@@ -54,6 +55,7 @@ type UserData = {
 };
 
 const initialState: UserData = {
+  id: '',
   avatar: '',
   userName: '',
   email: '',
@@ -113,106 +115,87 @@ export const userData = createSlice({
         state.avatar = action.payload.avatarUrl;
       })
       .addCase(registerUserAction.fulfilled, (state, action) => {
+        state.id = action.payload.user.id;
+        state.avatar = action.payload.user.avatarUrl;
+        state.userName = action.payload.user.userName;
+        state.trainingTypes = action.payload.user.trainingTypes;
+        state.trainingLevel = action.payload.user.trainingLevel;
+        state.location = action.payload.user.location;
+        state.gender = action.payload.user.gender;
         switch(action.payload.user.userRole) {
           case UserRole.Coach:
-            state.avatar = action.payload.user.avatarUrl;
-            state.userName = action.payload.user.userName;
             state.description = (action.payload.user.questionnaire as CoachQuestionnaire).description;
             state.isReadyToTrain = (action.payload.user.questionnaire as CoachQuestionnaire).isReadyToTrain;
-            state.trainingTypes = action.payload.user.trainingTypes;
-            state.trainingLevel = action.payload.user.trainingLevel;
-            state.location = action.payload.user.location;
-            state.gender = action.payload.user.gender;
             state.certificates = (action.payload.user.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
-            state.avatar = action.payload.user.avatarUrl;
-            state.userName = action.payload.user.userName;
             state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
-            state.trainingTypes = action.payload.user.trainingTypes;
-            state.trainingLevel = action.payload.user.trainingLevel;
-            state.location = action.payload.user.location;
-            state.gender = action.payload.user.gender;
             break;
         }
       })
       .addCase(signInUserAction.fulfilled, (state, action) => {
+        state.id = action.payload.user.id;
+        state.avatar = action.payload.user.avatarUrl;
+        state.userName = action.payload.user.userName;
+        state.trainingTypes = action.payload.user.trainingTypes;
+        state.trainingLevel = action.payload.user.trainingLevel;
+        state.location = action.payload.user.location;
+        state.gender = action.payload.user.gender;
         switch(action.payload.user.userRole) {
           case UserRole.Coach:
-            state.avatar = action.payload.user.avatarUrl;
-            state.userName = action.payload.user.userName;
             state.description = (action.payload.user.questionnaire as CoachQuestionnaire).description;
             state.isReadyToTrain = (action.payload.user.questionnaire as CoachQuestionnaire).isReadyToTrain;
-            state.trainingTypes = action.payload.user.trainingTypes;
-            state.trainingLevel = action.payload.user.trainingLevel;
-            state.location = action.payload.user.location;
-            state.gender = action.payload.user.gender;
             state.certificates = (action.payload.user.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
-            state.avatar = action.payload.user.avatarUrl;
-            state.userName = action.payload.user.userName;
             state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
-            state.trainingTypes = action.payload.user.trainingTypes;
-            state.trainingLevel = action.payload.user.trainingLevel;
-            state.location = action.payload.user.location;
-            state.gender = action.payload.user.gender;
             break;
         }
       })
       .addCase(refreshTokensAction.fulfilled, (state, action) => {
+        state.id = action.payload.user.id;
+        state.avatar = action.payload.user.avatarUrl;
+        state.userName = action.payload.user.userName;
+        state.trainingTypes = action.payload.user.trainingTypes;
+        state.trainingLevel = action.payload.user.trainingLevel;
+        state.location = action.payload.user.location;
+        state.gender = action.payload.user.gender;
         switch(action.payload.user.userRole) {
           case UserRole.Coach:
-            state.avatar = action.payload.user.avatarUrl;
-            state.userName = action.payload.user.userName;
             state.description = (action.payload.user.questionnaire as CoachQuestionnaire).description;
             state.isReadyToTrain = (action.payload.user.questionnaire as CoachQuestionnaire).isReadyToTrain;
-            state.trainingTypes = action.payload.user.trainingTypes;
-            state.trainingLevel = action.payload.user.trainingLevel;
-            state.location = action.payload.user.location;
-            state.gender = action.payload.user.gender;
             state.certificates = (action.payload.user.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
-            state.avatar = action.payload.user.avatarUrl;
-            state.userName = action.payload.user.userName;
             state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
-            state.trainingTypes = action.payload.user.trainingTypes;
-            state.trainingLevel = action.payload.user.trainingLevel;
-            state.location = action.payload.user.location;
-            state.gender = action.payload.user.gender;
             break;
         }
       })
       .addCase(updateUserAction.fulfilled, (state, action) => {
+        state.id = action.payload.id;
+        state.avatar = action.payload.avatarUrl;
+        state.userName = action.payload.userName;
+        state.trainingTypes = action.payload.trainingTypes;
+        state.trainingLevel = action.payload.trainingLevel;
+        state.location = action.payload.location;
+        state.gender = action.payload.gender;
         switch(action.payload.userRole) {
           case UserRole.Coach:
-            state.avatar = action.payload.avatarUrl;
-            state.userName = action.payload.userName;
             state.description = (action.payload.questionnaire as CoachQuestionnaire).description;
             state.isReadyToTrain = (action.payload.questionnaire as CoachQuestionnaire).isReadyToTrain;
-            state.trainingTypes = action.payload.trainingTypes;
-            state.trainingLevel = action.payload.trainingLevel;
-            state.location = action.payload.location;
-            state.gender = action.payload.gender;
             state.certificates = (action.payload.questionnaire as CoachQuestionnaire).certificates;
             break;
           case UserRole.User:
-            state.avatar = action.payload.avatarUrl;
-            state.userName = action.payload.userName;
             state.description = (action.payload.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.questionnaire as UserQuestionnaire).isReadyToGetTrained;
-            state.trainingTypes = action.payload.trainingTypes;
-            state.trainingLevel = action.payload.trainingLevel;
-            state.location = action.payload.location;
-            state.gender = action.payload.gender;
             break;
         }
       })
       .addCase(uploadCertificateAction.fulfilled, (state, action) => {
+        state.id = action.payload.id;
         state.avatar = action.payload.avatarUrl;
         state.userName = action.payload.userName;
         state.description = (action.payload.questionnaire as CoachQuestionnaire).description;
@@ -224,6 +207,7 @@ export const userData = createSlice({
         state.certificates = (action.payload.questionnaire as CoachQuestionnaire).certificates;
       })
       .addCase(deleteCertificateAction.fulfilled, (state, action) => {
+        state.id = action.payload.id;
         state.avatar = action.payload.avatarUrl;
         state.userName = action.payload.userName;
         state.description = (action.payload.questionnaire as CoachQuestionnaire).description;

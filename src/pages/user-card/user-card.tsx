@@ -4,11 +4,10 @@ import UserCardCoach from '../../components/user-card-coach/user-card-coach';
 import UserCardUser from '../../components/user-card-user/user-card-user';
 import {UserRole} from '../../types/user-role.enum';
 import {useNavigate, useParams} from 'react-router-dom';
-import {fetchMyFriendsAction, fetchOutgoingUserRequestsForTraining, fetchTrainingsAction, fetchUserInfoAction} from '../../store/api-actions';
+import {fetchOutgoingUserRequestsForTraining, fetchUserInfoAction} from '../../store/api-actions';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {getUserInfo, getUserTrainings} from '../../store/training-data/selectors';
-import {getMyFriends} from '../../store/user-data/selectors';
-import {AppRoute, MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
+import {getUserInfo} from '../../store/training-data/selectors';
+import {AppRoute} from '../../const';
 
 function UserCard(): JSX.Element {
   const navigate = useNavigate();
@@ -17,27 +16,13 @@ function UserCard(): JSX.Element {
   const userId = useParams().id;
 
   const user = useAppSelector(getUserInfo);
-  const trainings = useAppSelector(getUserTrainings);
-  const myFriends = useAppSelector(getMyFriends);
 
   useEffect(() => {
-    if (myFriends.length === 0) {
-      dispatch(fetchMyFriendsAction());
-    }
-    if (!user && userId) {
+    if (userId && user?.id !== userId) {
       dispatch(fetchUserInfoAction(userId));
     }
-    if (trainings.length === 0 && userId && user?.userRole === UserRole.Coach) {
-      dispatch(fetchTrainingsAction({
-        coachId: userId,
-        queryParams: {
-          page: 1,
-          limit: MAX_TRAININGS_COUNT_USER_CARD
-        }
-      }));
-    }
     dispatch(fetchOutgoingUserRequestsForTraining());
-  }, [dispatch, myFriends, trainings, user, user?.userRole, userId]);
+  }, [dispatch, user, user?.userRole, userId]);
 
   return (
     <>
@@ -58,10 +43,13 @@ function UserCard(): JSX.Element {
               <div className="inner-page__content">
                 {
                   user?.userRole === UserRole.Coach
-                    ? (
-                      <UserCardCoach coach={user} trainings={trainings}/>
+                    && (
+                      <UserCardCoach coach={user}/>
                     )
-                    : (
+                }
+                {
+                  user?.userRole === UserRole.User
+                    && (
                       <UserCardUser user={user}/>
                     )
                 }

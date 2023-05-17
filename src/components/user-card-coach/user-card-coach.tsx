@@ -1,11 +1,18 @@
 import {CoachQuestionnaire} from '../../types/user.interface';
 import {nanoid} from 'nanoid';
 import TrainingThumbnail from '../training-thumbnail/training-thumbnail';
-import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getMyFriends, getMyOutgoingRequests, getSubscriptionStatus} from '../../store/user-data/selectors';
-import {addFriendAction, checkSubscriptionStatusAction, fetchMyFriendsAction, fetchOutgoingUserRequestsForTraining, fetchTrainingsAction, removeFriendAction, sendTrainingRequestAction, toggleSubscriberStatusAction} from '../../store/api-actions';
+import {
+  addFriendAction,
+  checkSubscriptionStatusAction,
+  fetchMyFriendsAction,
+  fetchOutgoingUserRequestsForTraining,
+  fetchTrainingsAction, removeFriendAction,
+  sendTrainingRequestAction,
+  toggleSubscriberStatusAction
+} from '../../store/api-actions';
 import {MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
 import {useEffect, useState} from 'react';
 import PopupCoachCertificates from '../popup-coach-certificates/popup-coach-certificates';
@@ -14,16 +21,17 @@ import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {UserRequestType} from '../../types/user-request-type.enum';
 import {FriendAction} from '../../types/friend-action.enum';
 import {SubscriptionStatus} from '../../types/subscription-status.enum';
+import {getUserTrainings} from '../../store/training-data/selectors';
 
 type UserCardCoachProps = {
   coach: UserRdo;
-  trainings?: TrainingRdo[];
 };
 
-function UserCardCoach({coach, trainings}: UserCardCoachProps): JSX.Element {
+function UserCardCoach({coach}: UserCardCoachProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const myFriends = useAppSelector(getMyFriends);
+  const trainings = useAppSelector(getUserTrainings);
   const outgoingUserRequests = useAppSelector(getMyOutgoingRequests).filter((request) => request.type === UserRequestType.Training);
   const subscriptionStatus = useAppSelector(getSubscriptionStatus);
   const isInSubscribers = subscriptionStatus === SubscriptionStatus.Subsribed;
@@ -34,6 +42,7 @@ function UserCardCoach({coach, trainings}: UserCardCoachProps): JSX.Element {
   const [trainingsCurrentPage, setTrainingsCurrentPage] = useState(1);
 
   useEffect(() => {
+    dispatch(fetchMyFriendsAction());
     dispatch(fetchTrainingsAction({
       coachId: coach.id,
       queryParams: {
@@ -42,9 +51,10 @@ function UserCardCoach({coach, trainings}: UserCardCoachProps): JSX.Element {
       }
     }));
     dispatch(checkSubscriptionStatusAction(coach.id));
-  }, [dispatch, trainings?.length, trainingsCurrentPage, coach.id]);
+  }, [dispatch, trainingsCurrentPage, coach.id]);
 
   const handleFriendRelations = async (type: FriendAction) => {
+    dispatch(setDataLoadedStatus(true));
     switch(type) {
       case FriendAction.Add:
         await dispatch(addFriendAction(coach.id));
@@ -53,7 +63,8 @@ function UserCardCoach({coach, trainings}: UserCardCoachProps): JSX.Element {
         await dispatch(removeFriendAction(coach.id));
         break;
     }
-    dispatch(fetchMyFriendsAction());
+    await dispatch(fetchMyFriendsAction());
+    dispatch(setDataLoadedStatus(false));
   };
 
   const handleAddFriendButtonClick = () => {
@@ -168,23 +179,25 @@ function UserCardCoach({coach, trainings}: UserCardCoachProps): JSX.Element {
                   </li>
                 ))}
               </ul>
-              {myFriends.some((friend) => friend.id === coach.id)
-                ? (
-                  <button
-                    onClick={handleRemoveFriendButtonClick}
-                    className="btn user-card-coach__btn" type="button"
-                  >
-                    Удалить из друзей
-                  </button>
-                )
-                : (
-                  <button
-                    onClick={handleAddFriendButtonClick}
-                    className="btn user-card-coach__btn" type="button"
-                  >
-                    Добавить в друзья
-                  </button>
-                )}
+              {
+                myFriends.some((friend) => friend.id === coach.id)
+                  ? (
+                    <button
+                      onClick={handleRemoveFriendButtonClick}
+                      className="btn user-card-coach__btn" type="button"
+                    >
+                      Удалить из друзей
+                    </button>
+                  )
+                  : (
+                    <button
+                      onClick={handleAddFriendButtonClick}
+                      className="btn user-card-coach__btn" type="button"
+                    >
+                      Добавить в друзья
+                    </button>
+                  )
+              }
             </div>
             <div className="user-card-coach__gallary">
               <ul className="user-card-coach__gallary-list">

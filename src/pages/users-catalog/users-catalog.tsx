@@ -2,7 +2,7 @@ import Header from '../../components/header/header';
 import UsersCatalogItem from '../../components/users-catalog-item/users-catalog-item';
 import {useAppSelector} from '../../hooks';
 import UsersCatalogFilter from '../../components/users-catalog-filter/users-catalog-filter';
-import {getFilteredUsersCatalog} from '../../store/user-data/selectors';
+import {getFilteredUsersCatalog, getMyUserId} from '../../store/user-data/selectors';
 import {nanoid} from 'nanoid';
 import {useNavigate} from 'react-router-dom';
 import {AppRoute, MAX_USERS_CATALOG_ITEMS_COUNT_PER_PAGE} from '../../const';
@@ -12,6 +12,7 @@ function UsersCatalog(): JSX.Element {
   const navigate = useNavigate();
 
   const usersCatalog = useAppSelector(getFilteredUsersCatalog);
+  const myId = useAppSelector(getMyUserId);
 
   const [currentListPage, setCurrentListPage] = useState(1);
   const pagesCount = Math.ceil(usersCatalog.length / MAX_USERS_CATALOG_ITEMS_COUNT_PER_PAGE);
@@ -52,7 +53,7 @@ function UsersCatalog(): JSX.Element {
                 <div className="users-catalog">
                   <ul className="users-catalog__list">
                     {
-                      usersCatalog.map((user) => (
+                      usersCatalog.filter((user) => user.id !== myId).map((user) => (
                         <UsersCatalogItem key={nanoid()} user={user}/>
                       ))
                     }

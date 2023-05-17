@@ -11,6 +11,7 @@ import {UserRequestRdo} from '../../types/user-request.rdo';
 import {UserRole} from '../../types/user-role.enum';
 import {UserRdo} from '../../types/user.response';
 
+export const getMyUserId = (state: State): string => state[ReducerNameSpace.UserData].id;
 export const getAvatar = (state: State): string => state[ReducerNameSpace.UserData].avatar;
 export const getUserName = (state: State): string => state[ReducerNameSpace.UserData].userName;
 export const getEmail = (state: State): string => state[ReducerNameSpace.UserData].email;
