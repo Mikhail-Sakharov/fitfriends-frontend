@@ -1,5 +1,6 @@
 import {ReducerNameSpace} from '../../const';
 import {OrderRdo} from '../../types/order.rdo';
+import {ReviewRdo} from '../../types/review.rdo';
 import {State} from '../../types/state';
 import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
@@ -12,3 +13,4 @@ export const getCurrentRequestOrders = (state: State): OrderRdo[] => state[Reduc
 export const getFilteredTrainingCatalog = (state: State): TrainingRdo[] => state[ReducerNameSpace.TrainingData].filteredTrainingCatalog;
 export const getTrainingCatalog = (state: State): TrainingRdo[] => state[ReducerNameSpace.TrainingData].trainingCatalog;
 export const getUserTrainings = (state: State): TrainingRdo[] => state[ReducerNameSpace.TrainingData].userTrainings;
+export const getReviews = (state: State): ReviewRdo[] => state[ReducerNameSpace.TrainingData].reviews;

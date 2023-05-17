@@ -224,7 +224,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
           <div className="container">
             <div className="inner-page__wrapper">
               <h1 className="visually-hidden">Карточка тренировки</h1>
-              <ReviewsList />
+              <ReviewsList training={training}/>
               <div className={`training-card ${userRole === UserRole.Coach ? 'training-card--edit' : ''}`}>
                 <div className="training-info">
                   <h2 className="visually-hidden">Информация о тренировке</h2>
@@ -411,8 +411,17 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                       ? (
                         <div className="training-video__video">
                           <div className="training-video__thumbnail">
-                            <video onPause={handlePauseControlClick} ref={videoElementRef} src={`${FF_SERVICE_URL}/${training ? training?.videoUrl : ''}`}>
-                            </video>
+                            {
+                              training
+                                && (
+                                  <video
+                                    onPause={handlePauseControlClick}
+                                    ref={videoElementRef}
+                                    src={`${FF_SERVICE_URL}/${training.videoUrl}`}
+                                  >
+                                  </video>
+                                )
+                            }
                           </div>
                           <button ref={playButtonRef} onClick={handlePlayButtonClick} className="training-video__play-button btn-reset">
                             <svg width="18" height="30" aria-hidden="true">

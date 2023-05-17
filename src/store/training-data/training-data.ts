@@ -1,9 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {fetchMyOrdersAction, fetchMyTrainingsAction, fetchTrainingCatalogAction, fetchTrainingInfoAction, fetchTrainingsAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../api-actions';
+import {fetchMyOrdersAction, fetchMyTrainingsAction, fetchReviewsAction, fetchTrainingCatalogAction, fetchTrainingInfoAction, fetchTrainingsAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../api-actions';
 import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
 import {OrderRdo} from '../../types/order.rdo';
+import {ReviewRdo} from '../../types/review.rdo';
 
 type TrainingData = {
   currentTraining: TrainingRdo | null;
@@ -14,6 +15,7 @@ type TrainingData = {
   trainingCatalog: TrainingRdo[];
   userTrainings: TrainingRdo[];
   userInfo: UserRdo | null;
+  reviews: ReviewRdo[];
 };
 
 const initialState: TrainingData = {
@@ -24,7 +26,8 @@ const initialState: TrainingData = {
   filteredTrainingCatalog: [],
   trainingCatalog: [],
   userTrainings: [],
-  userInfo: null
+  userInfo: null,
+  reviews: []
 };
 
 export const trainingData = createSlice({
@@ -62,6 +65,9 @@ export const trainingData = createSlice({
       })
       .addCase(fetchTrainingsAction.fulfilled, (state, action) => {
         state.userTrainings = action.payload;
+      })
+      .addCase(fetchReviewsAction.fulfilled, (state, action) => {
+        state.reviews = action.payload;
       });
   }
 });

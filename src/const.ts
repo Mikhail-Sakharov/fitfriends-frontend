@@ -62,7 +62,8 @@ export enum APIRoute {
   AddGymToFavorites = '/gyms/favorites/add',
   RemoveGymFromFavorites = '/gyms/favorites/remove',
   Subscription = '/subscription',
-  SubscriptionStatus = '/subscription/status'
+  SubscriptionStatus = '/subscription/status',
+  Reviews = '/reviews'
 }
 
 export enum AuthorizationStatus {
