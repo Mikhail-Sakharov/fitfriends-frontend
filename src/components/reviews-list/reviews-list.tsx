@@ -68,7 +68,7 @@ function ReviewsList({training}: ReviewsListProps): JSX.Element {
       {
         isPopupOpened
           && (
-            <PopupFeedback setPopupOpened={setPopupOpened}/>
+            <PopupFeedback trainingId={training?.id} setPopupOpened={setPopupOpened}/>
           )
       }
     </>

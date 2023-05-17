@@ -25,6 +25,7 @@ import {GetUsersQuery} from '../types/get-users.query';
 import {SubscriptionStatus} from '../types/subscription-status.enum';
 import CreateOrderDto from '../types/create-order.dto';
 import {ReviewRdo} from '../types/review.rdo';
+import {CreateReviewDto} from '../types/create-review.dto';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -495,6 +496,18 @@ export const fetchReviewsAction = createAsyncThunk<ReviewRdo[], string, {
   'fetchReviewsAction',
   async (trainingId, {dispatch, extra: api}) => {
     const {data} = await api[0].get<ReviewRdo[]>(`${FF_SERVICE_URL}${APIRoute.Reviews}/${trainingId}`);
+    return data;
+  },
+);
+
+export const createReviewAction = createAsyncThunk<ReviewRdo, CreateReviewDto, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'createReviewAction',
+  async (createReviewDto, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<ReviewRdo>(`${FF_SERVICE_URL}${APIRoute.Reviews}`, createReviewDto);
     return data;
   },
 );

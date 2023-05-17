@@ -1,4 +1,4 @@
-import {FF_SERVICE_URL} from '../../const';
+import {FF_USERS_URL} from '../../const';
 import {ReviewRdo} from '../../types/review.rdo';
 
 type ReviewsListItemProps = {
@@ -12,7 +12,7 @@ function ReviewsListItem({review}: ReviewsListItemProps): JSX.Element {
         <div className="review__user-info">
           <div className="review__user-photo">
             <picture>
-              <img src={`${FF_SERVICE_URL}/${review.userAvatarPath}`} width="64" height="64" alt="Изображение пользователя"/>
+              <img src={`${FF_USERS_URL}/${review.userAvatarPath}`} width="64" height="64" alt="Изображение пользователя"/>
             </picture>
           </div>
           <span className="review__user-name">
