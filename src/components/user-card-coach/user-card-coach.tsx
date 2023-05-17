@@ -4,17 +4,15 @@ import TrainingThumbnail from '../training-thumbnail/training-thumbnail';
 import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {getMyFriends} from '../../store/user-data/selectors';
-import {addFriendAction, fetchMyFriendsAction, fetchTrainingsAction, removeFriendAction} from '../../store/api-actions';
+import {getMyFriends, getMyOutgoingRequests} from '../../store/user-data/selectors';
+import {addFriendAction, fetchMyFriendsAction, fetchOutgoingUserRequestsForTraining, fetchTrainingsAction, removeFriendAction, sendTrainingRequestAction} from '../../store/api-actions';
 import {MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
 import {useEffect, useState} from 'react';
 import PopupCoachCertificates from '../popup-coach-certificates/popup-coach-certificates';
 import PopupUserMap from '../popup-user-map/popup-user-map';
-
-enum FriendAction {
-  Add = 'add',
-  Remove = 'remove'
-}
+import {setDataLoadedStatus} from '../../store/app-data/app-data';
+import {UserRequestType} from '../../types/user-request-type.enum';
+import {FriendAction} from '../../types/friend-action.enum';
 
 type UserCardCoachProps = {
   user: UserRdo;
@@ -25,6 +23,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const myFriends = useAppSelector(getMyFriends);
+  const outgoingUserRequests = useAppSelector(getMyOutgoingRequests).filter((request) => request.type === UserRequestType.Training);
 
   const [isCertificatesModalOpened, setIsCertificatesModalOpened] = useState(false);
   const [isMapModalOpened, setIsMapModalOpened] = useState(false);
@@ -71,6 +70,20 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
 
   const handleShowCertificatesButtonClick = () => {
     setIsCertificatesModalOpened(true);
+  };
+
+  const createUserRequest = async () => {
+    dispatch(setDataLoadedStatus(true));
+    await dispatch(sendTrainingRequestAction({
+      type: UserRequestType.Training,
+      userId: user.id
+    }));
+    dispatch(fetchOutgoingUserRequestsForTraining());
+    dispatch(setDataLoadedStatus(false));
+  };
+
+  const handleInviteButtonClick = () => {
+    createUserRequest();
   };
 
   return (
@@ -205,7 +218,13 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
             <form className="user-card-coach__training-form">
               {((user.questionnaire as CoachQuestionnaire).isReadyToTrain && myFriends.some((friend) => friend.id === user.id))
               && (
-                <button className="btn user-card-coach__btn-training" type="button">Хочу персональную тренировку</button>
+                <button
+                  onClick={handleInviteButtonClick}
+                  className="btn user-card-coach__btn-training" type="button"
+                  disabled={outgoingUserRequests.some((request) => request.userId === user.id)}
+                >
+                  Хочу персональную тренировку
+                </button>
               )}
               <div className="user-card-coach__training-check">
                 <div className="custom-toggle custom-toggle--checkbox">

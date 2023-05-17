@@ -4,7 +4,7 @@ import UserCardCoach from '../../components/user-card-coach/user-card-coach';
 import UserCardUser from '../../components/user-card-user/user-card-user';
 import {UserRole} from '../../types/user-role.enum';
 import {useNavigate, useParams} from 'react-router-dom';
-import {fetchMyFriendsAction, fetchTrainingsAction, fetchUserInfoAction} from '../../store/api-actions';
+import {fetchMyFriendsAction, fetchOutgoingUserRequestsForTraining, fetchTrainingsAction, fetchUserInfoAction} from '../../store/api-actions';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getUserInfo, getUserTrainings} from '../../store/training-data/selectors';
 import {getMyFriends} from '../../store/user-data/selectors';
@@ -36,6 +36,7 @@ function UserCard(): JSX.Element {
         }
       }));
     }
+    dispatch(fetchOutgoingUserRequestsForTraining());
   }, [dispatch, myFriends, trainings, user, user?.userRole, userId]);
 
   return (
