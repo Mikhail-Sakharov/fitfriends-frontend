@@ -9,6 +9,7 @@ import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {getTrainingId} from '../../helpers';
 import {fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
+import PopupBuyTraining from '../../components/popup-buy-training/popup-buy-training';
 
 type TrainingCardProps = {
   userRole: UserRole;
@@ -28,6 +29,8 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     `#${training ? training.caloriesCount : ''}ккал`,
     `#${training ? training.duration : ''}`
   ];
+
+  const [isBuyTrainingModalOpened, setIsBuyTrainingModalOpened] = useState(false);
 
   const [isContentEditable, setIsContentEditable] = useState(false);
 
@@ -209,6 +212,10 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     setIsContentEditable(false);
   };
 
+  const handleBuyButtonClick = () => {
+    setIsBuyTrainingModalOpened(true);
+  };
+
   return (
     <>
       <Header />
@@ -378,7 +385,12 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                           {
                             userRole === UserRole.User
                               && (
-                                <button className="btn training-info__buy" type="button">Купить</button>
+                                <button
+                                  onClick={handleBuyButtonClick}
+                                  className="btn training-info__buy" type="button"
+                                >
+                                  Купить
+                                </button>
                               )
                           }
                         </div>
@@ -468,6 +480,12 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
           </div>
         </section>
       </main>
+      {
+        isBuyTrainingModalOpened
+          && (
+            <PopupBuyTraining setModalOpened={setIsBuyTrainingModalOpened}/>
+          )
+      }
     </>
   );
 }
