@@ -9,6 +9,7 @@ import {addFriendAction, fetchMyFriendsAction, fetchTrainingsAction, removeFrien
 import {MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
 import {useEffect, useState} from 'react';
 import PopupCoachCertificates from '../popup-coach-certificates/popup-coach-certificates';
+import PopupUserMap from '../popup-user-map/popup-user-map';
 
 enum FriendAction {
   Add = 'add',
@@ -26,6 +27,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
   const myFriends = useAppSelector(getMyFriends);
 
   const [isCertificatesModalOpened, setIsCertificatesModalOpened] = useState(false);
+  const [isMapModalOpened, setIsMapModalOpened] = useState(false);
 
   const [trainingsCurrentPage, setTrainingsCurrentPage] = useState(1);
 
@@ -83,7 +85,10 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
                   {user.userName}
                 </h2>
               </div>
-              <div className="user-card-coach__label">
+              <div
+                onClick={() => setIsMapModalOpened(true)}
+                className="user-card-coach__label"
+              >
                 <svg className="user-card-coach__icon-location" width="12" height="14" aria-hidden="true">
                   <use xlinkHref="#icon-location"></use>
                 </svg>
@@ -225,6 +230,16 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
             <PopupCoachCertificates
               certificates={(user.questionnaire as CoachQuestionnaire).certificates}
               setPopupOpened={setIsCertificatesModalOpened}
+            />
+          )
+      }
+      {
+        isMapModalOpened
+          && (
+            <PopupUserMap
+              location={user.location}
+              userName={user.userName}
+              setPopupOpened={setIsMapModalOpened}
             />
           )
       }
