@@ -3,6 +3,7 @@ import {Gender} from '../../types/gender.enum';
 import {NotificationRdo} from '../../types/notification.rdo';
 import {Purchase} from '../../types/purchase.type';
 import {State} from '../../types/state';
+import {SubscriptionStatus} from '../../types/subscription-status.enum';
 import {SubwayStation} from '../../types/subway-station.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
 import {TrainingType} from '../../types/training-type.enum';
@@ -33,4 +34,5 @@ export const getNotifications = (state: State): NotificationRdo[] => state[Reduc
 export const getMyPurchases = (state: State): Purchase[] => state[ReducerNameSpace.UserData].myPurchases;
 export const getFullUsersCatalog = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].fullUsersCatalog;
 export const getFilteredUsersCatalog = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].filteredUsersCatalog;
+export const getSubscriptionStatus = (state: State): SubscriptionStatus => state[ReducerNameSpace.UserData].subscriptionStatus;
 

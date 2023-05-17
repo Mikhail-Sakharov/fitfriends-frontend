@@ -4,8 +4,8 @@ import TrainingThumbnail from '../training-thumbnail/training-thumbnail';
 import {TrainingRdo} from '../../types/training.rdo';
 import {UserRdo} from '../../types/user.response';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {getMyFriends, getMyOutgoingRequests} from '../../store/user-data/selectors';
-import {addFriendAction, fetchMyFriendsAction, fetchOutgoingUserRequestsForTraining, fetchTrainingsAction, removeFriendAction, sendTrainingRequestAction} from '../../store/api-actions';
+import {getMyFriends, getMyOutgoingRequests, getSubscriptionStatus} from '../../store/user-data/selectors';
+import {addFriendAction, checkSubscriptionStatusAction, fetchMyFriendsAction, fetchOutgoingUserRequestsForTraining, fetchTrainingsAction, removeFriendAction, sendTrainingRequestAction, toggleSubscriberStatusAction} from '../../store/api-actions';
 import {MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
 import {useEffect, useState} from 'react';
 import PopupCoachCertificates from '../popup-coach-certificates/popup-coach-certificates';
@@ -13,17 +13,20 @@ import PopupUserMap from '../popup-user-map/popup-user-map';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {UserRequestType} from '../../types/user-request-type.enum';
 import {FriendAction} from '../../types/friend-action.enum';
+import {SubscriptionStatus} from '../../types/subscription-status.enum';
 
 type UserCardCoachProps = {
-  user: UserRdo;
+  coach: UserRdo;
   trainings?: TrainingRdo[];
 };
 
-function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
+function UserCardCoach({coach, trainings}: UserCardCoachProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const myFriends = useAppSelector(getMyFriends);
   const outgoingUserRequests = useAppSelector(getMyOutgoingRequests).filter((request) => request.type === UserRequestType.Training);
+  const subscriptionStatus = useAppSelector(getSubscriptionStatus);
+  const isInSubscribers = subscriptionStatus === SubscriptionStatus.Subsribed;
 
   const [isCertificatesModalOpened, setIsCertificatesModalOpened] = useState(false);
   const [isMapModalOpened, setIsMapModalOpened] = useState(false);
@@ -32,21 +35,22 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
 
   useEffect(() => {
     dispatch(fetchTrainingsAction({
-      coachId: user.id,
+      coachId: coach.id,
       queryParams: {
         page: trainingsCurrentPage,
         limit: MAX_TRAININGS_COUNT_USER_CARD
       }
     }));
-  }, [dispatch, trainings?.length, trainingsCurrentPage, user.id]);
+    dispatch(checkSubscriptionStatusAction(coach.id));
+  }, [dispatch, trainings?.length, trainingsCurrentPage, coach.id]);
 
   const handleFriendRelations = async (type: FriendAction) => {
     switch(type) {
       case FriendAction.Add:
-        await dispatch(addFriendAction(user.id));
+        await dispatch(addFriendAction(coach.id));
         break;
       case FriendAction.Remove:
-        await dispatch(removeFriendAction(user.id));
+        await dispatch(removeFriendAction(coach.id));
         break;
     }
     dispatch(fetchMyFriendsAction());
@@ -76,7 +80,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
     dispatch(setDataLoadedStatus(true));
     await dispatch(sendTrainingRequestAction({
       type: UserRequestType.Training,
-      userId: user.id
+      userId: coach.id
     }));
     dispatch(fetchOutgoingUserRequestsForTraining());
     dispatch(setDataLoadedStatus(false));
@@ -84,6 +88,16 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
 
   const handleInviteButtonClick = () => {
     createUserRequest();
+  };
+
+  const subscribeUser = async () => {
+    dispatch(setDataLoadedStatus(true));
+    await dispatch(toggleSubscriberStatusAction(coach.id));
+    dispatch(setDataLoadedStatus(false));
+  };
+
+  const handleSubscribeInputChange = () => {
+    subscribeUser();
   };
 
   return (
@@ -95,7 +109,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
             <div className="user-card-coach__content">
               <div className="user-card-coach__head">
                 <h2 className="user-card-coach__title">
-                  {user.userName}
+                  {coach.userName}
                 </h2>
               </div>
               <div
@@ -106,7 +120,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
                   <use xlinkHref="#icon-location"></use>
                 </svg>
                 <span>
-                  {user.location}
+                  {coach.location}
                 </span>
               </div>
               <div className="user-card-coach__status-container">
@@ -116,7 +130,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
                   </svg>
                   <span>Тренер</span>
                 </div>
-                {(user.questionnaire as CoachQuestionnaire).isReadyToTrain
+                {(coach.questionnaire as CoachQuestionnaire).isReadyToTrain
                   ? (
                     <div className="user-card-coach__status user-card-coach__status--check">
                       <span>Готов тренировать</span>
@@ -130,7 +144,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
               </div>
               <div className="user-card-coach__text">
                 <p>
-                  {(user.questionnaire as CoachQuestionnaire).description}
+                  {(coach.questionnaire as CoachQuestionnaire).description}
                 </p>
               </div>
               <button
@@ -143,7 +157,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
                 <span>Посмотреть сертификаты</span>
               </button>
               <ul className="user-card-coach__hashtag-list">
-                {user.trainingTypes.map((trainingType) => (
+                {coach.trainingTypes.map((trainingType) => (
                   <li key={nanoid()} className="user-card-coach__hashtag-item">
                     <div className="hashtag">
                       <span>
@@ -154,7 +168,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
                   </li>
                 ))}
               </ul>
-              {myFriends.some((friend) => friend.id === user.id)
+              {myFriends.some((friend) => friend.id === coach.id)
                 ? (
                   <button
                     onClick={handleRemoveFriendButtonClick}
@@ -216,12 +230,12 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
               </ul>
             )}
             <form className="user-card-coach__training-form">
-              {((user.questionnaire as CoachQuestionnaire).isReadyToTrain && myFriends.some((friend) => friend.id === user.id))
+              {((coach.questionnaire as CoachQuestionnaire).isReadyToTrain && myFriends.some((friend) => friend.id === coach.id))
               && (
                 <button
                   onClick={handleInviteButtonClick}
                   className="btn user-card-coach__btn-training" type="button"
-                  disabled={outgoingUserRequests.some((request) => request.userId === user.id)}
+                  disabled={outgoingUserRequests.some((request) => request.userId === coach.id)}
                 >
                   Хочу персональную тренировку
                 </button>
@@ -229,7 +243,11 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
               <div className="user-card-coach__training-check">
                 <div className="custom-toggle custom-toggle--checkbox">
                   <label>
-                    <input type="checkbox" value="user-agreement-1" name="user-agreement" />
+                    <input
+                      onChange={handleSubscribeInputChange}
+                      type="checkbox" value="user-agreement-1" name="user-agreement"
+                      checked={isInSubscribers}
+                    />
                     <span className="custom-toggle__icon">
                       <svg width="9" height="6" aria-hidden="true">
                         <use xlinkHref="#arrow-check"></use>
@@ -247,7 +265,7 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
         isCertificatesModalOpened
           && (
             <PopupCoachCertificates
-              certificates={(user.questionnaire as CoachQuestionnaire).certificates}
+              certificates={(coach.questionnaire as CoachQuestionnaire).certificates}
               setPopupOpened={setIsCertificatesModalOpened}
             />
           )
@@ -256,8 +274,8 @@ function UserCardCoach({user, trainings}: UserCardCoachProps): JSX.Element {
         isMapModalOpened
           && (
             <PopupUserMap
-              location={user.location}
-              userName={user.userName}
+              location={coach.location}
+              userName={coach.userName}
               setPopupOpened={setIsMapModalOpened}
             />
           )

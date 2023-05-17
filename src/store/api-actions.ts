@@ -22,6 +22,7 @@ import {GetGymsQuery} from '../types/get-gyms.query';
 import {FavoriteGymRdo} from '../types/favorite-gym.rdo';
 import {Purchase} from '../types/purchase.type';
 import {GetUsersQuery} from '../types/get-users.query';
+import {SubscriptionStatus} from '../types/subscription-status.enum';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -449,4 +450,25 @@ export const addFriendAction = createAsyncThunk<AxiosResponse<undefined>, string
 }>(
   'addFriendAction',
   async (friendId, {dispatch, extra: api}) => await api[0].get<undefined>(`${FF_USERS_URL}${APIRoute.AddFriend}/${friendId}`),
+);
+
+export const toggleSubscriberStatusAction = createAsyncThunk<AxiosResponse<undefined>, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'toggleSubscriberStatusAction',
+  async (coachId, {dispatch, extra: api}) => await api[0].get<undefined>(`${FF_NOTIFIER_URL}${APIRoute.Subscription}/${coachId}`),
+);
+
+export const checkSubscriptionStatusAction = createAsyncThunk<SubscriptionStatus, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'checkSubscriptionStatusAction',
+  async (coachId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<SubscriptionStatus>(`${FF_NOTIFIER_URL}${APIRoute.SubscriptionStatus}/${coachId}`);
+    return data;
+  },
 );

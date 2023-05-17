@@ -16,7 +16,8 @@ import {
   fetchOutgoingUserRequestsForTraining,
   fetchNotificationsAction,
   fetchMyPurchasesAction,
-  fetchUsersCatalogAction
+  fetchUsersCatalogAction,
+  checkSubscriptionStatusAction
 } from '../api-actions';
 import {TrainingType} from '../../types/training-type.enum';
 import {TrainingLevel} from '../../types/training-level.enum';
@@ -25,6 +26,7 @@ import {UserRdo} from '../../types/user.response';
 import {UserRequestRdo} from '../../types/user-request.rdo';
 import {NotificationRdo} from '../../types/notification.rdo';
 import {Purchase} from '../../types/purchase.type';
+import {SubscriptionStatus} from '../../types/subscription-status.enum';
 
 type UserData = {
   avatar: string;
@@ -48,6 +50,7 @@ type UserData = {
   myPurchases: Purchase[];
   fullUsersCatalog: UserRdo[];
   filteredUsersCatalog: UserRdo[];
+  subscriptionStatus: SubscriptionStatus;
 };
 
 const initialState: UserData = {
@@ -72,6 +75,7 @@ const initialState: UserData = {
   myPurchases: [],
   fullUsersCatalog: [],
   filteredUsersCatalog: [],
+  subscriptionStatus: SubscriptionStatus.NotSubscribedYet
 };
 
 export const userData = createSlice({
@@ -248,6 +252,9 @@ export const userData = createSlice({
       .addCase(fetchUsersCatalogAction.fulfilled, (state, action) => {
         state.fullUsersCatalog = action.payload[0];
         state.filteredUsersCatalog = action.payload[1];
+      })
+      .addCase(checkSubscriptionStatusAction.fulfilled, (state, action) => {
+        state.subscriptionStatus = action.payload;
       });
   }
 });

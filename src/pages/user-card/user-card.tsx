@@ -59,7 +59,7 @@ function UserCard(): JSX.Element {
                 {
                   user?.userRole === UserRole.Coach
                     ? (
-                      <UserCardCoach user={user} trainings={trainings}/>
+                      <UserCardCoach coach={user} trainings={trainings}/>
                     )
                     : (
                       <UserCardUser user={user}/>
