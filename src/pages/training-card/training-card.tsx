@@ -10,6 +10,8 @@ import {getTrainingId} from '../../helpers';
 import {fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import PopupBuyTraining from '../../components/popup-buy-training/popup-buy-training';
+import {OrderRdo, OrderType} from '../../types/order.rdo';
+import {getMyPurchases} from '../../store/user-data/selectors';
 
 type TrainingCardProps = {
   userRole: UserRole;
@@ -20,8 +22,16 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
 
   const training = useAppSelector(getCurrentTraining);
   const trainingAuthor = useAppSelector(getUserInfo);
+  const myPurchases = useAppSelector(getMyPurchases);
   const avatar = trainingAuthor?.avatarUrl;
   const userName = trainingAuthor?.userName;
+
+  const isTrainingAlreadyInMyPurchases = training
+    ? myPurchases
+      .filter((purchase) => purchase.orderType === OrderType.Training)
+      .find((purchase) => (purchase as OrderRdo).training.id === training.id)
+    : false;
+  const isBeginTrainingButtonDisabled = userRole === UserRole.Coach || !isTrainingAlreadyInMyPurchases;
 
   const features = [
     `#${training ? training.type : ''}`,
@@ -35,6 +45,8 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
   const [isContentEditable, setIsContentEditable] = useState(false);
 
   const [isCurrentVideoMarkedForDeleting, setIsCurrentVideoMarkedForDeleting] = useState(false);
+
+  const [trainingStarted, setTrainingStarted] = useState(false);
 
   const priceInputRef = useRef<HTMLInputElement | null>(null);
   const titleInputRef = useRef<HTMLInputElement | null>(null);
@@ -216,6 +228,10 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     setIsBuyTrainingModalOpened(true);
   };
 
+  const handleStartTrainingButtonClick = () => {
+    setTrainingStarted(true);
+  };
+
   return (
     <>
       <Header />
@@ -388,6 +404,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                                 <button
                                   onClick={handleBuyButtonClick}
                                   className="btn training-info__buy" type="button"
+                                  disabled={!!isTrainingAlreadyInMyPurchases}
                                 >
                                   Купить
                                 </button>
@@ -423,11 +440,20 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                                 )
                             }
                           </div>
-                          <button ref={playButtonRef} onClick={handlePlayButtonClick} className="training-video__play-button btn-reset">
-                            <svg width="18" height="30" aria-hidden="true">
-                              <use xlinkHref="#icon-arrow"></use>
-                            </svg>
-                          </button>
+                          {
+                            (isTrainingAlreadyInMyPurchases && trainingStarted)
+                              && (
+                                <button
+                                  ref={playButtonRef}
+                                  onClick={handlePlayButtonClick}
+                                  className="training-video__play-button btn-reset"
+                                >
+                                  <svg width="18" height="30" aria-hidden="true">
+                                    <use xlinkHref="#icon-arrow"></use>
+                                  </svg>
+                                </button>
+                              )
+                          }
                         </div>
                       )
                       : (
@@ -457,10 +483,29 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                       )
                   }
                   <div className="training-video__buttons-wrapper">
-                    <button className="btn training-video__button training-video__button--start" type="button" disabled={userRole === UserRole.Coach}>Приступить</button>
+                    {
+                      trainingStarted
+                        ? (
+                          <button
+                            onClick={() => setTrainingStarted(false)}
+                            className="btn training-video__button" type="button"
+                          >
+                            Закончить
+                          </button>
+                        )
+                        : (
+                          <button
+                            onClick={handleStartTrainingButtonClick}
+                            className="btn training-video__button training-video__button--start"
+                            type="button" disabled={isBeginTrainingButtonDisabled}
+                          >
+                            Приступить
+                          </button>
+                        )
+                    }
                     {
                       userRole === UserRole.Coach && isContentEditable
-                        ? (
+                        && (
                           <div className="training-video__edit-buttons">
                             <button
                               onClick={handleSaveVideoButtonClick}
@@ -477,9 +522,6 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                               Удалить
                             </button>
                           </div>
-                        )
-                        : (
-                          <button className="btn training-video__button training-video__button--stop" type="button">Закончить</button>
                         )
                     }
                   </div>

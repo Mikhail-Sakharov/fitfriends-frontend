@@ -5,8 +5,10 @@ import {TrainingRdo} from '../../types/training.rdo';
 import {UserRole} from '../../types/user-role.enum';
 import ReviewsListItem from '../reviews-list-item/reviews-list-item';
 import {getReviews} from '../../store/training-data/selectors';
-import {fetchReviewsAction} from '../../store/api-actions';
+import {fetchMyPurchasesAction, fetchReviewsAction} from '../../store/api-actions';
 import {nanoid} from 'nanoid';
+import {getMyPurchases} from '../../store/user-data/selectors';
+import {OrderRdo, OrderType} from '../../types/order.rdo';
 
 type ReviewsListProps = {
   training: TrainingRdo | null;
@@ -17,11 +19,20 @@ function ReviewsList({training}: ReviewsListProps): JSX.Element {
 
   const userRole = useAppSelector(getUserRole);
   const reviews = useAppSelector(getReviews);
+  const myPurchases = useAppSelector(getMyPurchases);
+
+  const isTrainingAlreadyInMyPurchases = training
+    ? myPurchases
+      .filter((purchase) => purchase.orderType === OrderType.Training)
+      .find((purchase) => (purchase as OrderRdo).training.id === training.id)
+    : false;
+  const isLeaveReviewButtonDisabled = userRole === UserRole.Coach || !isTrainingAlreadyInMyPurchases;
 
   useEffect(() => {
     if (training) {
       dispatch(fetchReviewsAction(training.id));
     }
+    dispatch(fetchMyPurchasesAction());
   }, [dispatch, training]);
 
   return (
@@ -44,7 +55,12 @@ function ReviewsList({training}: ReviewsListProps): JSX.Element {
             ))
         }
       </ul>
-      <button className="btn btn--medium reviews-side-bar__button" type="button" disabled={userRole === UserRole.Coach}>Оставить отзыв</button>
+      <button
+        className="btn btn--medium reviews-side-bar__button" type="button"
+        disabled={isLeaveReviewButtonDisabled}
+      >
+        Оставить отзыв
+      </button>
     </aside>
   );
 }
