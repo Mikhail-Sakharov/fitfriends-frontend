@@ -26,6 +26,8 @@ import {SubscriptionStatus} from '../types/subscription-status.enum';
 import CreateOrderDto from '../types/create-order.dto';
 import {ReviewRdo} from '../types/review.rdo';
 import {CreateReviewDto} from '../types/create-review.dto';
+import {CreateGymOrderDto} from '../types/create-gym-order.dto';
+import {GymOrderRdo} from '../types/gym-order.rdo';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -520,6 +522,18 @@ export const decrementTrainingAction = createAsyncThunk<undefined, string, {
   'decrementTrainingAction',
   async (trainingId, {dispatch, extra: api}) => {
     const {data} = await api[0].get<undefined>(`${FF_SERVICE_URL}${APIRoute.DecrementTraining}/${trainingId}`);
+    return data;
+  },
+);
+
+export const buyGymMembershipAction = createAsyncThunk<GymOrderRdo, CreateGymOrderDto, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'buyGymMembershipAction',
+  async (createGymOrderDto, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<GymOrderRdo>(`${FF_SERVICE_URL}${APIRoute.OrdersGyms}`, createGymOrderDto);
     return data;
   },
 );

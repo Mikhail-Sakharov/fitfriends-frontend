@@ -2,10 +2,14 @@ import {useParams} from 'react-router-dom';
 import Header from '../../components/header/header';
 import {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {fetchGymInfoAction} from '../../store/api-actions';
+import {fetchGymInfoAction, fetchMyPurchasesAction} from '../../store/api-actions';
 import {getCurrentGym} from '../../store/gyms-data/selectors';
 import {nanoid} from 'nanoid';
 import PopupGymMap from '../../components/popup-gym-map/popup-gym-map';
+import PopupMembership from '../../components/popup-membership/popup-membership';
+import {getMyPurchases} from '../../store/user-data/selectors';
+import {OrderType} from '../../types/order.rdo';
+import {GymOrderRdo} from '../../types/gym-order.rdo';
 
 function GymCard(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -13,15 +17,25 @@ function GymCard(): JSX.Element {
   const gymId = useParams().id;
 
   const gymInfo = useAppSelector(getCurrentGym);
+  const myPurchases = useAppSelector(getMyPurchases);
+
+  const isGymAlreadyInMyPurchases = gymInfo
+    ? myPurchases
+      .filter((purchase) => purchase.orderType === OrderType.Gym)
+      .filter((purchase) => purchase.isCompleted === false)
+      .find((purchase) => (purchase as GymOrderRdo).gym.id === gymInfo.id)
+    : false;
 
   const slidesCount = gymInfo?.images.length;
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-  const [popupOpened, setPopupOpened] = useState(false);
+  const [isMapPopupOpened, setIsMapPopupOpened] = useState(false);
+  const [isGymMembershipPopupOpened, setIsGymMembershipPopupOpened] = useState(false);
 
   useEffect(() => {
     if (gymId) {
       dispatch(fetchGymInfoAction(gymId));
+      dispatch(fetchMyPurchasesAction());
     }
   }, [dispatch, gymId]);
 
@@ -46,7 +60,11 @@ function GymCard(): JSX.Element {
   };
 
   const handleLocationClick = () => {
-    setPopupOpened(true);
+    setIsMapPopupOpened(true);
+  };
+
+  const handleCreateGymOrder = () => {
+    setIsGymMembershipPopupOpened(true);
   };
 
   return (
@@ -122,7 +140,13 @@ function GymCard(): JSX.Element {
                         </div>
                       </div>
                       <div className="gym-card__button">
-                        <button className="btn btn--dark-bg" type="button">оформить абонемент</button>
+                        <button
+                          onClick={handleCreateGymOrder}
+                          className="btn btn--dark-bg" type="button"
+                          disabled={!!isGymAlreadyInMyPurchases}
+                        >
+                          оформить абонемент
+                        </button>
                       </div>
                     </div>
                     <section className="slider-gyms">
@@ -173,7 +197,12 @@ function GymCard(): JSX.Element {
         </div>
       </main>
       {
-        popupOpened && <PopupGymMap location={gymInfo?.location} title={gymInfo?.title} setPopupOpened={setPopupOpened}/>
+        isMapPopupOpened
+          && <PopupGymMap location={gymInfo?.location} title={gymInfo?.title} setPopupOpened={setIsMapPopupOpened}/>
+      }
+      {
+        (isGymMembershipPopupOpened && gymInfo)
+          && <PopupMembership gym={gymInfo} setPopupOpened={setIsGymMembershipPopupOpened}/>
       }
     </>
   );
