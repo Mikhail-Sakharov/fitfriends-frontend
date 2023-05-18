@@ -13,7 +13,7 @@ import {
   sendTrainingRequestAction,
   toggleSubscriberStatusAction
 } from '../../store/api-actions';
-import {MAX_TRAININGS_COUNT_USER_CARD} from '../../const';
+import {MAX_USER_CARD_TRAININGS_COUNT} from '../../const';
 import {useEffect, useState} from 'react';
 import PopupCoachCertificates from '../popup-coach-certificates/popup-coach-certificates';
 import PopupUserMap from '../popup-user-map/popup-user-map';
@@ -47,7 +47,7 @@ function UserCardCoach({coach}: UserCardCoachProps): JSX.Element {
       coachId: coach.id,
       queryParams: {
         page: trainingsCurrentPage,
-        limit: MAX_TRAININGS_COUNT_USER_CARD
+        limit: MAX_USER_CARD_TRAININGS_COUNT
       }
     }));
     dispatch(checkSubscriptionStatusAction(coach.id));
@@ -80,7 +80,7 @@ function UserCardCoach({coach}: UserCardCoachProps): JSX.Element {
   };
 
   const handleNextArrowButtonClick = () => {
-    setTrainingsCurrentPage((prevState) => trainings && trainings.length < MAX_TRAININGS_COUNT_USER_CARD ? prevState : prevState + 1);
+    setTrainingsCurrentPage((prevState) => trainings && trainings.length < MAX_USER_CARD_TRAININGS_COUNT ? prevState : prevState + 1);
   };
 
   const handleShowCertificatesButtonClick = () => {
