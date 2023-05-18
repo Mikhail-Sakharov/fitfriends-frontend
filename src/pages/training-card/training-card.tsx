@@ -1,13 +1,27 @@
 import Header from '../../components/header/header';
 import ReviewsList from '../../components/reviews-list/reviews-list';
-import {FF_SERVICE_URL, FF_USERS_URL, TrainingDescriptionLength, TrainingPrice, TrainingTitleLength, VIDEO_FILE_TYPES} from '../../const';
+import {
+  FF_SERVICE_URL,
+  FF_USERS_URL,
+  TrainingDescriptionLength,
+  TrainingPrice,
+  TrainingTitleLength,
+  VIDEO_FILE_TYPES
+} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {UserRole} from '../../types/user-role.enum';
 import {nanoid} from 'nanoid';
 import {getCurrentTraining, getUserInfo} from '../../store/training-data/selectors';
 import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {getTrainingId} from '../../helpers';
-import {fetchTrainingInfoAction, fetchUserInfoAction, updateTrainingAction, uploadVideoFileAction} from '../../store/api-actions';
+import {
+  decrementTrainingAction,
+  fetchMyPurchasesAction,
+  fetchTrainingInfoAction,
+  fetchUserInfoAction,
+  updateTrainingAction,
+  uploadVideoFileAction
+} from '../../store/api-actions';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import PopupBuyTraining from '../../components/popup-buy-training/popup-buy-training';
 import {OrderRdo, OrderType} from '../../types/order.rdo';
@@ -29,6 +43,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
   const isTrainingAlreadyInMyPurchases = training
     ? myPurchases
       .filter((purchase) => purchase.orderType === OrderType.Training)
+      .filter((purchase) => purchase.isCompleted === false)
       .find((purchase) => (purchase as OrderRdo).training.id === training.id)
     : false;
   const isBeginTrainingButtonDisabled = userRole === UserRole.Coach || !isTrainingAlreadyInMyPurchases;
@@ -228,8 +243,16 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     setIsBuyTrainingModalOpened(true);
   };
 
+  const decrementTraining = async () => {
+    if (training) {
+      await dispatch(decrementTrainingAction(training.id));
+      dispatch(fetchMyPurchasesAction());
+    }
+  };
+
   const handleStartTrainingButtonClick = () => {
     setTrainingStarted(true);
+    decrementTraining();
   };
 
   return (

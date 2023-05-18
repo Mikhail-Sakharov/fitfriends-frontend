@@ -4,7 +4,8 @@ import {RATING_VALUES, ReviewTextLength} from '../../const';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {getAvatar} from '../../store/user-data/selectors';
-import {createReviewAction, fetchReviewsAction} from '../../store/api-actions';
+import {createReviewAction, fetchReviewsAction, fetchTrainingInfoAction} from '../../store/api-actions';
+import {getTrainingId} from '../../helpers';
 
 type PopupFeedbackProps = {
   trainingId: string | undefined;
@@ -60,6 +61,7 @@ function PopupFeedback({trainingId, setPopupOpened}: PopupFeedbackProps): JSX.El
         rating
       }));
       await dispatch(fetchReviewsAction(trainingId));
+      await dispatch(fetchTrainingInfoAction(getTrainingId()));
       dispatch(setDataLoadedStatus(false));
     }
   };

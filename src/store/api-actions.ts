@@ -511,3 +511,15 @@ export const createReviewAction = createAsyncThunk<ReviewRdo, CreateReviewDto, {
     return data;
   },
 );
+
+export const decrementTrainingAction = createAsyncThunk<undefined, string, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'decrementTrainingAction',
+  async (trainingId, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<undefined>(`${FF_SERVICE_URL}${APIRoute.DecrementTraining}/${trainingId}`);
+    return data;
+  },
+);
