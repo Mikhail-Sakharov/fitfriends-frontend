@@ -11,6 +11,7 @@ import {Gender} from '../../types/gender.enum';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {updateUserAction, uploadAvatarAction} from '../../store/api-actions';
 import {nanoid} from 'nanoid';
+import Calendar from '../../components/calendar/calendar';
 
 function PersonalAccountUser(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -639,7 +640,7 @@ function PersonalAccountUser(): JSX.Element {
                       </div>
                       <span className="thumbnail-link__text">Мои покупки</span>
                     </Link>
-                    <div className="personal-account-user__calendar"></div>
+                    <Calendar />
                   </div>
                 </div>
               </div>
