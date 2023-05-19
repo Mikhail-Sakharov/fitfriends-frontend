@@ -3,14 +3,12 @@ import Header from '../../components/header/header';
 import UserCardCoach from '../../components/user-card-coach/user-card-coach';
 import UserCardUser from '../../components/user-card-user/user-card-user';
 import {UserRole} from '../../types/user-role.enum';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import {fetchOutgoingUserRequestsForTraining, fetchUserInfoAction} from '../../store/api-actions';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getUserInfo} from '../../store/training-data/selectors';
-import {AppRoute} from '../../const';
 
 function UserCard(): JSX.Element {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const userId = useParams().id;
@@ -32,7 +30,7 @@ function UserCard(): JSX.Element {
           <div className="container">
             <div className="inner-page__wrapper">
               <button
-                onClick={() => navigate(AppRoute.UsersCatalog)}
+                onClick={() => window.history.back()}
                 className="btn-flat inner-page__back" type="button"
               >
                 <svg width="14" height="10" aria-hidden="true">

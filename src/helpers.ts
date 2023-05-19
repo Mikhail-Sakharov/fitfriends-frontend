@@ -59,6 +59,7 @@ export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery & Ge
     `${queryArgs.trainingTypes ? `trainingTypes=${queryArgs.trainingTypes}` : ''}`,
     `${queryArgs.trainingLevel ? `trainingLevel=${queryArgs.trainingLevel}` : ''}`,
     `${queryArgs.userRole ? `userRole=${queryArgs.userRole}` : ''}`,
+    `${queryArgs.isReadyForTraining !== undefined ? `isReadyForTraining=${queryArgs.isReadyForTraining.toString()}` : ''}`,
   ];
 
   const isNotEmptyString = queryParams.filter((param) => param !== '').join('') !== '';

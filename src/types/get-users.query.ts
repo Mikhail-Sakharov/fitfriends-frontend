@@ -6,6 +6,7 @@ export class GetUsersQuery {
   public trainingTypes?: string;
   public trainingLevel?: string;
   public userRole?: string;
+  public isReadyForTraining?: boolean;
   public sortType?: SortType;
   public sortOrder?: SortOrder;
   public page?: number;

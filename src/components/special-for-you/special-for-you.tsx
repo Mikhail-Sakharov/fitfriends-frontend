@@ -71,9 +71,11 @@ function SpecialForYou(): JSX.Element {
           </div>
           <ul className="special-for-you__list">
             {
-              specialForYouTrainings.slice((trainingsCurrentPage - 1) * MAX_SLIDER_TRAININGS_PER_PAGE, trainingsCurrentPage * MAX_SLIDER_TRAININGS_PER_PAGE).map((training) => (
-                <SpecialForYouItem key={nanoid()} training={training}/>
-              ))
+              specialForYouTrainings
+                .slice((trainingsCurrentPage - 1) * MAX_SLIDER_TRAININGS_PER_PAGE, trainingsCurrentPage * MAX_SLIDER_TRAININGS_PER_PAGE)
+                .map((training) => (
+                  <SpecialForYouItem key={nanoid()} training={training}/>
+                ))
             }
           </ul>
         </div>

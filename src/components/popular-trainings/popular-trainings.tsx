@@ -70,11 +70,13 @@ function PopularTrainings(): JSX.Element {
           </div>
           <ul className="popular-trainings__list">
             {
-              popularTrainings.slice((trainingsCurrentPage - 1) * MAX_SLIDER_POPULAR_TRAININGS_PER_PAGE, trainingsCurrentPage * MAX_SLIDER_POPULAR_TRAININGS_PER_PAGE).map((training) => (
-                <li key={nanoid()} className="popular-trainings__item">
-                  <TrainingThumbnail training={training}/>
-                </li>
-              ))
+              popularTrainings
+                .slice((trainingsCurrentPage - 1) * MAX_SLIDER_POPULAR_TRAININGS_PER_PAGE, trainingsCurrentPage * MAX_SLIDER_POPULAR_TRAININGS_PER_PAGE)
+                .map((training) => (
+                  <li key={nanoid()} className="popular-trainings__item">
+                    <TrainingThumbnail training={training}/>
+                  </li>
+                ))
             }
           </ul>
         </div>
