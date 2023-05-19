@@ -13,7 +13,7 @@ function LookForCompanyItem({user}: LookForCompanyItemProps): JSX.Element {
       <div className="thumbnail-user thumbnail-user--role-user thumbnail-user--dark">
         <div className="thumbnail-user__image">
           <picture>
-            <img src={`${FF_USERS_URL}/${user.avatarUrl}`} width="82" height="82" alt="avatar"/>
+            <img src={user && user.avatarUrl ? `${FF_USERS_URL}/${user.avatarUrl}` : ''} width="82" height="82" alt="avatar"/>
           </picture>
         </div>
         <div className="thumbnail-user__top-status thumbnail-user__top-status--role-user">
