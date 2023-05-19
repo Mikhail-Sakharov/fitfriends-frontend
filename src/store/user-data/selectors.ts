@@ -1,4 +1,5 @@
 import {ReducerNameSpace} from '../../const';
+import {Duration} from '../../types/duration.enum';
 import {Gender} from '../../types/gender.enum';
 import {NotificationRdo} from '../../types/notification.rdo';
 import {Purchase} from '../../types/purchase.type';
@@ -22,10 +23,12 @@ export const getGender = (state: State): Gender | null => state[ReducerNameSpace
 export const getUserRole = (state: State): UserRole | null => state[ReducerNameSpace.UserData].userRole;
 
 export const getDescription = (state: State): string => state[ReducerNameSpace.UserData].description;
+export const getDuration = (state: State): Duration | null => state[ReducerNameSpace.UserData].trainingDuration;
 export const getIsReadyToTrain = (state: State): boolean => state[ReducerNameSpace.UserData].isReadyToTrain;
 export const getIsReadyToGetTrained = (state: State): boolean => state[ReducerNameSpace.UserData].isReadyToGetTrained;
 export const getTrainingTypes = (state: State): TrainingType[] => state[ReducerNameSpace.UserData].trainingTypes;
 export const getTrainingLevel = (state: State): TrainingLevel | null => state[ReducerNameSpace.UserData].trainingLevel;
+export const getDailyCaloriesCount = (state: State): number | null => state[ReducerNameSpace.UserData].dailyCaloriesCount;
 export const getCertificates = (state: State): string[] => state[ReducerNameSpace.UserData].certificates;
 
 export const getMyFriends = (state: State): UserRdo[] => state[ReducerNameSpace.UserData].myFriends;

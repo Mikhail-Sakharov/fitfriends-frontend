@@ -51,6 +51,7 @@ export enum APIRoute {
   TrainingsCoach = '/trainings/coach',
   TrainingVideo = '/trainings/video',
   TrainingCatalog = '/trainings/catalog',
+  RecommendedTrainings = '/trainings/recommended',
   Orders = '/orders/trainings',
   OrdersGyms = '/orders/gyms',
   Purchases = '/purchases',
@@ -136,6 +137,10 @@ export const MAX_SLIDER_TRAININGS_COUNT = 9;
 export const MAX_SLIDER_TRAININGS_PER_PAGE = 3;
 
 export const MAX_DIFF_IN_MILLISECONDS = 900000;
+
+export const MIN_CALORIES_COUNT_COEFFICIENT = 0.8;
+
+export const MAX_CALORIES_COUNT_COEFFICIENT = 1.2;
 
 export const URL_MARKER = '../img/sprite/icon-pin.svg';
 

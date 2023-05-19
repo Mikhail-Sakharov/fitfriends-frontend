@@ -28,6 +28,7 @@ import {ReviewRdo} from '../types/review.rdo';
 import {CreateReviewDto} from '../types/create-review.dto';
 import {CreateGymOrderDto} from '../types/create-gym-order.dto';
 import {GymOrderRdo} from '../types/gym-order.rdo';
+import {GetRecommendedTrainingsQuery} from '../types/get-recommended-trainings.query';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -422,6 +423,19 @@ export const fetchTrainingCatalogAction = createAsyncThunk<TrainingRdo[][], GetT
     const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingCatalog}${queryString}`);
     const allCatalogTrainings = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.TrainingCatalog}`);
     return [data, allCatalogTrainings.data];
+  },
+);
+
+export const fetchRecommendedTrainingsAction = createAsyncThunk<TrainingRdo[], GetRecommendedTrainingsQuery | undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchRecommendedTrainingsAction',
+  async (getRecommendedTrainingsQuery, {dispatch, extra: api}) => {
+    const queryString = getQueryString(getRecommendedTrainingsQuery);
+    const {data} = await api[0].get<TrainingRdo[]>(`${FF_SERVICE_URL}${APIRoute.RecommendedTrainings}${queryString}`);
+    return data;
   },
 );
 

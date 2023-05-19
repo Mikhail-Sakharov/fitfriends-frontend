@@ -2,28 +2,39 @@ import {nanoid} from 'nanoid';
 import SpecialForYouItem from '../special-for-you-item/special-for-you-item';
 import {useEffect, useState} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
-import {getTrainingTypes} from '../../store/user-data/selectors';
-import {fetchTrainingCatalogAction} from '../../store/api-actions';
-import {getFilteredTrainingCatalog} from '../../store/training-data/selectors';
-import {MAX_SLIDER_TRAININGS_COUNT, MAX_SLIDER_TRAININGS_PER_PAGE} from '../../const';
+import {getDailyCaloriesCount, getDuration, getTrainingLevel, getTrainingTypes} from '../../store/user-data/selectors';
+import {fetchRecommendedTrainingsAction} from '../../store/api-actions';
+import {getRecommendedTrainings} from '../../store/training-data/selectors';
+import {
+  MAX_CALORIES_COUNT_COEFFICIENT,
+  MAX_SLIDER_TRAININGS_COUNT,
+  MAX_SLIDER_TRAININGS_PER_PAGE,
+  MIN_CALORIES_COUNT_COEFFICIENT
+} from '../../const';
 
 function SpecialForYou(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const userTrainingTypes = useAppSelector(getTrainingTypes);
-  const specialForYouTrainings = useAppSelector(getFilteredTrainingCatalog);
+  const userDuration = useAppSelector(getDuration);
+  const userTrainingLevel = useAppSelector(getTrainingLevel);
+  const userDailyCaloriesCount = useAppSelector(getDailyCaloriesCount);
+  const specialForYouTrainings = useAppSelector(getRecommendedTrainings);
 
   const [trainingsCurrentPage, setTrainingsCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(fetchTrainingCatalogAction({
-      trainingType: userTrainingTypes.join(','),
-      // продолжительность
-      // уровень
-      // калории
-      limit: MAX_SLIDER_TRAININGS_COUNT
-    }));
-  }, [dispatch, userTrainingTypes]);
+    if (userDuration && userTrainingTypes && userTrainingLevel && userDailyCaloriesCount) {
+      dispatch(fetchRecommendedTrainingsAction({
+        trainingType: userTrainingTypes.join(','),
+        duration: userDuration,
+        trainingLevel: userTrainingLevel,
+        minCaloriesCount: userDailyCaloriesCount * MIN_CALORIES_COUNT_COEFFICIENT,
+        maxCaloriesCount: userDailyCaloriesCount * MAX_CALORIES_COUNT_COEFFICIENT,
+        limit: MAX_SLIDER_TRAININGS_COUNT
+      }));
+    }
+  }, [dispatch, userDailyCaloriesCount, userDuration, userTrainingLevel, userTrainingTypes]);
 
   const handleBackArrowButtonClick = () => {
     setTrainingsCurrentPage((prevState) => prevState > 1 ? prevState - 1 : prevState);

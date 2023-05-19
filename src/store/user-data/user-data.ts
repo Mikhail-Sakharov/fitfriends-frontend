@@ -27,6 +27,7 @@ import {UserRequestRdo} from '../../types/user-request.rdo';
 import {NotificationRdo} from '../../types/notification.rdo';
 import {Purchase} from '../../types/purchase.type';
 import {SubscriptionStatus} from '../../types/subscription-status.enum';
+import {Duration} from '../../types/duration.enum';
 
 type UserData = {
   id: string;
@@ -37,6 +38,8 @@ type UserData = {
   isReadyToGetTrained: boolean;
   trainingTypes: TrainingType[];
   trainingLevel: TrainingLevel | null;
+  trainingDuration: Duration | null;
+  dailyCaloriesCount: number | null;
   email: string;
   password: string;
   location: SubwayStation | null;
@@ -64,6 +67,8 @@ const initialState: UserData = {
   isReadyToGetTrained: false,
   trainingTypes: [],
   trainingLevel: null,
+  trainingDuration: null,
+  dailyCaloriesCount: null,
   password: '',
   location: null,
   birthday: '',
@@ -131,6 +136,8 @@ export const userData = createSlice({
           case UserRole.User:
             state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
+            state.trainingDuration = (action.payload.user.questionnaire as UserQuestionnaire).trainingDuration;
+            state.dailyCaloriesCount = (action.payload.user.questionnaire as UserQuestionnaire).dailyCaloriesCount;
             break;
         }
       })
@@ -151,6 +158,8 @@ export const userData = createSlice({
           case UserRole.User:
             state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
+            state.trainingDuration = (action.payload.user.questionnaire as UserQuestionnaire).trainingDuration;
+            state.dailyCaloriesCount = (action.payload.user.questionnaire as UserQuestionnaire).dailyCaloriesCount;
             break;
         }
       })
@@ -171,6 +180,8 @@ export const userData = createSlice({
           case UserRole.User:
             state.description = (action.payload.user.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.user.questionnaire as UserQuestionnaire).isReadyToGetTrained;
+            state.trainingDuration = (action.payload.user.questionnaire as UserQuestionnaire).trainingDuration;
+            state.dailyCaloriesCount = (action.payload.user.questionnaire as UserQuestionnaire).dailyCaloriesCount;
             break;
         }
       })
@@ -191,6 +202,8 @@ export const userData = createSlice({
           case UserRole.User:
             state.description = (action.payload.questionnaire as UserQuestionnaire).description;
             state.isReadyToGetTrained = (action.payload.questionnaire as UserQuestionnaire).isReadyToGetTrained;
+            state.trainingDuration = (action.payload.questionnaire as UserQuestionnaire).trainingDuration;
+            state.dailyCaloriesCount = (action.payload.questionnaire as UserQuestionnaire).dailyCaloriesCount;
             break;
         }
       })
