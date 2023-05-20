@@ -1,6 +1,121 @@
 import Header from '../../components/header/header';
+import {WeekDay} from '../../types/week-day.enum';
+import {MealType} from '../../types/meal-type.enum';
+import {FormEvent, useEffect, useState} from 'react';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {createFoodDiaryAction, fetchFoodDiariesAction, updateFoodDiaryAction} from '../../store/api-actions';
+import {getFoodDiaries} from '../../store/diaries-data/selectors';
+import {setDataLoadedStatus} from '../../store/app-data/app-data';
 
 function FoodDiary(): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const diaries = useAppSelector(getFoodDiaries);
+
+  const initialState = {
+    [WeekDay.Monday]: {
+      [MealType.Breakfast]: undefined,
+      [MealType.Dinner]: undefined,
+      [MealType.Snack]: undefined,
+      [MealType.Supper]: undefined,
+    },
+    [WeekDay.Tuesday]: {
+      [MealType.Breakfast]: undefined,
+      [MealType.Dinner]: undefined,
+      [MealType.Snack]: undefined,
+      [MealType.Supper]: undefined,
+    },
+    [WeekDay.Wednesday]: {
+      [MealType.Breakfast]: undefined,
+      [MealType.Dinner]: undefined,
+      [MealType.Snack]: undefined,
+      [MealType.Supper]: undefined,
+    },
+    [WeekDay.Thursday]: {
+      [MealType.Breakfast]: undefined,
+      [MealType.Dinner]: undefined,
+      [MealType.Snack]: undefined,
+      [MealType.Supper]: undefined,
+    },
+    [WeekDay.Friday]: {
+      [MealType.Breakfast]: undefined,
+      [MealType.Dinner]: undefined,
+      [MealType.Snack]: undefined,
+      [MealType.Supper]: undefined,
+    },
+    [WeekDay.Saturday]: {
+      [MealType.Breakfast]: undefined,
+      [MealType.Dinner]: undefined,
+      [MealType.Snack]: undefined,
+      [MealType.Supper]: undefined,
+    },
+    [WeekDay.Sunday]: {
+      [MealType.Breakfast]: undefined,
+      [MealType.Dinner]: undefined,
+      [MealType.Snack]: undefined,
+      [MealType.Supper]: undefined,
+    },
+  };
+
+  const [state, setState] = useState(initialState);
+
+  useEffect(() => {
+    dispatch(fetchFoodDiariesAction());
+  }, []);
+
+  const handleInputChange = (evt: FormEvent<HTMLInputElement>) => {
+    evt.preventDefault();
+    const inputName = evt.currentTarget.name;
+    const inputValue = evt.currentTarget.value;
+    const weekDay = inputName.match(/.+(?=-)/) as unknown as WeekDay;
+    const mealType = inputName.match(/(?<=-).+/) as unknown as MealType;
+
+    setState((prevSate) => {
+      const updatedWeekDay = {...prevSate[weekDay], [mealType]: inputValue};
+      return {...prevSate, [weekDay]: updatedWeekDay};
+    });
+  };
+
+  const updateFoodDiary = async (id: string, caloriesCount: number) => {
+    dispatch(setDataLoadedStatus(true));
+    await dispatch(updateFoodDiaryAction({
+      id,
+      caloriesCount
+    }));
+    dispatch(fetchFoodDiariesAction());
+    dispatch(setDataLoadedStatus(false));
+  };
+
+  const createFoodDiary = async (weekDay: WeekDay, caloriesCount: number, mealType: MealType) => {
+    dispatch(setDataLoadedStatus(true));
+    await dispatch(createFoodDiaryAction({
+      weekDay,
+      caloriesCount,
+      mealType
+    }));
+    dispatch(fetchFoodDiariesAction());
+    dispatch(setDataLoadedStatus(false));
+  };
+
+  const handleSaveButtonClick = () => {
+    Object.values(WeekDay).forEach((weekDay) => {
+      Object.values(MealType).forEach((mealType) => {
+        const caloriesCountStateValue = state[weekDay][mealType];
+        const respectiveDiaryDatabaseEntry = diaries.find((diary) => diary.weekDay === weekDay && diary.mealType === mealType);
+        if (respectiveDiaryDatabaseEntry && caloriesCountStateValue) {
+          updateFoodDiary(respectiveDiaryDatabaseEntry.id, Number(caloriesCountStateValue));
+        }
+        if (!respectiveDiaryDatabaseEntry && caloriesCountStateValue) {
+          createFoodDiary(
+            weekDay,
+            Number(caloriesCountStateValue),
+            mealType
+          );
+        }
+      });
+    });
+  };
+
   return (
     <>
       <Header />
@@ -52,52 +167,74 @@ function FoodDiary(): JSX.Element {
                               <th className="food-diary__cell food-diary__cell--head">вс</th>
                             </tr>
                             <tr className="food-diary__row">
+                              {
+                                Object.values(WeekDay).map((weekDay) => {
+                                  const diary = diaries.find((item) => item.weekDay === weekDay && item.mealType === MealType.Breakfast);
+                                  return (
+                                    <td key={`${weekDay}-${MealType.Breakfast}`} className="food-diary__cell">
+                                      <div className="food-diary__input">
+                                        <label>
+                                          <input
+                                            onChange={handleInputChange}
+                                            type="number"
+                                            name={`${weekDay}-${MealType.Breakfast}`}
+                                            value={state[weekDay][MealType.Breakfast]}
+                                            defaultValue={diary?.caloriesCount ?? 0}
+                                          />
+                                        </label>
+                                      </div>
+                                    </td>
+                                  );
+                                })
+                              }
+                            </tr>
+                            <tr className="food-diary__row">
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="620"/>
+                                    <input type="number" name="calories" defaultValue="810"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="620"/>
+                                    <input type="number" name="calories" defaultValue="810"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="620"/>
+                                    <input type="number" name="calories" defaultValue="810"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="620"/>
+                                    <input type="number" name="calories" defaultValue="810"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="620"/>
+                                    <input type="number" name="calories" defaultValue="810"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="620"/>
+                                    <input type="number" name="calories" defaultValue="810"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="620"/>
+                                    <input type="number" name="calories" defaultValue="810"/>
                                   </label>
                                 </div>
                               </td>
@@ -106,100 +243,49 @@ function FoodDiary(): JSX.Element {
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="810"/>
+                                    <input type="number" name="calories" defaultValue="770"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="810"/>
+                                    <input type="number" name="calories" defaultValue="770"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="810"/>
+                                    <input type="number" name="calories" defaultValue="770"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="810"/>
+                                    <input type="number" name="calories" defaultValue="770"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="810"/>
+                                    <input type="number" name="calories" defaultValue="770"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="810"/>
+                                    <input type="number" name="calories" defaultValue="770"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="810"/>
-                                  </label>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr className="food-diary__row">
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" value="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" value="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" value="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" value="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" value="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" value="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" value="770"/>
+                                    <input type="number" name="calories" defaultValue="770"/>
                                   </label>
                                 </div>
                               </td>
@@ -208,49 +294,49 @@ function FoodDiary(): JSX.Element {
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="390"/>
+                                    <input type="number" name="calories" defaultValue="390"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="390"/>
+                                    <input type="number" name="calories" defaultValue="390"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="390"/>
+                                    <input type="number" name="calories" defaultValue="390"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="390"/>
+                                    <input type="number" name="calories" defaultValue="390"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="390"/>
+                                    <input type="number" name="calories" defaultValue="390"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="390"/>
+                                    <input type="number" name="calories" defaultValue="390"/>
                                   </label>
                                 </div>
                               </td>
                               <td className="food-diary__cell">
                                 <div className="food-diary__input">
                                   <label>
-                                    <input type="number" name="calories" value="390"/>
+                                    <input type="number" name="calories" defaultValue="390"/>
                                   </label>
                                 </div>
                               </td>
@@ -305,7 +391,12 @@ function FoodDiary(): JSX.Element {
                       </div>
                       <p className="total__number">18 130</p>
                     </div>
-                    <button className="btn food-diary__button" type="button">Сохранить</button>
+                    <button
+                      onClick={handleSaveButtonClick}
+                      className="btn food-diary__button" type="button"
+                    >
+                      Сохранить
+                    </button>
                   </div>
                 </section>
               </div>

@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AxiosInstance, AxiosResponse} from 'axios';
-import {APIRoute, FF_NOTIFIER_URL, FF_SERVICE_URL, FF_USERS_URL} from '../const';
+import {APIRoute, FF_DIARY_URL, FF_NOTIFIER_URL, FF_SERVICE_URL, FF_USERS_URL} from '../const';
 import {UserRdo, UserResponse} from '../types/user.response';
 import {RegisterUserRequestBody} from '../types/register-user-request-body';
 import {AppDispatch, State} from '../types/state';
@@ -29,6 +29,9 @@ import {CreateReviewDto} from '../types/create-review.dto';
 import {CreateGymOrderDto} from '../types/create-gym-order.dto';
 import {GymOrderRdo} from '../types/gym-order.rdo';
 import {GetRecommendedTrainingsQuery} from '../types/get-recommended-trainings.query';
+import {FoodDiaryRdo} from '../types/food-diary.rdo';
+import {CreateFoodDiaryDto} from '../types/create-food-diary.dto';
+import {UpdateFoodDiaryDto} from '../types/update-food-diary.dto';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -548,6 +551,42 @@ export const buyGymMembershipAction = createAsyncThunk<GymOrderRdo, CreateGymOrd
   'buyGymMembershipAction',
   async (createGymOrderDto, {dispatch, extra: api}) => {
     const {data} = await api[0].post<GymOrderRdo>(`${FF_SERVICE_URL}${APIRoute.OrdersGyms}`, createGymOrderDto);
+    return data;
+  },
+);
+
+export const createFoodDiaryAction = createAsyncThunk<FoodDiaryRdo, CreateFoodDiaryDto, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'createFoodDiaryAction',
+  async (createFoodDiaryDto, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<FoodDiaryRdo>(`${FF_DIARY_URL}${APIRoute.FoodDiary}`, createFoodDiaryDto);
+    return data;
+  },
+);
+
+export const updateFoodDiaryAction = createAsyncThunk<FoodDiaryRdo, UpdateFoodDiaryDto & {id: string}, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'updateFoodDiaryAction',
+  async (updateFoodDiaryDto, {dispatch, extra: api}) => {
+    const {data} = await api[0].patch<FoodDiaryRdo>(`${FF_DIARY_URL}${APIRoute.FoodDiary}`, updateFoodDiaryDto);
+    return data;
+  },
+);
+
+export const fetchFoodDiariesAction = createAsyncThunk<FoodDiaryRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchFoodDiariesAction',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<FoodDiaryRdo[]>(`${FF_DIARY_URL}${APIRoute.FoodDiary}`);
     return data;
   },
 );

@@ -5,11 +5,13 @@ import {userData} from './user-data/user-data';
 import {appData} from './app-data/app-data';
 import {trainingData} from './training-data/training-data';
 import {gymsData} from './gyms-data/gyms-data';
+import {diariesData} from './diaries-data/diaries-data';
 
 export const rootReducer = combineReducers({
   [ReducerNameSpace.AuthProcess]: authProcess.reducer,
   [ReducerNameSpace.UserData]: userData.reducer,
   [ReducerNameSpace.AppData]: appData.reducer,
   [ReducerNameSpace.TrainingData]: trainingData.reducer,
-  [ReducerNameSpace.GymsData]: gymsData.reducer
+  [ReducerNameSpace.GymsData]: gymsData.reducer,
+  [ReducerNameSpace.DiariesData]: diariesData.reducer,
 });

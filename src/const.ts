@@ -33,6 +33,8 @@ export const FF_USERS_URL = 'http://localhost:5678';
 
 export const FF_SERVICE_URL = 'http://localhost:5679';
 
+export const FF_DIARY_URL = 'http://localhost:5680';
+
 export const FF_NOTIFIER_URL = 'http://localhost:5681';
 
 export enum APIRoute {
@@ -66,7 +68,8 @@ export enum APIRoute {
   RemoveGymFromFavorites = '/gyms/favorites/remove',
   Subscription = '/subscription',
   SubscriptionStatus = '/subscription/status',
-  Reviews = '/reviews'
+  Reviews = '/reviews',
+  FoodDiary = '/food-diary',
 }
 
 export enum AuthorizationStatus {
@@ -80,7 +83,8 @@ export enum ReducerNameSpace {
   UserData = 'USER_DATA',
   AppData = 'APP_DATA',
   TrainingData = 'TRAINING_DATA',
-  GymsData = 'GYMS_DATA'
+  GymsData = 'GYMS_DATA',
+  DiariesData = 'DIARIES_DATA',
 }
 
 export const TrainingTypeImageMap = {
