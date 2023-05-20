@@ -1,99 +1,41 @@
+import {useAppSelector} from '../../hooks';
+import SpecialOffersItem from '../special-offers-item/special-offers-item';
 import ThumbnailSpecGym from '../thumbnail-spec-gym/thumbnail-spec-gym';
+import {getTrainingCatalog} from '../../store/training-data/selectors';
+import {nanoid} from 'nanoid';
+import {useState} from 'react';
+
+/* export enum ActiveSliderPosition {
+  First = 'first',
+  Second = 'second',
+  Third = 'third',
+} */
 
 function SpecialOffers(): JSX.Element {
+  const specialOffers = useAppSelector(getTrainingCatalog).filter((training) => training.isSpecialOffer);
+
+  const [activeSliderPosition, setActiveSliderPosition] = useState(0);
+
   return (
     <section className="special-offers">
       <div className="container">
         <div className="special-offers__wrapper">
           <h2 className="visually-hidden">Специальные предложения</h2>
           <ul className="special-offers__list">
-            <li className="special-offers__item is-active">
-              <aside className="promo-slider">
-                <div className="promo-slider__overlay"></div>
-                <div className="promo-slider__image">
-                  <img src="img/content/promo-1.png" srcSet="img/content/promo-1@2x.png 2x" width="1040" height="469" alt="promo"/>
-                </div>
-                <div className="promo-slider__header">
-                  <h3 className="promo-slider__title">Fitball</h3>
-                  <div className="promo-slider__logo">
-                    <svg width="74" height="74" aria-hidden="true">
-                      <use xlinkHref="#logotype"></use>
-                    </svg>
-                  </div>
-                </div>
-                <span className="promo-slider__text">Горячие предложения на тренировки на фитболе</span>
-                <div className="promo-slider__bottom-container">
-                  <div className="promo-slider__slider-dots">
-                    <button className="promo-slider__slider-dot--active promo-slider__slider-dot" aria-label="первый слайд"></button>
-                    <button className="promo-slider__slider-dot" aria-label="второй слайд"></button>
-                    <button className="promo-slider__slider-dot" aria-label="третий слайд"></button>
-                  </div>
-                  <div className="promo-slider__price-container">
-                    <p className="promo-slider__price">1600 ₽</p>
-                    <p className="promo-slider__sup">за занятие</p>
-                    <p className="promo-slider__old-price">2000 ₽</p>
-                  </div>
-                </div>
-              </aside>
-            </li>
-            <li className="special-offers__item">
-              <aside className="promo-slider">
-                <div className="promo-slider__overlay"></div>
-                <div className="promo-slider__image">
-                  <img src="img/content/promo-2.png" srcSet="img/content/promo-2@2x.png 2x" width="1040" height="469" alt="promo"/>
-                </div>
-                <div className="promo-slider__header">
-                  <h3 className="promo-slider__title">Fleksbend</h3>
-                  <div className="promo-slider__logo">
-                    <svg width="74" height="74" aria-hidden="true">
-                      <use xlinkHref="#logotype"></use>
-                    </svg>
-                  </div>
-                </div>
-                <span className="promo-slider__text">Горячие предложения на&nbsp;Тренировки с&nbsp;резинкой для фитнеса</span>
-                <div className="promo-slider__bottom-container">
-                  <div className="promo-slider__slider-dots">
-                    <button className="promo-slider__slider-dot" aria-label="первый слайд"></button>
-                    <button className="promo-slider__slider-dot--active promo-slider__slider-dot" aria-label="второй слайд"></button>
-                    <button className="promo-slider__slider-dot" aria-label="третий слайд"></button>
-                  </div>
-                  <div className="promo-slider__price-container">
-                    <p className="promo-slider__price">2400 ₽</p>
-                    <p className="promo-slider__sup">за занятие</p>
-                    <p className="promo-slider__old-price">2800 ₽</p>
-                  </div>
-                </div>
-              </aside>
-            </li>
-            <li className="special-offers__item">
-              <aside className="promo-slider">
-                <div className="promo-slider__overlay"></div>
-                <div className="promo-slider__image">
-                  <img src="img/content/promo-3.png" srcSet="img/content/promo-3@2x.png 2x" width="1040" height="469" alt="promo"/>
-                </div>
-                <div className="promo-slider__header">
-                  <h3 className="promo-slider__title">Full Body Stretch</h3>
-                  <div className="promo-slider__logo">
-                    <svg width="74" height="74" aria-hidden="true">
-                      <use xlinkHref="#logotype"></use>
-                    </svg>
-                  </div>
-                </div>
-                <span className="promo-slider__text">Горячие предложения на&nbsp;Комплекс упражнений на&nbsp;растяжку всего тела для новичков</span>
-                <div className="promo-slider__bottom-container">
-                  <div className="promo-slider__slider-dots">
-                    <button className="promo-slider__slider-dot" aria-label="первый слайд"></button>
-                    <button className="promo-slider__slider-dot" aria-label="второй слайд"></button>
-                    <button className="promo-slider__slider-dot--active promo-slider__slider-dot" aria-label="третий слайд"></button>
-                  </div>
-                  <div className="promo-slider__price-container">
-                    <p className="promo-slider__price">1800 ₽</p>
-                    <p className="promo-slider__sup">за занятие</p>
-                    <p className="promo-slider__old-price">2200 ₽</p>
-                  </div>
-                </div>
-              </aside>
-            </li>
+            {
+              specialOffers.map((offer, index) => (
+                <li
+                  key={nanoid()}
+                  className={`special-offers__item ${index === activeSliderPosition ? 'is-active' : ''}`}
+                >
+                  <SpecialOffersItem
+                    offer={offer}
+                    activeSliderPosition={activeSliderPosition}
+                    setActiveSliderPosition={setActiveSliderPosition}
+                  />
+                </li>
+              ))
+            }
           </ul>
           <ThumbnailSpecGym />
         </div>

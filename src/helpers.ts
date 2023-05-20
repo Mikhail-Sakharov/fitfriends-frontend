@@ -65,6 +65,7 @@ export const getQueryString = (queryArgs?: GetTrainingsQuery & GetGymsQuery & Ge
   const isNotEmptyString = queryParams.filter((param) => param !== '').join('') !== '';
 
   const queryString = isNotEmptyString ? `?${queryParams.filter((param) => param !== '').join('&')}` : '';
+
   return queryString;
 };
 

@@ -1,6 +1,7 @@
 import Header from '../../components/header/header';
 import ReviewsList from '../../components/reviews-list/reviews-list';
 import {
+  DISCOUNT,
   FF_SERVICE_URL,
   FF_USERS_URL,
   TrainingDescriptionLength,
@@ -417,7 +418,9 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                                   <svg width="14" height="14" aria-hidden="true">
                                     <use xlinkHref="#icon-discount"></use>
                                   </svg>
-                                  <span>Сделать скидку 10%</span>
+                                  <span>
+                                    {`Сделать скидку ${DISCOUNT}%`}
+                                  </span>
                                 </button>
                               )
                           }

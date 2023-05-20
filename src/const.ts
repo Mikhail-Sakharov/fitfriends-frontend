@@ -108,6 +108,8 @@ export const AVATAR_MAX_SIZE = 1000000;
 
 export const VIDEO_FILE_TYPES = ['mov', 'avi', 'mp4'];
 
+export const DISCOUNT = 10;
+
 export const MAX_CERTIFICATES_COUNT_PER_PAGE = 3;
 
 export const MAX_POPUP_CERTIFICATES_COUNT_PER_PAGE = 1;
