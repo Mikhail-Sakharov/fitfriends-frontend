@@ -6,6 +6,7 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {createFoodDiaryAction, fetchFoodDiariesAction, updateFoodDiaryAction} from '../../store/api-actions';
 import {getFoodDiaries} from '../../store/diaries-data/selectors';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
+import {nanoid} from 'nanoid';
 
 function FoodDiary(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -61,7 +62,7 @@ function FoodDiary(): JSX.Element {
 
   useEffect(() => {
     dispatch(fetchFoodDiariesAction());
-  }, []);
+  }, [dispatch]);
 
   const handleInputChange = (evt: FormEvent<HTMLInputElement>) => {
     evt.preventDefault();
@@ -189,194 +190,88 @@ function FoodDiary(): JSX.Element {
                               }
                             </tr>
                             <tr className="food-diary__row">
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="810"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="810"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="810"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="810"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="810"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="810"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="810"/>
-                                  </label>
-                                </div>
-                              </td>
+                              {
+                                Object.values(WeekDay).map((weekDay) => {
+                                  const diary = diaries.find((item) => item.weekDay === weekDay && item.mealType === MealType.Dinner);
+                                  return (
+                                    <td key={`${weekDay}-${MealType.Dinner}`} className="food-diary__cell">
+                                      <div className="food-diary__input">
+                                        <label>
+                                          <input
+                                            onChange={handleInputChange}
+                                            type="number"
+                                            name={`${weekDay}-${MealType.Dinner}`}
+                                            value={state[weekDay][MealType.Dinner]}
+                                            defaultValue={diary?.caloriesCount ?? 0}
+                                          />
+                                        </label>
+                                      </div>
+                                    </td>
+                                  );
+                                })
+                              }
                             </tr>
                             <tr className="food-diary__row">
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="770"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="770"/>
-                                  </label>
-                                </div>
-                              </td>
+                              {
+                                Object.values(WeekDay).map((weekDay) => {
+                                  const diary = diaries.find((item) => item.weekDay === weekDay && item.mealType === MealType.Supper);
+                                  return (
+                                    <td key={`${weekDay}-${MealType.Supper}`} className="food-diary__cell">
+                                      <div className="food-diary__input">
+                                        <label>
+                                          <input
+                                            onChange={handleInputChange}
+                                            type="number"
+                                            name={`${weekDay}-${MealType.Supper}`}
+                                            value={state[weekDay][MealType.Supper]}
+                                            defaultValue={diary?.caloriesCount ?? 0}
+                                          />
+                                        </label>
+                                      </div>
+                                    </td>
+                                  );
+                                })
+                              }
                             </tr>
                             <tr className="food-diary__row">
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="390"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="390"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="390"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="390"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="390"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="390"/>
-                                  </label>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__input">
-                                  <label>
-                                    <input type="number" name="calories" defaultValue="390"/>
-                                  </label>
-                                </div>
-                              </td>
+                              {
+                                Object.values(WeekDay).map((weekDay) => {
+                                  const diary = diaries.find((item) => item.weekDay === weekDay && item.mealType === MealType.Snack);
+                                  return (
+                                    <td key={`${weekDay}-${MealType.Snack}`} className="food-diary__cell">
+                                      <div className="food-diary__input">
+                                        <label>
+                                          <input
+                                            onChange={handleInputChange}
+                                            type="number"
+                                            name={`${weekDay}-${MealType.Snack}`}
+                                            value={state[weekDay][MealType.Snack]}
+                                            defaultValue={diary?.caloriesCount ?? 0}
+                                          />
+                                        </label>
+                                      </div>
+                                    </td>
+                                  );
+                                })
+                              }
                             </tr>
                             <tr className="food-diary__row">
-                              <td className="food-diary__cell">
-                                <div className="food-diary__total-value">
-                                  <span>2 590</span>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__total-value">
-                                  <span>2 590</span>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__total-value">
-                                  <span>2 590</span>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__total-value">
-                                  <span>2 590</span>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__total-value">
-                                  <span>2 590</span>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__total-value">
-                                  <span>2 590</span>
-                                </div>
-                              </td>
-                              <td className="food-diary__cell">
-                                <div className="food-diary__total-value">
-                                  <span>2 590</span>
-                                </div>
-                              </td>
+                              {
+                                Object.values(WeekDay).map((weekDay) => (
+                                  <td key={nanoid()} className="food-diary__cell">
+                                    <div className="food-diary__total-value">
+                                      <span>
+                                        {
+                                          diaries
+                                            .filter((diary) => diary.weekDay === weekDay)
+                                            .reduce((res, diary) => res + diary.caloriesCount, 0)
+                                            .toLocaleString()
+                                        }
+                                      </span>
+                                    </div>
+                                  </td>
+                                ))
+                              }
                             </tr>
                           </table>
                         </form>
@@ -389,7 +284,11 @@ function FoodDiary(): JSX.Element {
                           <use xlinkHref="#icon-chart-with-arrow"></use>
                         </svg>
                       </div>
-                      <p className="total__number">18 130</p>
+                      <p className="total__number">
+                        {
+                          diaries.reduce((res, diary) => res + diary.caloriesCount, 0).toLocaleString()
+                        }
+                      </p>
                     </div>
                     <button
                       onClick={handleSaveButtonClick}

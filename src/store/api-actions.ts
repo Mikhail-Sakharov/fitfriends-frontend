@@ -574,7 +574,10 @@ export const updateFoodDiaryAction = createAsyncThunk<FoodDiaryRdo, UpdateFoodDi
 }>(
   'updateFoodDiaryAction',
   async (updateFoodDiaryDto, {dispatch, extra: api}) => {
-    const {data} = await api[0].patch<FoodDiaryRdo>(`${FF_DIARY_URL}${APIRoute.FoodDiary}`, updateFoodDiaryDto);
+    const {data} = await api[0].patch<FoodDiaryRdo>(
+      `${FF_DIARY_URL}${APIRoute.FoodDiary}/${updateFoodDiaryDto.id}`,
+      updateFoodDiaryDto
+    );
     return data;
   },
 );
