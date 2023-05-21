@@ -161,6 +161,8 @@ export const MAX_PROGRESS_DASHBOARD_ITEMS_PER_PAGE = 4;
 
 export const MAX_PROGRESS_DASHBOARD_ITEMS_COUNT = 7;
 
+export const DAYS_IN_A_WEEK = 7;
+
 export const URL_MARKER = '../img/sprite/icon-pin.svg';
 
 export const UserDailyCaloriesCount = {

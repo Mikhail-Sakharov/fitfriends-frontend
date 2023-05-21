@@ -3,6 +3,7 @@ import Header from '../../components/header/header';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {
   getAvatar,
+  getDailyCaloriesCount,
   getDescription,
   getGender,
   getIsReadyToGetTrained,
@@ -16,6 +17,7 @@ import {
   AVATAR_MAX_SIZE,
   AppRoute,
   CoachDescriptionLength,
+  DAYS_IN_A_WEEK,
   FF_USERS_URL,
   TrainingTypesCount,
   UserNameLength
@@ -42,6 +44,8 @@ function PersonalAccountUser(): JSX.Element {
   const trainingLevelInitialValue = useAppSelector(getTrainingLevel);
   const locationInitialValue = useAppSelector(getLocation);
   const genderInitialValue = useAppSelector(getGender);
+  const userDailyCaloriesCount = useAppSelector(getDailyCaloriesCount) ?? 0;
+  const planForWeekCaloriesCount = userDailyCaloriesCount * DAYS_IN_A_WEEK ?? 0;
 
   const [isContentEditable, setIsContentEditable] = useState(false);
 
@@ -524,13 +528,19 @@ function PersonalAccountUser(): JSX.Element {
                         <div className="personal-account-user__input">
                           <label>
                             <span className="personal-account-user__label">План на день, ккал</span>
-                            <input type="text" name="schedule-for-the-day" value="3 300"/>
+                            <input
+                              type="text" name="schedule-for-the-day"
+                              defaultValue={userDailyCaloriesCount}
+                            />
                           </label>
                         </div>
                         <div className="personal-account-user__input">
                           <label>
                             <span className="personal-account-user__label">План на неделю, ккал</span>
-                            <input type="text" name="schedule-for-the-week" value="23 100"/>
+                            <input
+                              type="text" name="schedule-for-the-week"
+                              defaultValue={planForWeekCaloriesCount}
+                            />
                           </label>
                         </div>
                       </div>
