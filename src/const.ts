@@ -101,6 +101,8 @@ export const TrainingTypeImageMap = {
 
 export const RATING_VALUES = [1, 2, 3, 4, 5];
 
+export const WEEK_DAYS = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+
 export const FILTER_QUERY_DELAY = 1000;
 
 export const EMAIL_REG_EXP = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
@@ -154,6 +156,10 @@ export const MAX_DIFF_IN_MILLISECONDS = 900000;
 export const MIN_CALORIES_COUNT_COEFFICIENT = 0.8;
 
 export const MAX_CALORIES_COUNT_COEFFICIENT = 1.2;
+
+export const MAX_PROGRESS_DASHBOARD_ITEMS_PER_PAGE = 4;
+
+export const MAX_PROGRESS_DASHBOARD_ITEMS_COUNT = 7;
 
 export const URL_MARKER = '../img/sprite/icon-pin.svg';
 
