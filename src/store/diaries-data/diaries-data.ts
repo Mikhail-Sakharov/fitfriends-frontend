@@ -1,14 +1,17 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {ReducerNameSpace} from '../../const';
-import {fetchFoodDiariesAction} from '../api-actions';
+import {fetchFoodDiariesAction, fetchTrainingDiariesAction} from '../api-actions';
 import {FoodDiaryRdo} from '../../types/food-diary.rdo';
+import {TrainingsDiaryRdo} from '../../types/trainings-diary.rdo';
 
 type DiariesData = {
   foodDiaries: FoodDiaryRdo[];
+  trainingDiaries: TrainingsDiaryRdo[];
 };
 
 const initialState: DiariesData = {
-  foodDiaries: []
+  foodDiaries: [],
+  trainingDiaries: []
 };
 
 export const diariesData = createSlice({
@@ -19,6 +22,9 @@ export const diariesData = createSlice({
     builder
       .addCase(fetchFoodDiariesAction.fulfilled, (state, action) => {
         state.foodDiaries = action.payload;
+      })
+      .addCase(fetchTrainingDiariesAction.fulfilled, (state, action) => {
+        state.trainingDiaries = action.payload;
       });
   }
 });

@@ -32,6 +32,8 @@ import {GetRecommendedTrainingsQuery} from '../types/get-recommended-trainings.q
 import {FoodDiaryRdo} from '../types/food-diary.rdo';
 import {CreateFoodDiaryDto} from '../types/create-food-diary.dto';
 import {UpdateFoodDiaryDto} from '../types/update-food-diary.dto';
+import {TrainingsDiaryRdo} from '../types/trainings-diary.rdo';
+import {CreateTrainingsDiaryDto} from '../types/create-trainings-diary.dto';
 
 type UploadVideoFileDto = {
   videoFileFormData: FormData;
@@ -590,6 +592,33 @@ export const fetchFoodDiariesAction = createAsyncThunk<FoodDiaryRdo[], undefined
   'fetchFoodDiariesAction',
   async (_arg, {dispatch, extra: api}) => {
     const {data} = await api[0].get<FoodDiaryRdo[]>(`${FF_DIARY_URL}${APIRoute.FoodDiary}`);
+    return data;
+  },
+);
+
+export const createTrainingDiaryAction = createAsyncThunk<TrainingsDiaryRdo, CreateTrainingsDiaryDto, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'createTrainingDiaryAction',
+  async (createTrainingsDiaryDto, {dispatch, extra: api}) => {
+    const {data} = await api[0].post<TrainingsDiaryRdo>(
+      `${FF_DIARY_URL}${APIRoute.TrainingsDiary}`,
+      createTrainingsDiaryDto
+    );
+    return data;
+  },
+);
+
+export const fetchTrainingDiariesAction = createAsyncThunk<TrainingsDiaryRdo[], undefined, {
+  dispatch: AppDispatch;
+  state: State;
+  extra: AxiosInstance[];
+}>(
+  'fetchTrainingDiariesAction',
+  async (_arg, {dispatch, extra: api}) => {
+    const {data} = await api[0].get<TrainingsDiaryRdo[]>(`${FF_DIARY_URL}${APIRoute.TrainingsDiary}`);
     return data;
   },
 );

@@ -7,9 +7,12 @@ import {createFoodDiaryAction, fetchFoodDiariesAction, updateFoodDiaryAction} fr
 import {getFoodDiaries} from '../../store/diaries-data/selectors';
 import {setDataLoadedStatus} from '../../store/app-data/app-data';
 import {nanoid} from 'nanoid';
+import {useNavigate} from 'react-router-dom';
+import {AppRoute} from '../../const';
 
 function FoodDiary(): JSX.Element {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const diaries = useAppSelector(getFoodDiaries);
 
@@ -124,7 +127,10 @@ function FoodDiary(): JSX.Element {
         <div className="inner-page inner-page--no-sidebar">
           <div className="container">
             <div className="inner-page__wrapper">
-              <button className="btn-flat inner-page__back" type="button">
+              <button
+                onClick={() => navigate(AppRoute.PersonalAccountUser)}
+                className="btn-flat inner-page__back" type="button"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-left"></use>
                 </svg>

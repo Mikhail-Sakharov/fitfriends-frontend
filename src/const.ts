@@ -70,6 +70,7 @@ export enum APIRoute {
   SubscriptionStatus = '/subscription/status',
   Reviews = '/reviews',
   FoodDiary = '/food-diary',
+  TrainingsDiary = '/trainings-diary'
 }
 
 export enum AuthorizationStatus {

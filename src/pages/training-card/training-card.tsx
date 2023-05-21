@@ -16,6 +16,7 @@ import {getCurrentTraining, getUserInfo} from '../../store/training-data/selecto
 import {ChangeEvent, useEffect, useRef, useState} from 'react';
 import {getTrainingId} from '../../helpers';
 import {
+  createTrainingDiaryAction,
   decrementTrainingAction,
   fetchMyPurchasesAction,
   fetchTrainingInfoAction,
@@ -55,6 +56,8 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
     `#${training ? training.caloriesCount : ''}ккал`,
     `#${training ? training.duration : ''}`
   ];
+
+  const [startTrainingTime, setStartTrainingTime] = useState<Date | null>(null);
 
   const [isBuyTrainingModalOpened, setIsBuyTrainingModalOpened] = useState(false);
 
@@ -253,7 +256,22 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
 
   const handleStartTrainingButtonClick = () => {
     setTrainingStarted(true);
+    setStartTrainingTime(new Date());
     decrementTraining();
+  };
+
+  const handleStopTrainingButtonClick = () => {
+    setTrainingStarted(false);
+    if (training && startTrainingTime) {
+      const duration = Math.ceil(((new Date()).getTime() - (new Date(startTrainingTime)).getTime()) / 60000);
+
+      dispatch(createTrainingDiaryAction({
+        trainingId: training.id,
+        trainingTitle: training.title,
+        caloriesCount: training.caloriesCount,
+        duration
+      }));
+    }
   };
 
   return (
@@ -513,7 +531,7 @@ function TrainingCard({userRole}: TrainingCardProps): JSX.Element {
                       trainingStarted
                         ? (
                           <button
-                            onClick={() => setTrainingStarted(false)}
+                            onClick={handleStopTrainingButtonClick}
                             className="btn training-video__button" type="button"
                           >
                             Закончить

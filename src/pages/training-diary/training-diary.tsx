@@ -1,6 +1,33 @@
+import {useNavigate} from 'react-router-dom';
 import Header from '../../components/header/header';
+import {AppRoute} from '../../const';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {useEffect} from 'react';
+import {fetchTrainingDiariesAction} from '../../store/api-actions';
+import {getTrainingDiaries} from '../../store/diaries-data/selectors';
+import {nanoid} from 'nanoid';
+import {WeekDay, WeekDayMap} from '../../types/week-day.enum';
+import {TrainingsDiaryRdo} from '../../types/trainings-diary.rdo';
 
 function TrainingDiary(): JSX.Element {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const trainingDiaries = useAppSelector(getTrainingDiaries);
+
+  const trainingDiariesMap = new Map();
+  const trainingIdsSet = new Set(trainingDiaries.map((trainingDiary) => trainingDiary.trainingId));
+
+  trainingIdsSet.forEach((trainingId) => {
+    trainingDiariesMap.set(trainingId, trainingDiaries.filter((trainingDiary) => trainingDiary.trainingId === trainingId));
+  });
+
+  const iterableDiaries = Object.fromEntries(trainingDiariesMap) as {[key: string]: TrainingsDiaryRdo[]};
+
+  useEffect(() => {
+    dispatch(fetchTrainingDiariesAction());
+  }, [dispatch]);
+
   return (
     <>
       <Header />
@@ -8,7 +35,10 @@ function TrainingDiary(): JSX.Element {
         <div className="inner-page inner-page--no-sidebar">
           <div className="container">
             <div className="inner-page__wrapper">
-              <button className="btn-flat inner-page__back" type="button">
+              <button
+                onClick={() => navigate(AppRoute.PersonalAccountUser)}
+                className="btn-flat inner-page__back" type="button"
+              >
                 <svg width="14" height="10" aria-hidden="true">
                   <use xlinkHref="#arrow-left"></use>
                 </svg>
@@ -24,48 +54,32 @@ function TrainingDiary(): JSX.Element {
                           <use xlinkHref="#icon-ranking"></use>
                         </svg>
                         <ul className="training-diary__list">
-                          <li className="training-diary__item">
-                            <span>Тренировка 1</span>
-                            <ul className="training-diary__sublist">
-                              <li className="training-diary__subitem">
-                                <span>Калории</span>
+                          {
+                            Object.entries(iterableDiaries).map((entry) => (
+                              <li key={nanoid()} className="training-diary__item">
+                                <span>
+                                  {entry[1][0].trainingTitle}
+                                </span>
+                                <ul className="training-diary__sublist">
+                                  <li className="training-diary__subitem">
+                                    <span>Калории, ккал</span>
+                                  </li>
+                                  <li className="training-diary__subitem">
+                                    <span>Время, мин</span>
+                                  </li>
+                                </ul>
                               </li>
-                              <li className="training-diary__subitem">
-                                <span>Время</span>
-                              </li>
-                            </ul>
-                          </li>
-                          <li className="training-diary__item">
-                            <span>Тренировка 2</span>
-                            <ul className="training-diary__sublist">
-                              <li className="training-diary__subitem">
-                                <span>Калории</span>
-                              </li>
-                              <li className="training-diary__subitem">
-                                <span>Время</span>
-                              </li>
-                            </ul>
-                          </li>
-                          <li className="training-diary__item">
-                            <span>Тренировка 3</span>
-                            <ul className="training-diary__sublist">
-                              <li className="training-diary__subitem">
-                                <span>Калории</span>
-                              </li>
-                              <li className="training-diary__subitem">
-                                <span>Время</span>
-                              </li>
-                            </ul>
-                          </li>
+                            ))
+                          }
                         </ul>
                         <div className="training-diary__total">
                           <p className="training-diary__total-label">Итого</p>
                           <ul className="training-diary__total-list">
                             <li className="training-diary__total-item">
-                              <span>Калории</span>
+                              <span>Калории, ккал</span>
                             </li>
                             <li className="training-diary__total-item">
-                              <span>Время</span>
+                              <span>Время, мин</span>
                             </li>
                           </ul>
                         </div>
@@ -81,253 +95,81 @@ function TrainingDiary(): JSX.Element {
                             <th className="training-diary__cell training-diary__cell--head">сб</th>
                             <th className="training-diary__cell training-diary__cell--head">вс</th>
                           </tr>
+                          {
+                            Object.entries(iterableDiaries).map((entry) => (
+                              <>
+                                <tr key={nanoid()} className="training-diary__row">
+                                  {
+                                    Object.values(WeekDay).map((weekDay) => (
+                                      <td key={nanoid()} className="training-diary__cell">
+                                        <div className="training-diary__data">
+                                          <span>
+                                            {
+                                              entry[1]
+                                                .filter((item) => (new Date(item.createdAt)).getDay() === WeekDayMap[weekDay])
+                                                .reduce((res, item) => res + item.caloriesCount, 0).toLocaleString()
+                                            }
+                                          </span>
+                                        </div>
+                                      </td>
+                                    ))
+                                  }
+                                </tr>
+                                <tr key={nanoid()} className="training-diary__row">
+                                  {
+                                    Object.values(WeekDay).map((weekDay) => (
+                                      <td key={nanoid()} className="training-diary__cell">
+                                        <div className="training-diary__data">
+                                          <span>
+                                            {
+                                              entry[1]
+                                                .filter((item) => (new Date(item.createdAt)).getDay() === WeekDayMap[weekDay])
+                                                .reduce((res, item) => res + item.duration, 0).toLocaleString()
+                                            }
+                                          </span>
+                                        </div>
+                                      </td>
+                                    ))
+                                  }
+                                </tr>
+                              </>
+                            ))
+                          }
                           <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>620</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>320</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>700</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>620</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>320</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>700</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>620</span>
-                              </div>
-                            </td>
+                            {
+                              Object.values(WeekDay).map((weekDay) => (
+                                <td key={nanoid()} className="training-diary__cell">
+                                  <div className="training-diary__data training-diary__data--total">
+                                    <span>
+                                      {
+                                        Object.values(iterableDiaries)
+                                          .reduce((res, diaryGroup) => res.concat(diaryGroup), [])
+                                          .filter((diary) => (new Date(diary.createdAt)).getDay() === WeekDayMap[weekDay])
+                                          .reduce((res, diary) => res + diary.caloriesCount, 0).toLocaleString()
+                                      }
+                                    </span>
+                                  </div>
+                                </td>
+                              ))
+                            }
                           </tr>
                           <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>30</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>30</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>90</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>30</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>30</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>30</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>30</span>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>410</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>810</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>410</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>810</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>410</span>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>60</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>60</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>60</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>60</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>60</span>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>830</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>830</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>830</span>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>90</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>90</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell"></td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data">
-                                <span>90</span>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>1860</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>1130</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>700</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>1860</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>1130</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>700</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>1860</span>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr className="training-diary__row">
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>180</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>90</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>90</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>180</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>90</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>30</span>
-                              </div>
-                            </td>
-                            <td className="training-diary__cell">
-                              <div className="training-diary__data training-diary__data--total">
-                                <span>180</span>
-                              </div>
-                            </td>
+                            {
+                              Object.values(WeekDay).map((weekDay) => (
+                                <td key={nanoid()} className="training-diary__cell">
+                                  <div className="training-diary__data training-diary__data--total">
+                                    <span>
+                                      {
+                                        Object.values(iterableDiaries)
+                                          .reduce((res, diaryGroup) => res.concat(diaryGroup), [])
+                                          .filter((diary) => (new Date(diary.createdAt)).getDay() === WeekDayMap[weekDay])
+                                          .reduce((res, diary) => res + diary.duration, 0).toLocaleString()
+                                      }
+                                    </span>
+                                  </div>
+                                </td>
+                              ))
+                            }
                           </tr>
                         </table>
                       </div>
@@ -341,12 +183,24 @@ function TrainingDiary(): JSX.Element {
                       </div>
                       <dl className="total__result">
                         <div className="total__item">
-                          <dt className="total__label">Калории</dt>
-                          <dd className="total__number">9 240</dd>
+                          <dt className="total__label">Калории, ккал</dt>
+                          <dd className="total__number">
+                            {
+                              Object.values(iterableDiaries)
+                                .reduce((res, diaryGroup) => res.concat(diaryGroup), [])
+                                .reduce((res, diary) => res + diary.caloriesCount, 0).toLocaleString()
+                            }
+                          </dd>
                         </div>
                         <div className="total__item">
-                          <dt className="total__label">Время</dt>
-                          <dd className="total__number">840</dd>
+                          <dt className="total__label">Время, мин</dt>
+                          <dd className="total__number">
+                            {
+                              Object.values(iterableDiaries)
+                                .reduce((res, diaryGroup) => res.concat(diaryGroup), [])
+                                .reduce((res, diary) => res + diary.duration, 0).toLocaleString()
+                            }
+                          </dd>
                         </div>
                       </dl>
                     </div>
