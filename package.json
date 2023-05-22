@@ -30,6 +30,10 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .tsx --ext .ts src/"
   },
+  "jest": {
+    "transform": {},
+    "transformIgnorePatterns": []
+  },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
     "plugins": [
