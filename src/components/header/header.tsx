@@ -1,5 +1,4 @@
 import {Link, useLocation} from 'react-router-dom';
-import {dropTokens} from '../../services/tokens';
 import {useEffect} from 'react';
 import {useAppDispatch, useAppSelector} from '../../hooks';
 import {deleteNotificationAction, fetchNotificationsAction} from '../../store/api-actions';
@@ -15,13 +14,6 @@ function Header(): JSX.Element {
   const pathName = location.pathname;
 
   const notifications = useAppSelector(getNotifications);
-
-  // Временно. Удалить!
-  //-------------------------------------------------------
-  const handleExitButtonClick = () => {
-    dropTokens();
-  };
-  //-------------------------------------------------------
 
   const dispatchDeleteNotification = async (notificationId: string) => {
     await dispatch(deleteNotificationAction(notificationId));
@@ -121,16 +113,6 @@ function Header(): JSX.Element {
                   }
                 </ul>
               </div>
-            </li>
-            <li
-              onClick={handleExitButtonClick}
-              className="main-nav__item"
-            >
-              <Link className="main-nav__link" to="#" aria-label="Выход (временно, удалить)">
-                <svg width="16" height="18" aria-hidden="true">
-                  <use xlinkHref="#icon-wallet"></use>
-                </svg>
-              </Link>
             </li>
           </ul>
         </nav>
