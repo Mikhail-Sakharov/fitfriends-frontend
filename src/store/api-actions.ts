@@ -444,7 +444,7 @@ export const fetchRecommendedTrainingsAction = createAsyncThunk<TrainingRdo[], G
   },
 );
 
-export const fetchUsersCatalogAction = createAsyncThunk<UserRdo[][], GetUsersQuery, {
+export const fetchUsersCatalogAction = createAsyncThunk<UserRdo[][], GetUsersQuery | undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance[];

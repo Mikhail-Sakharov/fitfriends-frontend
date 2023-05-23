@@ -47,6 +47,38 @@ import {
   uploadCertificateAction
 } from './api-actions';
 import {api} from '.';
+import UpdateTrainingDto from '../types/update-training.dto';
+import {UserRequestType} from '../types/user-request-type.enum';
+import {Status} from '../types/status.enum';
+import {SubwayStation} from '../types/subway-station.enum';
+import CreateOrderDto from '../types/create-order.dto';
+import {CreateReviewDto} from '../types/create-review.dto';
+import {CreateGymOrderDto} from '../types/create-gym-order.dto';
+import {CreateFoodDiaryDto} from '../types/create-food-diary.dto';
+import {CreateTrainingsDiaryDto} from '../types/create-trainings-diary.dto';
+import UpdateUserDto from '../types/update-user.dto';
+import {GetUsersQuery} from '../types/get-users.query';
+import {getQueryString} from '../helpers';
+
+type UploadVideoFileDto = {
+  videoFileFormData: FormData;
+  createdTrainingId: string;
+};
+
+type UpdateTrainingArgs = {
+  trainingId: string;
+  updateTrainingDto: UpdateTrainingDto;
+};
+
+type TrainingRequestDto = {
+  type: UserRequestType;
+  userId: string;
+};
+
+type ChangeRequestStatusDto = {
+  trainingRequestStatus: Status;
+  requestId: string;
+};
 
 describe('Async actions', () => {
   const mockAPI = new MockAdapter(api);
@@ -65,7 +97,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchMyFriendsAction());
+    await store.dispatch(fetchMyFriendsAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -83,7 +115,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchIncomingUserRequestsForTraining());
+    await store.dispatch(fetchIncomingUserRequestsForTraining() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -101,7 +133,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchOutgoingUserRequestsForTraining());
+    await store.dispatch(fetchOutgoingUserRequestsForTraining() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -113,13 +145,14 @@ describe('Async actions', () => {
 
   it('sendTrainingRequestAction', async () => {
     const store = mockStore();
+    const dto = {} as TrainingRequestDto;
     mockAPI
       .onPost(`${FF_NOTIFIER_URL}${APIRoute.UserRequests}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(sendTrainingRequestAction());
+    await store.dispatch(sendTrainingRequestAction(dto) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -139,9 +172,9 @@ describe('Async actions', () => {
     expect(store.getActions()).toEqual([]);
 
     await store.dispatch(changeTrainingRequestStatusAction({
-      trainingRequestStatus: '',
+      trainingRequestStatus: Status.Accepted,
       requestId
-    }));
+    }) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -159,7 +192,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchNotificationsAction());
+    await store.dispatch(fetchNotificationsAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -178,7 +211,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(deleteNotificationAction(notificationId));
+    await store.dispatch(deleteNotificationAction(notificationId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -196,7 +229,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchGymsCatalogAction());
+    await store.dispatch(fetchGymsCatalogAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -214,7 +247,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchMyFavoriteGymsAction());
+    await store.dispatch(fetchMyFavoriteGymsAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -233,7 +266,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(addGymToFavoritesAction(gymId));
+    await store.dispatch(addGymToFavoritesAction(gymId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -252,7 +285,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(removeGymFromFavoritesAction(gymId));
+    await store.dispatch(removeGymFromFavoritesAction(gymId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -271,7 +304,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchGymInfoAction(gymId));
+    await store.dispatch(fetchGymInfoAction(gymId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -289,7 +322,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchMyPurchasesAction());
+    await store.dispatch(fetchMyPurchasesAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -307,7 +340,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchTrainingCatalogAction());
+    await store.dispatch(fetchTrainingCatalogAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -325,7 +358,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchRecommendedTrainingsAction());
+    await store.dispatch(fetchRecommendedTrainingsAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -343,9 +376,11 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchUsersCatalogAction());
+    await store.dispatch(fetchUsersCatalogAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
+
+    console.log(actions);
 
     expect(actions).toEqual([
       fetchUsersCatalogAction.pending.type,
@@ -362,7 +397,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(removeFriendAction(friendId));
+    await store.dispatch(removeFriendAction(friendId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -381,7 +416,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(addFriendAction(friendId));
+    await store.dispatch(addFriendAction(friendId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -400,7 +435,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(toggleSubscriberStatusAction(coachId));
+    await store.dispatch(toggleSubscriberStatusAction(coachId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -419,7 +454,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(checkSubscriptionStatusAction(coachId));
+    await store.dispatch(checkSubscriptionStatusAction(coachId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -431,13 +466,14 @@ describe('Async actions', () => {
 
   it('buyTrainingAction', async () => {
     const store = mockStore();
+    const dto = {} as CreateOrderDto;
     mockAPI
       .onPost(`${FF_SERVICE_URL}${APIRoute.Orders}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(buyTrainingAction());
+    await store.dispatch(buyTrainingAction(dto) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -456,7 +492,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchReviewsAction(trainingId));
+    await store.dispatch(fetchReviewsAction(trainingId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -468,14 +504,14 @@ describe('Async actions', () => {
 
   it('createReviewAction', async () => {
     const store = mockStore();
-    const trainingId = '';
+    const dto = {trainingId: ''} as CreateReviewDto;
     mockAPI
       .onPost(`${FF_SERVICE_URL}${APIRoute.Reviews}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(createReviewAction(trainingId));
+    await store.dispatch(createReviewAction(dto) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -494,7 +530,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(decrementTrainingAction(trainingId));
+    await store.dispatch(decrementTrainingAction(trainingId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -506,13 +542,14 @@ describe('Async actions', () => {
 
   it('buyGymMembershipAction', async () => {
     const store = mockStore();
+    const dto = {} as CreateGymOrderDto;
     mockAPI
       .onPost(`${FF_SERVICE_URL}${APIRoute.OrdersGyms}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(buyGymMembershipAction());
+    await store.dispatch(buyGymMembershipAction(dto) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -524,13 +561,14 @@ describe('Async actions', () => {
 
   it('createFoodDiaryAction', async () => {
     const store = mockStore();
+    const dto = {} as CreateFoodDiaryDto;
     mockAPI
       .onPost(`${FF_DIARY_URL}${APIRoute.FoodDiary}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(createFoodDiaryAction());
+    await store.dispatch(createFoodDiaryAction(dto) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -549,7 +587,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(updateFoodDiaryAction({id: updateFoodDiaryDtoId}));
+    await store.dispatch(updateFoodDiaryAction({id: updateFoodDiaryDtoId}) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -567,7 +605,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchFoodDiariesAction());
+    await store.dispatch(fetchFoodDiariesAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -579,13 +617,14 @@ describe('Async actions', () => {
 
   it('createTrainingDiaryAction', async () => {
     const store = mockStore();
+    const dto = {} as CreateTrainingsDiaryDto;
     mockAPI
       .onPost(`${FF_DIARY_URL}${APIRoute.TrainingsDiary}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(createTrainingDiaryAction());
+    await store.dispatch(createTrainingDiaryAction(dto) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -603,7 +642,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchTrainingDiariesAction());
+    await store.dispatch(fetchTrainingDiariesAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -615,13 +654,14 @@ describe('Async actions', () => {
 
   it('uploadCertificateAction', async () => {
     const store = mockStore();
+    const formData = {} as FormData;
     mockAPI
       .onPost(`${FF_USERS_URL}${APIRoute.Certificate}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(uploadCertificateAction());
+    await store.dispatch(uploadCertificateAction(formData) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -640,7 +680,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(deleteCertificateAction(certificateUrl));
+    await store.dispatch(deleteCertificateAction(certificateUrl) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -652,13 +692,14 @@ describe('Async actions', () => {
 
   it('uploadAvatarAction', async () => {
     const store = mockStore();
+    const formData = {} as FormData;
     mockAPI
       .onPost(`${FF_USERS_URL}${APIRoute.Avatar}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(uploadAvatarAction());
+    await store.dispatch(uploadAvatarAction(formData) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -670,13 +711,14 @@ describe('Async actions', () => {
 
   it('updateUserAction', async () => {
     const store = mockStore();
+    const dto = {} as UpdateUserDto;
     mockAPI
       .onPatch(`${FF_USERS_URL}${APIRoute.Users}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(updateUserAction());
+    await store.dispatch(updateUserAction(dto) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -688,13 +730,14 @@ describe('Async actions', () => {
 
   it('createTrainingAction', async () => {
     const store = mockStore();
+    const formData = {} as FormData;
     mockAPI
       .onPost(`${FF_SERVICE_URL}${APIRoute.Trainings}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(createTrainingAction());
+    await store.dispatch(createTrainingAction(formData) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -706,14 +749,13 @@ describe('Async actions', () => {
 
   it('fetchMyTrainingsAction', async () => {
     const store = mockStore();
-    const trainingId = '';
     mockAPI
       .onGet(`${FF_SERVICE_URL}${APIRoute.Trainings}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchMyTrainingsAction(trainingId));
+    await store.dispatch(fetchMyTrainingsAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -732,7 +774,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchTrainingsAction({coachId}));
+    await store.dispatch(fetchTrainingsAction({coachId}) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -751,7 +793,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchUserInfoAction(userId));
+    await store.dispatch(fetchUserInfoAction(userId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -770,7 +812,7 @@ describe('Async actions', () => {
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchTrainingInfoAction(trainingId));
+    await store.dispatch(fetchTrainingInfoAction(trainingId) as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
@@ -782,14 +824,13 @@ describe('Async actions', () => {
 
   it('fetchMyOrdersAction', async () => {
     const store = mockStore();
-    const trainingId = '';
     mockAPI
       .onGet(`${FF_SERVICE_URL}${APIRoute.Orders}`)
       .reply(200, []);
 
     expect(store.getActions()).toEqual([]);
 
-    await store.dispatch(fetchMyOrdersAction(trainingId));
+    await store.dispatch(fetchMyOrdersAction() as unknown as Action<any>);
 
     const actions = store.getActions().map(({type}) => type);
 
