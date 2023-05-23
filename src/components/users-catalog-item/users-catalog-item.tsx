@@ -12,7 +12,7 @@ function UsersCatalogItem({user}: UsersCatalogItemProps): JSX.Element {
   const isUserTop = true; // использовать для определения статуса "топ-пользователь" при необходимости
 
   return (
-    <li className="users-catalog__item">
+    <li className="users-catalog__item" data-testid="users-catalog-item">
       <div
         className={`
           thumbnail-user

@@ -29,7 +29,7 @@ function Header(): JSX.Element {
   }, [dispatch]);
 
   return (
-    <header className="header">
+    <header className="header" data-testid="header">
       <div className="container">
         <span className="header__logo">
           <svg width="187" height="70" aria-hidden="true">

@@ -96,7 +96,7 @@ function GymsCatalogFilter(): JSX.Element {
   };
 
   return (
-    <form className="gym-hall-form__form">
+    <form className="gym-hall-form__form" data-testid="gyms-catalog-filter">
       <div className="gym-hall-form__block">
         <h4 className="gym-hall-form__block-title gym-hall-form__block-title--price">Цена, ₽</h4>
         <div className="filter-price">

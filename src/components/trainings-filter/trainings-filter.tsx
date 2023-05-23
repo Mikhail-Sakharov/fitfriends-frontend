@@ -94,7 +94,7 @@ function TrainingsFilter(): JSX.Element {
   };
 
   return (
-    <form className="my-training-form__form">
+    <form className="my-training-form__form" data-testid="trainings-filter">
       <div className="my-training-form__block my-training-form__block--price">
         <h4 className="my-training-form__block-title">Цена, ₽</h4>
         <div className="filter-price">

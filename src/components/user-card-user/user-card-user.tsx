@@ -50,7 +50,7 @@ function UserCardUser({user}: UserCardUserProps): JSX.Element {
 
   return (
     <>
-      <section className="user-card">
+      <section className="user-card" data-testid="user-card-user">
         <h1 className="visually-hidden">Карточка пользователя</h1>
         <div className="user-card__wrapper">
           <div className="user-card__content">

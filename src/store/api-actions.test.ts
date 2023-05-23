@@ -47,37 +47,18 @@ import {
   uploadCertificateAction
 } from './api-actions';
 import {api} from '.';
-import UpdateTrainingDto from '../types/update-training.dto';
 import {UserRequestType} from '../types/user-request-type.enum';
 import {Status} from '../types/status.enum';
-import {SubwayStation} from '../types/subway-station.enum';
 import CreateOrderDto from '../types/create-order.dto';
 import {CreateReviewDto} from '../types/create-review.dto';
 import {CreateGymOrderDto} from '../types/create-gym-order.dto';
 import {CreateFoodDiaryDto} from '../types/create-food-diary.dto';
 import {CreateTrainingsDiaryDto} from '../types/create-trainings-diary.dto';
 import UpdateUserDto from '../types/update-user.dto';
-import {GetUsersQuery} from '../types/get-users.query';
-import {getQueryString} from '../helpers';
-
-type UploadVideoFileDto = {
-  videoFileFormData: FormData;
-  createdTrainingId: string;
-};
-
-type UpdateTrainingArgs = {
-  trainingId: string;
-  updateTrainingDto: UpdateTrainingDto;
-};
 
 type TrainingRequestDto = {
   type: UserRequestType;
   userId: string;
-};
-
-type ChangeRequestStatusDto = {
-  trainingRequestStatus: Status;
-  requestId: string;
 };
 
 describe('Async actions', () => {

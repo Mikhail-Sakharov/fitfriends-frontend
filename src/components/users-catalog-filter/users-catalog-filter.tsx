@@ -75,7 +75,7 @@ function UsersCatalogFilter(): JSX.Element {
   };
 
   return (
-    <form className="user-catalog-form__form">
+    <form className="user-catalog-form__form" data-testid="users-catalog-filter">
       <div className="user-catalog-form__block user-catalog-form__block--location">
         <h4 className="user-catalog-form__block-title">Локация, станция метро</h4>
         <ul className="user-catalog-form__check-list">

@@ -85,7 +85,7 @@ function FriendsListItem({friend, request, userRole}: FriendsListItemProps): JSX
   };
 
   return (
-    <li className="friends-list__item">
+    <li className="friends-list__item" data-testid="friends-list-item">
       <div className="thumbnail-friend">
         <div
           className={`

@@ -7,7 +7,7 @@ type ReviewsListItemProps = {
 
 function ReviewsListItem({review}: ReviewsListItemProps): JSX.Element {
   return (
-    <li className="reviews-side-bar__item">
+    <li className="reviews-side-bar__item" data-testid="reviews-list-item">
       <div className="review">
         <div className="review__user-info">
           <div className="review__user-photo">

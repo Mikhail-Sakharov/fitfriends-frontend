@@ -27,7 +27,7 @@ function TrainingThumbnail({training}: TrainingThumbnailProps): JSX.Element {
   };
 
   return (
-    <div className="thumbnail-training">
+    <div className="thumbnail-training" data-testid="training-thumbnail">
       <div className="thumbnail-training__inner">
         <div className="thumbnail-training__image">
           <picture>

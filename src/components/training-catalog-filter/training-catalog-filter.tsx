@@ -118,7 +118,7 @@ function TrainingCatalogFilter(): JSX.Element {
   };
 
   return (
-    <form className="gym-catalog-form__form">
+    <form className="gym-catalog-form__form" data-testid="training-catalog-filter">
       <div className="gym-catalog-form__block gym-catalog-form__block--price">
         <h4 className="gym-catalog-form__block-title">Цена, ₽</h4>
         <div className="filter-price">

@@ -9,7 +9,7 @@ type CertificateItemProps = {
 
 function CertificateItem({certificateItem}: CertificateItemProps): JSX.Element {
   return (
-    <div className="certificate-card__image">
+    <div className="certificate-card__image" data-testid="certificate-item">
       <picture>
         {
           certificateItem.match(/.+.pdf/)

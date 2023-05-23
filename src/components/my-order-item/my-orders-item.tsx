@@ -14,7 +14,7 @@ function MyOrdersItem({order}: MyOrdersItemProps): JSX.Element {
   ];
 
   return (
-    <li className="my-orders__item">
+    <li className="my-orders__item" data-testid="my-orders-item">
       <div className="thumbnail-training">
         <div className="thumbnail-training__inner">
           <div className="thumbnail-training__image">

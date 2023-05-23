@@ -9,7 +9,7 @@ type LookForCompanyItemProps = {
 
 function LookForCompanyItem({user}: LookForCompanyItemProps): JSX.Element {
   return (
-    <li className="look-for-company__item">
+    <li className="look-for-company__item" data-testid="look-for-company-item">
       <div className="thumbnail-user thumbnail-user--role-user thumbnail-user--dark">
         <div className="thumbnail-user__image">
           <picture>

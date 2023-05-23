@@ -31,7 +31,7 @@ function GymsCatalogItem({gym, isInFavorites}: GymsCatalogItemProps): JSX.Elemen
   };
 
   return (
-    <div className="thumbnail-gym">
+    <div className="thumbnail-gym" data-testid="gyms-catalog-item">
       <div className="thumbnail-gym__image">
         <picture>
           <img src={gym.images[0]} width="330" height="190" alt=""/>
